@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return 'Hello, TigerFoodies!'
+    return 'Hello, TigerFoodies Backend!'
 
 if __name__ == '__main__':
     app.run()
