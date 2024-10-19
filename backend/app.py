@@ -2,12 +2,15 @@ from flask import Flask, send_from_directory
 import os
 import psycopg2
 
+#-----------------------------------------------------------------------
 # Initialize the database
 DATABASE_URL = os.environ.get('DATABASE_URL')
 conn = psycopg2.connect(DATABASE_URL)
 
 # Initialize Flask app
 app = Flask(__name__, static_folder='build', static_url_path='')
+
+#-----------------------------------------------------------------------
 
 # Route to serve the React app's index.html
 @app.route('/')
@@ -23,6 +26,8 @@ def serve_static_files(path):
 @app.route('/api/data')
 def get_data():
     return {"message": "Hello from the Flask backend!"}
+
+#-----------------------------------------------------------------------
 
 # Start the Flask app
 if __name__ == '__main__':
