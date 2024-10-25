@@ -1,126 +1,362 @@
 /* Import custom font */
 @import url('https://fonts.googleapis.com/css2?family=Goudy+Bookletter+1911&family=Quicksand:wght@300..700&display=swap');
 
+/* Page colors: #716F81, #B97A95, #F6AE99, #F2E1C1 */
+
+
+/* TIGER FOODIES TEAM: */
+/*
+    Pro tips:
+    - The Padding, Width, Margin of objects left to right should
+      add to 100 view height (100vh) or 100 view width (100vw)
+    
+    - You can use !important at the end of styles to have them
+      supercede. But use it sparingly! Remember, styles have
+      higher priority the farther down the page they are.
+
+    - Be as specific as you can when targeting elements.
+      
+      For example:
+      - ".element-parent .element" to target a group of items
+        with the class "element," is better than 
+        ".element-parent button," even if all are buttons- use
+        the class name! 
+
+    - Finally... please comment and explain your code! 
+      Be detailed for everyone's benefit!!
+
+      --- Love, Anha
+*/
+
 /* Style page layout */
 body {
     font-family: "Quicksand", sans-serif;
-    background-color: rgb(255, 226, 188);
+    background-color: #F2E1C1;
+    margin: 0;
+}
+
+p {
+    margin: 0;
 }
 
 /* Style the navbar */
 .navbar {
-    width: 100%;
-    height: 100%;
+    width: 98vw;
+    height: 5vh;
     display: flex;
-    justify-content: space-between;
-    background-color: rgb(108, 60, 38);
-    padding: 0.25rem;
-    align-items: center;
-    border-bottom: 2px;
+    background-color: #716F81;
+    padding: 1vh 1vw;
     flex-wrap: wrap;
+    box-shadow: 1px 0 3px black;
+}
+
+/* Style the left side of the navbar */
+.navbar-left {
+    width: 50%;
+    display: flex;
+    gap: 1rem;
+}
+
+/* Style the right side of the navbar */
+.navbar-right {
+    width: 50%;
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
 }
 
 /* Style the buttons in the navbar */
 .nav-button {
-    background-color: rgb(231, 159, 130);
-    color: white;
-    padding: 0.5rem 1rem;
+    background-color: #F6AE99;
     border: none;
-    border-radius: none;
-    cursor: pointer;
+    border-radius: 15px;
     font-size: 0.75rem;
+    font-family: "Quicksand", sans-serif;
+    box-shadow: 0.1px 0.1px 2px black;
+    height: 100%;
+}
+
+.nav-button:first-child, .navbar-right .nav-button:last-child {
+    width: 45px;
 }
 
 /* Style the buttons that have links in the navbar */
 .nav-button a {
     text-decoration: none;
-    color: white;
+    color: black;
+    font-family: "Quicksand", sans-serif;
+}
+
+/* Hide hamburger menu in normal display, adjust position */
+.nav-menu-open {
+    display: none;
+    padding-top: 4px;
 }
 
 /* Style the search bar */
 .search-form {
     display: flex;
-    align-items: center;
+    flex-direction: row;
 }
 
-/* Style the search bar icon */
-.search-bar {
-    padding: 0.36rem;
-    font-size: 0.6rem;
+/* Search input container helps with relative positioning */
+.search-container {
+    position: relative;
+}
+
+.search-form input {
+    padding-left: 30px;
+    border: none;
+    height: 90%;
+    width: 300px;
+    border-radius: 15px;
+    align-items: left;
+    font-family: "Quicksand", sans-serif;
+    box-shadow: 0.1px 0.1px 2px black;
+}
+
+.search-form input::placeholder {
+    font-style: italic;
+}
+
+/* Style the search icon */
+.search-icon {
+    left: 0;
+    position: absolute;
+    padding: 8px 0 0 8px;
+    pointer-events: none;
 }
 
 /* Style the main content layout */
 main {
     display: flex;
-    padding: 2rem;
+    height: 88vh;
+    width: 100%;
+}
+
+/* Style the greeting and card grid */
+.content-container {
+    width: 85%;
+    overflow-y: scroll;
 }
 
 /* Welcome section styling */
 .greeting {
     text-align: left;
     color: black;
-    margin-top: 2rem;
-}
-
-/* Style the sidebar */
-.sidebar {
-    background-color: rgb(165, 89, 55);
-    padding: 0.5rem;
-    width: 150px;
-}
-
-.filter-section h2 {
-    color: white;
-    text-align: center;
-}
-
-.filter-section label {
-    color: white;
-    display: block;
+    padding: 6vh 1vw 1vh;
 }
 
 /* Style list of cards */
 .card-list {
     display: grid;
-    grid-template-columns: repeat(autofit, minmax(250px, 1fr));
-    gap: 2rem;
-    padding: 2rem;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    padding: 1vh 1vw;
+    width: 98%;
 }
 
 /* Style each card */
 .card {
-    background-color: rgb(205, 117, 92);
-    border: 1px;
-    padding: 1rem;
-    border-radius: 10px;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    background-color: #F6AE99;
+    border-radius: 15px;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    /* width: 280px; */
+    overflow-y: scroll;
+    box-shadow: 0.25px 0.25px 2px black;
 }
 
-/* Style the content of the cards */
+/* Style the card's image */
+.card-image {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 125px;
+}
+
+/* Style the text content of the cards */
+.card-content {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+}
+
 .card h3 {
-    text-align: center;
+    text-align: left;
     font-size: 1.5rem;
+    margin-top: 0.5px;
+    margin-bottom: 0;
 }
 
 .card p {
     text-align: left;
-    font-size: 1rem;
+    margin-bottom: 0.25rem;
+    margin-top: 0.2rem;
 }
 
-.card-image {
-    width: 100%;
-    height: auto;
-    border-radius: 5px;
-    margin-bottom: 1rem;
+.posted-at {
+    color: #716F81;
+    font-style: italic;
+    align-self: end;
+    font-size: 0.75rem;
+}
+
+/* Style the sidebar */
+.sidebar {
+    background-color: #F6AE99;
+    padding: 0.5rem;
+    width: 15%;
+    height: 100%;
+    overflow-y: scroll;
+    z-index: -1;
+    box-shadow: 0 1px 2px black;
+}
+
+.sidebar h3 {
+    text-align: left;
+    font-size: 1.5rem;
+}
+
+.sidebar label {
+    display: block;
+}
+
+.dietary-section {
+    height: 45%;
+    overflow-y: scroll;
+}
+
+.allergy-section {
+    height: 45%;
+    overflow-y: scroll;
+}
+
+/* Hide smaller preferences menu in normal display */
+.smaller-preferences {
+    display: none;
 }
 
 /* Style the footer */
 footer {
-    background-color: rgb(108, 60, 38);
+    background-color: #716F81;
     text-align: center;
     color: white;
-    padding: 0.5rem;
+    padding: 1vh 2vw;
     position: absolute;
     bottom: 0;
-    width: 100%;
+    width: 96vw;
+    box-shadow: 1px 0 3px black;
+    height: 3vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+footer p {
+    font-size: 12px;
+    font-style: italic;
+}
+
+/* Media query for screens between 840px and 1240px */
+@media screen and (max-width: 1280px) {
+    /* On a smaller screen, less cards appear in one row */
+    .card-list {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+}
+
+/* Media query for screens between 480px and 840px */
+@media screen and (max-width: 840px) {
+    /* Hide original create, view cards, and report bugs button */
+    .navbar-left .nav-button {
+        display: none;
+    }
+
+    .navbar-right {
+        width: 99%;
+        justify-content: center;
+        gap: 3%;
+    }
+
+    /* Show hamburger menu in smaller displays */
+    .nav-menu-open {
+        display: flex;
+    }
+
+    /* Modify the width of search bar, search bar container, and input */
+    .search-form {
+        width: 60%;
+    }
+
+    .search-container {
+        width: 100%;
+    }
+
+    .search-form input {
+        width: 100%;
+    }
+
+    /* Move last button over to accommodate for padding from input (30px) */
+    .navbar-right button:last-child {
+        margin-left: 32px;
+    }
+
+    .navbar-right button:first-child {
+        padding-bottom: 4px;
+    }
+
+    .navbar-right button {
+        height: 5vh;
+        width: 45px;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Make sure food cards reaches full height of page */
+    .content-container {
+        width: 100%;
+    }
+
+    /* Display menu button for preferences on smaller screen */
+    .smaller-preferences {
+        display: flex;
+        justify-content: right;
+    }
+
+    .preferences-button {
+        background-color: #F6AE99;
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0.1px 0.1px 2px black;
+        margin-right: 0.5rem;
+        width: 2.5rem;
+        height: 2.5rem;
+        padding-top: 5px;
+    }
+
+    /* Will display filters in a menu instead of on the side to account for smaller screens*/
+    .sidebar {
+        display: none;
+    }
+    
+    /* On a smaller screen, less cards appear in one row */
+    .card-list {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* Style the search icon */
+    .search-icon {
+        padding-top:13px;
+    }
+}
+
+/* Media query for screens between 0px and 480px */
+@media screen and (max-width: 460px) {
+    /* On a smaller screen, less cards appear in one row */
+    .card-list {
+        grid-template-columns: repeat(1, 1fr);
+    }
 }

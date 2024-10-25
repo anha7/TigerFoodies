@@ -1,9 +1,17 @@
 // src/pages/Homepage.js
 
+//----------------------------------------------------------------------
+
 // Imports
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './Homepage.css'; // Import custom CSS file
+import searchIcon from './media/search-icon.png';
+import notificationsIcon from './media/notifications.png';
+import plusIcon from './media/plus.png';
+import matheyImage from './media/mathey.png';
+import hamburgerIcon from './media/hamburger-icon.png';
+import preferencesIcon from './media/preferences.png';
 
 //----------------------------------------------------------------------
 
@@ -112,69 +120,190 @@ const Homepage = () => {
 
             {/* Navigation Bar */}
             <nav className = "navbar">
-                {/* Create card button */}
-                <button className="nav-button">
-                    <Link to="/post">+</Link>
-                </button>
+                {/* Div to organize items on the left of the navbar */}
+                <div className = "navbar-left">
+                    {/* Create card button */}
+                    <button className="nav-button">
+                        <Link to="/post">
+                            <img src={plusIcon} alt="createIcon" height="15px" />
+                        </Link>
+                    </button>
 
-                {/* View my cards button */}
-                <button className="nav-button">
-                    <Link to="/view">View My Cards</Link>
-                </button>
+                    {/* View my cards button */}
+                    <button className="nav-button">
+                        <Link to="/view">View My Cards</Link>
+                    </button>
 
-                {/* Report bugs button */}
-                <button className="nav-button">
-                    Report Bugs...
-                </button>
+                    {/* Report bugs button */}
+                    <button className="nav-button">
+                        Report Bugs...
+                    </button>
+                </div>
 
-                {/* Search bar */}
-                <form onSubmit={handleSearch} className="search-form">
-                    <input
-                        type="text"
-                        placeholder="Search for location, title, etc..."
-                        value={searchInput}
-                        onChange={(query) => 
-                            setSearchInput(query.target.value)}
-                        className="search-bar"
-                    />
-                </form>
+                {/* Div to organize items on the right of the navbar */}
+                <div className="navbar-right">
+                    {/* Notifications button */}
+                    <button className="nav-button nav-menu-open">
+                        <img src={hamburgerIcon} alt="Open Menu" height="15px" />
+                    </button>
+                    
+                    {/* Search bar */}
+                    <form onSubmit={handleSearch} className="search-form">
+                        <div className="search-container">
+                            <span class="search-icon">
+                                <img src={searchIcon} alt="SearchIcon" height="15px" />
+                            </span>
+                            <input
+                                type="text"
+                                placeholder="Search for locations, titles, etc..."
+                                value={searchInput}
+                                onChange={(query) => 
+                                    setSearchInput(query.target.value)}
+                                className="search-bar"
+                            />
+                        </div>
+                    </form>
 
-                {/* Notifications button */}
-                <button className="nav-button">
-                    🔔
-                </button>
+                    {/* Notifications button */}
+                    <button className="nav-button">
+                        <img src={notificationsIcon} alt="Notifications" height="15px" />
+                    </button>
+                </div>
             </nav>
             
             {/* Main content layout */}
             <main>
+                {/* Div for left side content */}
                 <div className="content-container">
                     {/* Welcome section */}
                     <div className="greeting">
-                        <h1>{greeting}! Welcome to TigerFoodies!</h1>
+                        <h1>{greeting}, welcome to TigerFoodies!</h1>
+                    </div>
+
+                    {/* Div for preferences layout for when screen is smaller */}
+                    <div className="smaller-preferences">
+                        <button className="preferences-button">
+                            <img src={preferencesIcon} alt="SearchIcon" height="15px" />
+                        </button>
+                    
                     </div>
                     
                     {/* Display list of active free food cards */}
                     <div className="card-list">
                         {cards.map((card) => (
-                            <div key={card.card_id} className="card">
+                            <div key={card.card_id} className="card" style={{ backgroundImage: `url(${card.photo_url})` }}>
+                                <div 
+                                    className="card-image"
+                                    style={{ backgroundImage: `url(${card.photo_url})`}}
+                                >
+                                </div>
                                 <div className="card-content">
                                     <h3>{card.title}</h3>
-                                    <img src={card.photo_url} alt="Food" className="card-image" />
                                     <p>Location: {card.location}</p>
                                     <p>Dietary Restrictions: {card.dietary_tags.join(', ')}</p>
                                     <p>Allergens: {card.allergies.join(', ')}</p>
-                                    <p>Posted at {card.posted_at}</p>
+                                    <p className="posted-at">Posted at {card.posted_at}</p>
                                 </div>
                             </div>
                         ))}
+                        {/* Fake card for design purposes */}
+                        <div className="card">
+                            <div 
+                                className="card-image"
+                                style={{ backgroundImage: `url(${matheyImage})`}}
+                            >
+                            </div>
+                            <div className="card-content"> 
+                                <h3>title</h3>
+                                <p>location</p>
+                                <p>dietary restrictions</p>
+                                <p>allergens</p>
+                                <p className="posted-at">posted at</p>
+                            </div>
+                        </div>
+                        {/* Fake card for design purposes */}
+                        <div className="card">
+                            <div 
+                                className="card-image"
+                                style={{ backgroundImage: `url(${matheyImage})`}}
+                            >
+                            </div>
+                            <div className="card-content"> 
+                                <h3>title</h3>
+                                <p>location</p>
+                                <p>dietary restrictions</p>
+                                <p>allergens</p>
+                                <p className="posted-at">posted at</p>
+                            </div>
+                        </div>
+                        {/* Fake card for design purposes */}
+                        <div className="card">
+                            <div 
+                                className="card-image"
+                                style={{ backgroundImage: `url(${matheyImage})`}}
+                            >
+                            </div>
+                            <div className="card-content"> 
+                                <h3>title</h3>
+                                <p>location</p>
+                                <p>dietary restrictions</p>
+                                <p>allergens</p>
+                                <p className="posted-at">posted at</p>
+                            </div>
+                        </div>
+                        {/* Fake card for design purposes */}
+                        <div className="card">
+                            <div 
+                                className="card-image"
+                                style={{ backgroundImage: `url(${matheyImage})`}}
+                            >
+                            </div>
+                            <div className="card-content"> 
+                                <h3>title</h3>
+                                <p>location</p>
+                                <p>dietary restrictions</p>
+                                <p>allergens</p>
+                                <p className="posted-at">posted at</p>
+                            </div>
+                        </div>
+                        {/* Fake card for design purposes */}
+                        <div className="card">
+                            <div 
+                                className="card-image"
+                                style={{ backgroundImage: `url(${matheyImage})`}}
+                            >
+                            </div>
+                            <div className="card-content"> 
+                                <h3>title</h3>
+                                <p>location</p>
+                                <p>dietary restrictions</p>
+                                <p>allergens</p>
+                                <p className="posted-at">posted at</p>
+                            </div>
+                        </div>
+                        {/* Fake card for design purposes */}
+                        <div className="card">
+                            <div 
+                                className="card-image"
+                                style={{ backgroundImage: `url(${matheyImage})`}}
+                            >
+                            </div>
+                            <div className="card-content"> 
+                                <h3>title</h3>
+                                <p>location</p>
+                                <p>dietary restrictions</p>
+                                <p>allergens</p>
+                                <p className="posted-at">posted at</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
-                {/* Siderbar with dietary preferences and allergy filters */}
+                {/* Right sidebar with dietary preferences and allergy filters */}
                 <aside className="sidebar">
                     {/* Section for dietary preferences */}
-                    <div className="filter-section">
-                        <h2>Dietary Preferences</h2>
+                    <div className="dietary-section">
+                        <h3>Dietary Preferences</h3>
                         <label>
                             <input type="checkbox" name="vegetarian" onChange={(filter) => handleFilter(filter, 'dietary')} />
                             Vegetarian
@@ -194,8 +323,8 @@ const Homepage = () => {
                     </div>
 
                     {/* Section for allergy filtering */}
-                    <div className="filter-section">
-                        <h2>Allergies</h2>
+                    <div className="allergy-section">
+                        <h3>Allergies</h3>
                         <label>
                             <input type="checkbox" name="nuts" onChange={(filter) => handleFilter(filter, 'allergy')} />
                             Nuts
@@ -218,7 +347,9 @@ const Homepage = () => {
 
             {/* Footer */}
             <footer>
-                Created by Anha Khan '26, Arika Hassan '26, Laiba Ali '26, Mark Gazzerro '26, Sami Dalu '26
+                <p>
+                Created by Anha Khan '26, Arika Hassan '26, Laiba Ali '26, Mark Gazzerro '25, Sami Dalu '27
+                </p>
             </footer>
         </div>
     );
