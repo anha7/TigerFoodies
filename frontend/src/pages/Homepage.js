@@ -52,10 +52,21 @@ const Homepage = () => {
     const [searchInput, setSearchInput] = useState('');
     // State that stores greeting to reflect time of day
     const [greeting, setGreeting] = useState('');
-    // State that stores dietary filter
-    const [dietaryFilters, setDietaryFilters] = useState([]);
-    // State that stores allergens
-    const [allergyFilters, setAllergyFilters] = useState([]);
+    // State that stores food filters
+    const [foodFilters, setFoodFilters] = useState({
+        dietary: {
+            vegetarian: false,
+            vegan: false,
+            halal: false,
+            kosher: false,
+        },
+        allergies: {
+            nuts: false,
+            gluten: false,
+            dairy: false,
+            shellfish: false
+        }
+    });
     // State that stores whether mobile hamburger menu is open
     const [isHamburgerOpen, setHamburgerOpen] = useState(false);
     // State that stores whether mobile preferences is open
@@ -96,26 +107,18 @@ const Homepage = () => {
 
 //----------------------------------------------------------------------
 
-    // Function that handles dietary filters and allergen filters
+    // Function that toggles dietary filters and allergen filters
     const handleFilter = (filter, type) => {
         const { name, checked } = filter.target;
 
-        // sets dietary filter
-        if (type === 'dietary') {
-            if (checked) {
-                setDietaryFilters((prevFilters) => [...prevFilters, name])
-            } else {
-                setDietaryFilters((prevFilters) => prevFilters.filter((filter) => filter !== name));
-            }
-        // sets allergy filters
-        } else if (type == 'allergy') {
-            if (checked) {
-                setAllergyFilters((prevFilters) => [...prevFilters, name])
-            } else {
-                setAllergyFilters((prevFilters) => prevFilters.filter((filter) => filter !== name));
-            }
-        }
-    }
+        setFoodFilters((prevFoodFilters) => ({
+            ...prevFoodFilters,
+            [type]: {
+                ...prevFoodFilters[type],
+                [name]: checked,
+            },
+        }));
+    };
 
 //----------------------------------------------------------------------
 
@@ -127,9 +130,11 @@ const Homepage = () => {
         const mobileNavbar = document.querySelector('.mobile-navbar-left');
 
         if(isHamburgerOpen) {
-            mobileNavbar.style.display = "block";
+            mobileNavbar.style.height = "5vh";
+            mobileNavbar.style.top = "7vh";
         } else {
-            mobileNavbar.style.display = "none";
+            mobileNavbar.style.height = "0px";
+            mobileNavbar.style.top = "3.5vh";
         }
     }
 
@@ -143,7 +148,7 @@ const Homepage = () => {
         const preferences = document.querySelector('.mobile-preferences-menu');
 
         if(isPreferencesOpen) {
-            preferences.style.display = "block";
+            preferences.style.display = "flex";
         } else {
             preferences.style.display = "none";
         }
@@ -239,50 +244,50 @@ const Homepage = () => {
                         <button className="preferences-button" onClick={toggleSmallPreferences}>
                             <img src={preferencesIcon} alt="SearchIcon" height="15px" />
                         </button>
-                        <aside className="mobile-preferences-menu">
-                            {/* Section for dietary preferences */}
-                            <div className="dietary-section">
-                                <h3>Dietary Preferences</h3>
-                                <label>
-                                    <input type="checkbox" name="vegetarian" onChange={(filter) => handleFilter(filter, 'dietary')} />
-                                    Vegetarian
-                                </label>
-                                <label>
-                                    <input type="checkbox" name="vegan" onChange={(filter) => handleFilter(filter, 'dietary')} />
-                                    Vegan
-                                </label>
-                                <label>
-                                    <input type="checkbox" name="halal" onChange={(filter) => handleFilter(filter, 'dietary')} />
-                                    Halal
-                                </label>
-                                <label>
-                                    <input type="checkbox" name="kosher" onChange={(filter) => handleFilter(filter, 'dietary')} />
-                                    Kosher
-                                </label>
-                            </div>
-
-                            {/* Section for allergy filtering */}
-                            <div className="allergy-section">
-                                <h3>Allergies</h3>
-                                <label>
-                                    <input type="checkbox" name="nuts" onChange={(filter) => handleFilter(filter, 'allergy')} />
-                                    Nuts
-                                </label>
-                                <label>
-                                    <input type="checkbox" name="gluten" onChange={(filter) => handleFilter(filter, 'allergy')} />
-                                    Gluten
-                                </label>
-                                <label>
-                                    <input type="checkbox" name="dairy" onChange={(filter) => handleFilter(filter, 'allergy')} />
-                                    Dairy
-                                </label>
-                                <label>
-                                    <input type="checkbox" name="shellfish" onChange={(filter) => handleFilter(filter, 'allergy')} />
-                                    Shellfish
-                                </label>
-                            </div>
-                        </aside>
                     </div>
+                    <aside className="mobile-preferences-menu">
+                        {/* Section for dietary preferences */}
+                        <div className="mobile-food-preference-selection">
+                            <h3>Dietary Preferences</h3>
+                            <label>
+                                <input type="checkbox" name="vegetarian" checked={foodFilters.dietary.vegetarian} onChange={(filter) => handleFilter(filter, 'dietary')} />
+                                Vegetarian
+                            </label>
+                            <label>
+                                <input type="checkbox" name="vegan" checked={foodFilters.dietary.vegan} onChange={(filter) => handleFilter(filter, 'dietary')} />
+                                Vegan
+                            </label>
+                            <label>
+                                <input type="checkbox" name="halal" checked={foodFilters.dietary.halal} onChange={(filter) => handleFilter(filter, 'dietary')} />
+                                Halal
+                            </label>
+                            <label>
+                                <input type="checkbox" name="kosher" checked={foodFilters.dietary.kosher} onChange={(filter) => handleFilter(filter, 'dietary')} />
+                                Kosher
+                            </label>
+                        </div>
+
+                        {/* Section for allergy filtering */}
+                        <div className="mobile-food-preference-selection">
+                            <h3>Allergies</h3>
+                            <label>
+                                <input type="checkbox" name="nuts" checked={foodFilters.allergies.nuts} onChange={(filter) => handleFilter(filter, 'allergy')} />
+                                Nuts
+                            </label>
+                            <label>
+                                <input type="checkbox" name="gluten" checked={foodFilters.allergies.gluten} onChange={(filter) => handleFilter(filter, 'allergy')} />
+                                Gluten
+                            </label>
+                            <label>
+                                <input type="checkbox" name="dairy" checked={foodFilters.allergies.dairy} onChange={(filter) => handleFilter(filter, 'allergy')} />
+                                Dairy
+                            </label>
+                            <label>
+                                <input type="checkbox" name="shellfish" checked={foodFilters.allergies.shellfish} onChange={(filter) => handleFilter(filter, 'allergy')} />
+                                Shellfish
+                            </label>
+                        </div>
+                    </aside>
                     
                     {/* Display list of active free food cards */}
                     <div className="card-list">
@@ -368,43 +373,43 @@ const Homepage = () => {
                 {/* Right sidebar with dietary preferences and allergy filters */}
                 <aside className="sidebar">
                     {/* Section for dietary preferences */}
-                    <div className="dietary-section">
+                    <div className="food-preferences-selection">
                         <h3>Dietary Preferences</h3>
                         <label>
-                            <input type="checkbox" name="vegetarian" onChange={(filter) => handleFilter(filter, 'dietary')} />
+                            <input type="checkbox" name="vegetarian" checked={foodFilters.dietary.vegetarian} onChange={(filter) => handleFilter(filter, 'dietary')} />
                             Vegetarian
                         </label>
                         <label>
-                            <input type="checkbox" name="vegan" onChange={(filter) => handleFilter(filter, 'dietary')} />
+                            <input type="checkbox" name="vegan" checked={foodFilters.dietary.vegan} onChange={(filter) => handleFilter(filter, 'dietary')} />
                             Vegan
                         </label>
                         <label>
-                            <input type="checkbox" name="halal" onChange={(filter) => handleFilter(filter, 'dietary')} />
+                            <input type="checkbox" name="halal" checked={foodFilters.dietary.halal} onChange={(filter) => handleFilter(filter, 'dietary')} />
                             Halal
                         </label>
                         <label>
-                            <input type="checkbox" name="kosher" onChange={(filter) => handleFilter(filter, 'dietary')} />
+                            <input type="checkbox" name="kosher" checked={foodFilters.dietary.kosher} onChange={(filter) => handleFilter(filter, 'dietary')} />
                             Kosher
                         </label>
                     </div>
 
                     {/* Section for allergy filtering */}
-                    <div className="allergy-section">
+                    <div className="food-preferences-selection">
                         <h3>Allergies</h3>
                         <label>
-                            <input type="checkbox" name="nuts" onChange={(filter) => handleFilter(filter, 'allergy')} />
+                            <input type="checkbox" name="nuts" checked={foodFilters.allergies.nuts} onChange={(filter) => handleFilter(filter, 'allergy')} />
                             Nuts
                         </label>
                         <label>
-                            <input type="checkbox" name="gluten" onChange={(filter) => handleFilter(filter, 'allergy')} />
+                            <input type="checkbox" name="gluten" checked={foodFilters.allergies.gluten} onChange={(filter) => handleFilter(filter, 'allergy')} />
                             Gluten
                         </label>
                         <label>
-                            <input type="checkbox" name="dairy" onChange={(filter) => handleFilter(filter, 'allergy')} />
+                            <input type="checkbox" name="dairy" checked={foodFilters.allergies.dairy} onChange={(filter) => handleFilter(filter, 'allergy')} />
                             Dairy
                         </label>
                         <label>
-                            <input type="checkbox" name="shellfish" onChange={(filter) => handleFilter(filter, 'allergy')} />
+                            <input type="checkbox" name="shellfish" checked={foodFilters.allergies.shellfish} onChange={(filter) => handleFilter(filter, 'allergy')} />
                             Shellfish
                         </label>
                     </div>
