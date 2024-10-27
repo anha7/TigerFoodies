@@ -271,19 +271,19 @@ const Homepage = () => {
                         <div className="mobile-food-preference-selection">
                             <h3>Allergies</h3>
                             <label>
-                                <input type="checkbox" name="nuts" checked={foodFilters.allergies.nuts} onChange={(filter) => handleFilter(filter, 'allergy')} />
+                                <input type="checkbox" name="nuts" checked={foodFilters.allergies.nuts} onChange={(filter) => handleFilter(filter, 'allergies')} />
                                 Nuts
                             </label>
                             <label>
-                                <input type="checkbox" name="gluten" checked={foodFilters.allergies.gluten} onChange={(filter) => handleFilter(filter, 'allergy')} />
+                                <input type="checkbox" name="gluten" checked={foodFilters.allergies.gluten} onChange={(filter) => handleFilter(filter, 'allergies')} />
                                 Gluten
                             </label>
                             <label>
-                                <input type="checkbox" name="dairy" checked={foodFilters.allergies.dairy} onChange={(filter) => handleFilter(filter, 'allergy')} />
+                                <input type="checkbox" name="dairy" checked={foodFilters.allergies.dairy} onChange={(filter) => handleFilter(filter, 'allergies')} />
                                 Dairy
                             </label>
                             <label>
-                                <input type="checkbox" name="shellfish" checked={foodFilters.allergies.shellfish} onChange={(filter) => handleFilter(filter, 'allergy')} />
+                                <input type="checkbox" name="shellfish" checked={foodFilters.allergies.shellfish} onChange={(filter) => handleFilter(filter, 'allergies')} />
                                 Shellfish
                             </label>
                         </div>
@@ -397,19 +397,19 @@ const Homepage = () => {
                     <div className="food-preferences-selection">
                         <h3>Allergies</h3>
                         <label>
-                            <input type="checkbox" name="nuts" checked={foodFilters.allergies.nuts} onChange={(filter) => handleFilter(filter, 'allergy')} />
+                            <input type="checkbox" name="nuts" checked={foodFilters.allergies.nuts} onChange={(filter) => handleFilter(filter, 'allergies')} />
                             Nuts
                         </label>
                         <label>
-                            <input type="checkbox" name="gluten" checked={foodFilters.allergies.gluten} onChange={(filter) => handleFilter(filter, 'allergy')} />
+                            <input type="checkbox" name="gluten" checked={foodFilters.allergies.gluten} onChange={(filter) => handleFilter(filter, 'allergies')} />
                             Gluten
                         </label>
                         <label>
-                            <input type="checkbox" name="dairy" checked={foodFilters.allergies.dairy} onChange={(filter) => handleFilter(filter, 'allergy')} />
+                            <input type="checkbox" name="dairy" checked={foodFilters.allergies.dairy} onChange={(filter) => handleFilter(filter, 'allergies')} />
                             Dairy
                         </label>
                         <label>
-                            <input type="checkbox" name="shellfish" checked={foodFilters.allergies.shellfish} onChange={(filter) => handleFilter(filter, 'allergy')} />
+                            <input type="checkbox" name="shellfish" checked={foodFilters.allergies.shellfish} onChange={(filter) => handleFilter(filter, 'allergies')} />
                             Shellfish
                         </label>
                     </div>
