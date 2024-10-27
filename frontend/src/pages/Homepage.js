@@ -56,6 +56,11 @@ const Homepage = () => {
     const [dietaryFilters, setDietaryFilters] = useState([]);
     // State that stores allergens
     const [allergyFilters, setAllergyFilters] = useState([]);
+    // State that stores whether mobile hamburger menu is open
+    const [isHamburgerOpen, setHamburgerOpen] = useState(false);
+    // State that stores whether mobile preferences is open
+    const [isPreferencesOpen, setPreferencesOpen] = useState(false);
+
 
 //----------------------------------------------------------------------
 
@@ -114,6 +119,38 @@ const Homepage = () => {
 
 //----------------------------------------------------------------------
 
+    // Function that toggles hamburger menu (for mobile)
+    const toggleHamburger = () => {
+        setHamburgerOpen(!isHamburgerOpen);
+
+        // If hamburger is open, display the hidden navbar items
+        const mobileNavbar = document.querySelector('.mobile-navbar-left');
+
+        if(isHamburgerOpen) {
+            mobileNavbar.style.display = "block";
+        } else {
+            mobileNavbar.style.display = "none";
+        }
+    }
+
+//----------------------------------------------------------------------
+
+    // Function that toggles small preferences menu (for mobile)
+    const toggleSmallPreferences = () => {
+        setPreferencesOpen(!isPreferencesOpen);
+
+        // If mobile preferences button is open, display the hidden items
+        const preferences = document.querySelector('.mobile-preferences-menu');
+
+        if(isPreferencesOpen) {
+            preferences.style.display = "block";
+        } else {
+            preferences.style.display = "none";
+        }
+    }
+
+//----------------------------------------------------------------------
+
     // Return the JSX code for the homepage
     return (
         <div className="homepage">
@@ -128,12 +165,10 @@ const Homepage = () => {
                             <img src={plusIcon} alt="createIcon" height="15px" />
                         </Link>
                     </button>
-
                     {/* View my cards button */}
                     <button className="nav-button">
                         <Link to="/view">View My Cards</Link>
                     </button>
-
                     {/* Report bugs button */}
                     <button className="nav-button">
                         Report Bugs...
@@ -142,8 +177,9 @@ const Homepage = () => {
 
                 {/* Div to organize items on the right of the navbar */}
                 <div className="navbar-right">
-                    {/* Notifications button */}
-                    <button className="nav-button nav-menu-open">
+                    
+                    {/* Hamburger icon to condense left navbar buttons on smaller screens */}
+                    <button className="nav-button nav-menu-open" onClick={toggleHamburger}>
                         <img src={hamburgerIcon} alt="Open Menu" height="15px" />
                     </button>
                     
@@ -170,6 +206,24 @@ const Homepage = () => {
                     </button>
                 </div>
             </nav>
+
+            {/* Container for navbar buttons on mobile view */}
+            <div className="mobile-navbar-left">
+                {/* Create card button */}
+                <button className="nav-button">
+                    <Link to="/post">
+                        <img src={plusIcon} alt="createIcon" height="15px" />
+                    </Link>
+                </button>
+                {/* View my cards button */}
+                <button className="nav-button">
+                    <Link to="/view">View My Cards</Link>
+                </button>
+                {/* Report bugs button */}
+                <button className="nav-button">
+                    Report Bugs...
+                </button>
+            </div>
             
             {/* Main content layout */}
             <main>
@@ -182,10 +236,52 @@ const Homepage = () => {
 
                     {/* Div for preferences layout for when screen is smaller */}
                     <div className="smaller-preferences">
-                        <button className="preferences-button">
+                        <button className="preferences-button" onClick={toggleSmallPreferences}>
                             <img src={preferencesIcon} alt="SearchIcon" height="15px" />
                         </button>
-                    
+                        <aside className="mobile-preferences-menu">
+                            {/* Section for dietary preferences */}
+                            <div className="dietary-section">
+                                <h3>Dietary Preferences</h3>
+                                <label>
+                                    <input type="checkbox" name="vegetarian" onChange={(filter) => handleFilter(filter, 'dietary')} />
+                                    Vegetarian
+                                </label>
+                                <label>
+                                    <input type="checkbox" name="vegan" onChange={(filter) => handleFilter(filter, 'dietary')} />
+                                    Vegan
+                                </label>
+                                <label>
+                                    <input type="checkbox" name="halal" onChange={(filter) => handleFilter(filter, 'dietary')} />
+                                    Halal
+                                </label>
+                                <label>
+                                    <input type="checkbox" name="kosher" onChange={(filter) => handleFilter(filter, 'dietary')} />
+                                    Kosher
+                                </label>
+                            </div>
+
+                            {/* Section for allergy filtering */}
+                            <div className="allergy-section">
+                                <h3>Allergies</h3>
+                                <label>
+                                    <input type="checkbox" name="nuts" onChange={(filter) => handleFilter(filter, 'allergy')} />
+                                    Nuts
+                                </label>
+                                <label>
+                                    <input type="checkbox" name="gluten" onChange={(filter) => handleFilter(filter, 'allergy')} />
+                                    Gluten
+                                </label>
+                                <label>
+                                    <input type="checkbox" name="dairy" onChange={(filter) => handleFilter(filter, 'allergy')} />
+                                    Dairy
+                                </label>
+                                <label>
+                                    <input type="checkbox" name="shellfish" onChange={(filter) => handleFilter(filter, 'allergy')} />
+                                    Shellfish
+                                </label>
+                            </div>
+                        </aside>
                     </div>
                     
                     {/* Display list of active free food cards */}
@@ -206,36 +302,6 @@ const Homepage = () => {
                                 </div>
                             </div>
                         ))}
-                        {/* Fake card for design purposes */}
-                        <div className="card">
-                            <div 
-                                className="card-image"
-                                style={{ backgroundImage: `url(${matheyImage})`}}
-                            >
-                            </div>
-                            <div className="card-content"> 
-                                <h3>title</h3>
-                                <p>location</p>
-                                <p>dietary restrictions</p>
-                                <p>allergens</p>
-                                <p className="posted-at">posted at</p>
-                            </div>
-                        </div>
-                        {/* Fake card for design purposes */}
-                        <div className="card">
-                            <div 
-                                className="card-image"
-                                style={{ backgroundImage: `url(${matheyImage})`}}
-                            >
-                            </div>
-                            <div className="card-content"> 
-                                <h3>title</h3>
-                                <p>location</p>
-                                <p>dietary restrictions</p>
-                                <p>allergens</p>
-                                <p className="posted-at">posted at</p>
-                            </div>
-                        </div>
                         {/* Fake card for design purposes */}
                         <div className="card">
                             <div 

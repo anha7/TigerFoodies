@@ -93,6 +93,11 @@ p {
     padding-top: 4px;
 }
 
+/* Hide hamburger menu options in normal display */
+.mobile-navbar-left {
+    display: none;
+}
+
 /* Style the search bar */
 .search-form {
     display: flex;
@@ -237,6 +242,12 @@ main {
 .smaller-preferences {
     display: none;
 }
+
+/* Hide menu preferences options in normal display */
+.mobile-preferences-menu {
+    display: none;
+}
+
 
 /* Style the footer */
 footer {
