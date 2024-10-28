@@ -52,10 +52,26 @@ const Homepage = () => {
     const [searchInput, setSearchInput] = useState('');
     // State that stores greeting to reflect time of day
     const [greeting, setGreeting] = useState('');
-    // State that stores dietary filter
-    const [dietaryFilters, setDietaryFilters] = useState([]);
-    // State that stores allergens
-    const [allergyFilters, setAllergyFilters] = useState([]);
+    // State that stores food filters
+    const [foodFilters, setFoodFilters] = useState({
+        dietary: {
+            vegetarian: false,
+            vegan: false,
+            halal: false,
+            kosher: false,
+        },
+        allergies: {
+            nuts: false,
+            gluten: false,
+            dairy: false,
+            shellfish: false
+        }
+    });
+    // State that stores whether mobile hamburger menu is open
+    const [isHamburgerOpen, setHamburgerOpen] = useState(false);
+    // State that stores whether mobile preferences is open
+    const [isPreferencesOpen, setPreferencesOpen] = useState(false);
+
 
 //----------------------------------------------------------------------
 
@@ -91,24 +107,50 @@ const Homepage = () => {
 
 //----------------------------------------------------------------------
 
-    // Function that handles dietary filters and allergen filters
+    // Function that toggles dietary filters and allergen filters
     const handleFilter = (filter, type) => {
         const { name, checked } = filter.target;
 
-        // sets dietary filter
-        if (type === 'dietary') {
-            if (checked) {
-                setDietaryFilters((prevFilters) => [...prevFilters, name])
-            } else {
-                setDietaryFilters((prevFilters) => prevFilters.filter((filter) => filter !== name));
-            }
-        // sets allergy filters
-        } else if (type == 'allergy') {
-            if (checked) {
-                setAllergyFilters((prevFilters) => [...prevFilters, name])
-            } else {
-                setAllergyFilters((prevFilters) => prevFilters.filter((filter) => filter !== name));
-            }
+        setFoodFilters((prevFoodFilters) => ({
+            ...prevFoodFilters,
+            [type]: {
+                ...prevFoodFilters[type],
+                [name]: checked,
+            },
+        }));
+    };
+
+//----------------------------------------------------------------------
+
+    // Function that toggles hamburger menu (for mobile)
+    const toggleHamburger = () => {
+        setHamburgerOpen(!isHamburgerOpen);
+
+        // If hamburger is open, display the hidden navbar items
+        const mobileNavbar = document.querySelector('.mobile-navbar-left');
+
+        if(isHamburgerOpen) {
+            mobileNavbar.style.height = "5vh";
+            mobileNavbar.style.top = "7vh";
+        } else {
+            mobileNavbar.style.height = "0px";
+            mobileNavbar.style.top = "3.5vh";
+        }
+    }
+
+//----------------------------------------------------------------------
+
+    // Function that toggles small preferences menu (for mobile)
+    const toggleSmallPreferences = () => {
+        setPreferencesOpen(!isPreferencesOpen);
+
+        // If mobile preferences button is open, display the hidden items
+        const preferences = document.querySelector('.mobile-preferences-menu');
+
+        if(isPreferencesOpen) {
+            preferences.style.display = "flex";
+        } else {
+            preferences.style.display = "none";
         }
     }
 
@@ -128,12 +170,10 @@ const Homepage = () => {
                             <img src={plusIcon} alt="createIcon" height="15px" />
                         </Link>
                     </button>
-
                     {/* View my cards button */}
                     <button className="nav-button">
                         <Link to="/view">View My Cards</Link>
                     </button>
-
                     {/* Report bugs button */}
                     <button className="nav-button">
                         Report Bugs...
@@ -142,8 +182,9 @@ const Homepage = () => {
 
                 {/* Div to organize items on the right of the navbar */}
                 <div className="navbar-right">
-                    {/* Notifications button */}
-                    <button className="nav-button nav-menu-open">
+                    
+                    {/* Hamburger icon to condense left navbar buttons on smaller screens */}
+                    <button className="nav-button nav-menu-open" onClick={toggleHamburger}>
                         <img src={hamburgerIcon} alt="Open Menu" height="15px" />
                     </button>
                     
@@ -170,6 +211,24 @@ const Homepage = () => {
                     </button>
                 </div>
             </nav>
+
+            {/* Container for navbar buttons on mobile view */}
+            <div className="mobile-navbar-left">
+                {/* Create card button */}
+                <button className="nav-button">
+                    <Link to="/post">
+                        <img src={plusIcon} alt="createIcon" height="15px" />
+                    </Link>
+                </button>
+                {/* View my cards button */}
+                <button className="nav-button">
+                    <Link to="/view">View My Cards</Link>
+                </button>
+                {/* Report bugs button */}
+                <button className="nav-button">
+                    Report Bugs...
+                </button>
+            </div>
             
             {/* Main content layout */}
             <main>
@@ -182,11 +241,53 @@ const Homepage = () => {
 
                     {/* Div for preferences layout for when screen is smaller */}
                     <div className="smaller-preferences">
-                        <button className="preferences-button">
+                        <button className="preferences-button" onClick={toggleSmallPreferences}>
                             <img src={preferencesIcon} alt="SearchIcon" height="15px" />
                         </button>
-                    
                     </div>
+                    <aside className="mobile-preferences-menu">
+                        {/* Section for dietary preferences */}
+                        <div className="mobile-food-preference-selection">
+                            <h3>Dietary Preferences</h3>
+                            <label>
+                                <input type="checkbox" name="vegetarian" checked={foodFilters.dietary.vegetarian} onChange={(filter) => handleFilter(filter, 'dietary')} />
+                                Vegetarian
+                            </label>
+                            <label>
+                                <input type="checkbox" name="vegan" checked={foodFilters.dietary.vegan} onChange={(filter) => handleFilter(filter, 'dietary')} />
+                                Vegan
+                            </label>
+                            <label>
+                                <input type="checkbox" name="halal" checked={foodFilters.dietary.halal} onChange={(filter) => handleFilter(filter, 'dietary')} />
+                                Halal
+                            </label>
+                            <label>
+                                <input type="checkbox" name="kosher" checked={foodFilters.dietary.kosher} onChange={(filter) => handleFilter(filter, 'dietary')} />
+                                Kosher
+                            </label>
+                        </div>
+
+                        {/* Section for allergy filtering */}
+                        <div className="mobile-food-preference-selection">
+                            <h3>Allergies</h3>
+                            <label>
+                                <input type="checkbox" name="nuts" checked={foodFilters.allergies.nuts} onChange={(filter) => handleFilter(filter, 'allergies')} />
+                                Nuts
+                            </label>
+                            <label>
+                                <input type="checkbox" name="gluten" checked={foodFilters.allergies.gluten} onChange={(filter) => handleFilter(filter, 'allergies')} />
+                                Gluten
+                            </label>
+                            <label>
+                                <input type="checkbox" name="dairy" checked={foodFilters.allergies.dairy} onChange={(filter) => handleFilter(filter, 'allergies')} />
+                                Dairy
+                            </label>
+                            <label>
+                                <input type="checkbox" name="shellfish" checked={foodFilters.allergies.shellfish} onChange={(filter) => handleFilter(filter, 'allergies')} />
+                                Shellfish
+                            </label>
+                        </div>
+                    </aside>
                     
                     {/* Display list of active free food cards */}
                     <div className="card-list">
@@ -266,79 +367,49 @@ const Homepage = () => {
                                 <p className="posted-at">posted at</p>
                             </div>
                         </div>
-                        {/* Fake card for design purposes */}
-                        <div className="card">
-                            <div 
-                                className="card-image"
-                                style={{ backgroundImage: `url(${matheyImage})`}}
-                            >
-                            </div>
-                            <div className="card-content"> 
-                                <h3>title</h3>
-                                <p>location</p>
-                                <p>dietary restrictions</p>
-                                <p>allergens</p>
-                                <p className="posted-at">posted at</p>
-                            </div>
-                        </div>
-                        {/* Fake card for design purposes */}
-                        <div className="card">
-                            <div 
-                                className="card-image"
-                                style={{ backgroundImage: `url(${matheyImage})`}}
-                            >
-                            </div>
-                            <div className="card-content"> 
-                                <h3>title</h3>
-                                <p>location</p>
-                                <p>dietary restrictions</p>
-                                <p>allergens</p>
-                                <p className="posted-at">posted at</p>
-                            </div>
-                        </div>
                     </div>
                 </div>
                 
                 {/* Right sidebar with dietary preferences and allergy filters */}
                 <aside className="sidebar">
                     {/* Section for dietary preferences */}
-                    <div className="dietary-section">
+                    <div className="food-preferences-selection">
                         <h3>Dietary Preferences</h3>
                         <label>
-                            <input type="checkbox" name="vegetarian" onChange={(filter) => handleFilter(filter, 'dietary')} />
+                            <input type="checkbox" name="vegetarian" checked={foodFilters.dietary.vegetarian} onChange={(filter) => handleFilter(filter, 'dietary')} />
                             Vegetarian
                         </label>
                         <label>
-                            <input type="checkbox" name="vegan" onChange={(filter) => handleFilter(filter, 'dietary')} />
+                            <input type="checkbox" name="vegan" checked={foodFilters.dietary.vegan} onChange={(filter) => handleFilter(filter, 'dietary')} />
                             Vegan
                         </label>
                         <label>
-                            <input type="checkbox" name="halal" onChange={(filter) => handleFilter(filter, 'dietary')} />
+                            <input type="checkbox" name="halal" checked={foodFilters.dietary.halal} onChange={(filter) => handleFilter(filter, 'dietary')} />
                             Halal
                         </label>
                         <label>
-                            <input type="checkbox" name="kosher" onChange={(filter) => handleFilter(filter, 'dietary')} />
+                            <input type="checkbox" name="kosher" checked={foodFilters.dietary.kosher} onChange={(filter) => handleFilter(filter, 'dietary')} />
                             Kosher
                         </label>
                     </div>
 
                     {/* Section for allergy filtering */}
-                    <div className="allergy-section">
+                    <div className="food-preferences-selection">
                         <h3>Allergies</h3>
                         <label>
-                            <input type="checkbox" name="nuts" onChange={(filter) => handleFilter(filter, 'allergy')} />
+                            <input type="checkbox" name="nuts" checked={foodFilters.allergies.nuts} onChange={(filter) => handleFilter(filter, 'allergies')} />
                             Nuts
                         </label>
                         <label>
-                            <input type="checkbox" name="gluten" onChange={(filter) => handleFilter(filter, 'allergy')} />
+                            <input type="checkbox" name="gluten" checked={foodFilters.allergies.gluten} onChange={(filter) => handleFilter(filter, 'allergies')} />
                             Gluten
                         </label>
                         <label>
-                            <input type="checkbox" name="dairy" onChange={(filter) => handleFilter(filter, 'allergy')} />
+                            <input type="checkbox" name="dairy" checked={foodFilters.allergies.dairy} onChange={(filter) => handleFilter(filter, 'allergies')} />
                             Dairy
                         </label>
                         <label>
-                            <input type="checkbox" name="shellfish" onChange={(filter) => handleFilter(filter, 'allergy')} />
+                            <input type="checkbox" name="shellfish" checked={foodFilters.allergies.shellfish} onChange={(filter) => handleFilter(filter, 'allergies')} />
                             Shellfish
                         </label>
                     </div>

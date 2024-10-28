@@ -48,6 +48,7 @@ p {
     padding: 1vh 1vw;
     flex-wrap: wrap;
     box-shadow: 1px 0 3px black;
+    position: relative;
 }
 
 /* Style the left side of the navbar */
@@ -87,12 +88,6 @@ p {
     font-family: "Quicksand", sans-serif;
 }
 
-/* Hide hamburger menu in normal display, adjust position */
-.nav-menu-open {
-    display: none;
-    padding-top: 4px;
-}
-
 /* Style the search bar */
 .search-form {
     display: flex;
@@ -127,6 +122,28 @@ p {
     pointer-events: none;
 }
 
+/* Hide hamburger menu in normal display, adjust position */
+.nav-menu-open {
+    display: none;
+    padding-top: 4px;
+}
+
+/* Style hidden navbar buttons on mobile */
+.mobile-navbar-left {
+    height: 0px; /* Hide hamburger menu options in normal display */
+    justify-content: center;
+    top: 3.5vh;
+    position: absolute;
+    width: 100%;
+    background-color: #716F81;
+    padding: 0.75vh 0px 0.75vh 0px;
+    gap: 2vw;
+    transition: 0.3s;
+    z-index: -1;
+    display: flex;
+    box-shadow: 1px 0 3px black;
+}
+
 /* Style the main content layout */
 main {
     display: flex;
@@ -136,6 +153,8 @@ main {
 
 /* Style the greeting and card grid */
 .content-container {
+    display: flex;
+    flex-direction: column;
     width: 85%;
     overflow-y: scroll;
 }
@@ -185,7 +204,7 @@ main {
 
 .card h3 {
     text-align: left;
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     margin-top: 0.5px;
     margin-bottom: 0;
 }
@@ -210,32 +229,49 @@ main {
     width: 15%;
     height: 100%;
     overflow-y: scroll;
-    z-index: -1;
     box-shadow: 0 1px 2px black;
 }
 
 .sidebar h3 {
     text-align: left;
-    font-size: 1.5rem;
+    font-size: 1.3rem;
 }
 
 .sidebar label {
     display: block;
 }
 
-.dietary-section {
+.food-preferences-selection {
     height: 45%;
     overflow-y: scroll;
 }
 
-.allergy-section {
-    height: 45%;
-    overflow-y: scroll;
-}
-
-/* Hide smaller preferences menu in normal display */
+/* Hide smaller preferences menu button in normal display */
 .smaller-preferences {
     display: none;
+}
+
+/* Style mobile food preferences moenu */
+.mobile-preferences-menu {
+    display: none; /* Hide mobile preferences selection in normal display */
+    align-self: center;
+    align-items: center;
+    margin: 1vh 1vw;
+    justify-content: center;
+    padding: 0vh 0 2vh 0;
+    gap: 5vw;
+    position: relative;
+    width: 98vw;
+    background-color: #F6AE99;
+    border-radius: 15px;
+    box-shadow: 0.1px 0.1px 2px black;
+}
+
+/* Style mobile dietary preferences selection */
+.mobile-food-preference-selection {
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
 }
 
 /* Style the footer */
@@ -257,6 +293,17 @@ footer {
 footer p {
     font-size: 12px;
     font-style: italic;
+}
+
+/* Force hide mobile menus on screens wider than 840px */
+@media screen and (min-width: 841px) {
+    .mobile-preferences-menu, .mobile-food-preference-selection {
+        display: none!important;
+    }
+
+    .mobile-navbar-left {
+        display: none!important;
+    }
 }
 
 /* Media query for screens between 840px and 1240px */
@@ -349,7 +396,7 @@ footer p {
 
     /* Style the search icon */
     .search-icon {
-        padding-top:13px;
+        padding-top:px;
     }
 }
 
@@ -358,5 +405,10 @@ footer p {
     /* On a smaller screen, less cards appear in one row */
     .card-list {
         grid-template-columns: repeat(1, 1fr);
+    }
+
+    /* Style the search icon */
+    .search-icon {
+        padding-top:13px;
     }
 }
