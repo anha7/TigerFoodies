@@ -62,21 +62,19 @@ function CreateEditCard() {
     return (
         <div className="DataContainer">
             {/* Navigation Bar */}
-            <nav className = "navbar">
+            <nav className = "navigationbar">
                 {/* Div to organize items on the left of the navbar */}
-                <div className = "navbar-left">
-                    {/* Create card button */}
-                    <button className="nav-button">
-                        <Link to="/Homepage">
-                            <h2>TigerFoodies</h2>
+                    <button className="navigation-button">
+                        <Link to="/">
+                            <h1>TigerFoodies</h1>
                         </Link>
                     </button>
-                </div>
             </nav>
+            <div className='body'></div>
         <h2> Make A Card </h2>
+        <main>
             <form onSumbit={handleSubmit}>
-
-                <div className="form-group">
+                <div className="net_id">
                 <h4> Net ID: </h4>
                 <input 
                     type="text" 
@@ -85,7 +83,7 @@ function CreateEditCard() {
                     onChange={(e) => setNetID(e.target.value)}/>
                 </div>
 
-                <div className="form-group">
+                <div className="title">
                 <h4>Title: </h4>
                 <input 
                     type="text" 
@@ -94,18 +92,18 @@ function CreateEditCard() {
                     onChange={(e) => setTitle(e.target.value)}/>
                 </div>
 
-                <div className="form-group">
+                <div className="description">
                 <h4>Description: </h4>
                 <textarea
+                    type = 'text'
                     name = "description" 
-                    cols= "30"
-                    rows= "10"
+                    // cols="80"
+                    row="70"
                     value={description} 
-                    onChange={(e) => setDescription(e.target.value)}>
-                    </textarea>
+                    onChange={(e) => setDescription(e.target.value)}> </textarea>
                 </div>
 
-                <div className="form-group">
+                <div className="image">
                 <h4>Image: </h4>
                 <input 
                     type="url" 
@@ -114,7 +112,7 @@ function CreateEditCard() {
                     onChange={(e) => setPhoto(e.target.value)}/>
                 </div>
 
-                <div className="form-group">
+                <div className="location">
                 <h4>Location: </h4>
                 <input 
                     type="text" 
@@ -123,7 +121,7 @@ function CreateEditCard() {
                     onChange={(e) => setLocation(e.target.value)}/>
                 </div>
 
-                <div className='form-group'>
+                <div className='dietary'>
                     <h4>Dietary Tags (Select all that apply)</h4>
                     <label><input type="checkbox" name="dietary" value="Halal" checked={dietary.includes('Halal')} onChange={handleDietaryChange}/> Halal</label>
                     <label><input type="checkbox" name="dietary" value="Kosher" checked={dietary.includes('Kosher') } onChange={handleDietaryChange}/> Kosher</label>
@@ -132,16 +130,18 @@ function CreateEditCard() {
                     <label><input type="checkbox" name="dietary" value="Gluten Free"checked={dietary.includes('Gluten Free')} onChange={handleDietaryChange}/>Gluten Free</label>
                 </div>
 
-                <div className='form-group'>
+                <div className='allergies'>
                     <h4>Allergens (Select all that apply)</h4>
                     <label><input type="checkbox" name="allergies" value="Contains Nuts" checked={allergies.includes('Contains Nuts')} onChange={handleAllergiesChange}/> Contains Nuts</label>
                     <label><input type="checkbox" name="allergies" value="Contains Dairy" checked={allergies.includes('Contains Dairy')} onChange={handleAllergiesChange}/> Contains Dairy</label>
                     <label><input type="checkbox" name="allergies" value="Contains Shellfish" checked={allergies.includes('Contains Shellfish')} onChange={handleAllergiesChange}/> Contains Shellfish</label>
                 </div>         
-               
-                <button type="submit">Add Card</button>
+               <div className="button">
+               <button variant="Add Card">Add Card</button>{' '}
+                </div>
             </form>
 
+            </main>
             {/* Footer */}
             <footer>
                 <p>
