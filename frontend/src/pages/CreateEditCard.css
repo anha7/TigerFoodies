@@ -1,0 +1,196 @@
+/* .dataContainer {
+    width: 100%;
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    position: relative;
+} */
+
+/* .dataContainer .main {
+    text-align: center;
+    background-color: #F6AE99;
+    border-radius: 15px;
+    box-shadow: 0 0 20px black;
+    padding: 10px 20px;
+    transition: transform .2s;
+    width: 500px;
+    text-align: center;
+    margin: auto;
+    margin-top: 20px;
+} */
+
+.dataContainer {
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem;
+}
+
+.nav {
+    width: 100%;
+    height: 5vh;
+    display: flex;
+    align-items: center;
+    background-color: #716F81;
+    padding: 1vh 2vw;
+    box-shadow: 1px 0 3px black;
+}
+
+.dataContainer a, .dataContainer a:visited, .dataContainer a:hover, 
+.dataContainer a:focus, .dataContainer a:active {
+    font-weight: 800;
+    color: #ffffff;
+    text-decoration: none;
+    font-size: large;
+    margin-left: 20px;
+    width: 0;
+}
+
+.dataContainer h1{
+    color: white;
+    margin: 10px;
+    font-size: 24px;
+}
+
+.dataContainer .footer1 {
+    background-color: #716F81;
+    text-align: center;
+    color: white;
+    padding: 1vh 0;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    box-shadow: 1px 0 3px black;
+    height: 3vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8em;
+}
+.nav h1 {
+    margin: 0;
+    font-size: 24px;
+    color: white;
+}
+
+/* Page Title */
+h2 {
+    text-align: center;
+    font-size: 1.8em;
+    color: #333333;
+    margin-top: 10px;
+}
+
+/* Form Container */
+form {
+    margin-left: 5%;
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+}
+
+form .h4 {
+    margin: 0;
+    width: 100%;
+    margin-top: 8px;
+    margin-bottom: 5px;
+    text-align: left;
+    color: #333333;
+    font-weight: bold;
+}
+
+.form input[type="text"],
+.form input[type="url"],
+.form textarea {
+    display: inline;
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+    border-radius: 0px;
+    gap: 0px;
+    font-size: 12px;
+}
+
+.dataContainer label {
+    width: 100%;
+    margin-top: 8px;
+    margin-bottom: 5px;
+    text-align: left;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.dataContainer .footer {
+    position: fixed;
+    padding: 5px;
+    bottom: 0;
+    width: 100%;
+    height: 50px;
+    background: rgb(55, 61, 55);
+    color: white;
+    font-size: 30px;
+}
+
+
+.dataContainer .dietary {
+    margin-right: 10px;
+    margin-left: 20px;
+}
+
+.dataContainer .allergies {
+    margin-right: 10px;
+    margin-left: 20px;
+}
+
+.dataContainer .footer{
+    background-color: #716F81;
+    text-align: center;
+    color: white;
+    padding: 1vh 2vw;
+    position: fixed;
+    left: 0;
+    margin-bottom: 0;
+    width: 100%;
+    text-align: center;
+}
+
+/* Button */
+.button {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
+}
+
+/* Button styling */
+button[type="submit"] {
+    background-color: #F6AE99;
+    border: none;
+    border-radius: 15px;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #ffffff;
+    padding: 0.2rem 4.5rem;
+    font-family: "Quicksand", sans-serif;
+    align-items: right;
+}
+
+.dataContainer button {
+    padding: 10px 20px;
+    font-size: 1.1rem;
+    color: #fff;
+    background-color: #0073e6;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.dataContainer button:hover {
+    background-color: #005bb5;
+}
