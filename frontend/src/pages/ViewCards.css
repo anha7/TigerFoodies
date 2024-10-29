@@ -1,0 +1,125 @@
+/*Navigation to homepage*/
+.navigationbar {
+  height: 5vh;
+  display: flex;
+  align-items: center;
+  justify-content: space-between; 
+  background-color: #716F81;
+  padding: 1vh 2vw;
+  box-shadow: 1px 0 3px black;
+}
+.navigationbar h1 {
+  margin: 0;
+  font-size: 24px;
+  color: white;
+  background-color: transparent;
+  text-decoration: none;
+  font-weight: bold;
+}
+.login-box{
+  color: white;
+  font-size: 1em;
+  text-decoration: none;
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+  font-weight: bold;
+}
+
+/* Style list of cards */
+.card-list {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  padding: 1vh 1vw;
+  width: 98%;
+}
+
+/* Style each card */
+.card {
+  background-color: #F6AE99;
+  border-radius: 15px;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  /* width: 280px; */
+  overflow-y: scroll;
+  box-shadow: 0.25px 0.25px 2px black;
+}
+
+/* Style the card's image */
+.card-image {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 125px;
+}
+
+/* Style the text content of the cards */
+.card-content {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+}
+
+.card h3 {
+  text-align: left;
+  font-size: 1.3rem;
+  margin-top: 0.5px;
+  margin-bottom: 0;
+}
+
+.card p {
+  text-align: left;
+  margin-bottom: 0.25rem;
+  margin-top: 0.2rem;
+}
+
+.posted-at {
+  color: #716F81;
+  font-style: italic;
+  align-self: end;
+  font-size: 0.75rem;
+}
+
+/* Card actions */
+.card-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  justify-content: center;
+}
+
+/* Button styling */
+.edit-button, .delete-button {
+  padding: 5px 15px;
+  font-size: 0.9em;
+  border: none;
+  border-radius: 20px; /* Rounded buttons */
+  cursor: pointer;
+  background-color: white;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.edit-button {
+  color: #4CAF50; /* Green text for Edit */
+}
+
+.delete-button {
+  color: #f44336; /* Red text for Delete */
+}
+
+.footer {
+  background-color: #8A7D8A; /* Adjust the color as needed */
+  color: white;
+  text-align: center;
+  padding: 10px 20px;
+  position: relative;
+  width: 100%;
+  bottom: 0;
+}
+
+.footer {
+  font-size: 12px;
+  font-style: italic;
+}

@@ -5,7 +5,7 @@
 // Imports
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-// import './ViewCard.css'; // Import custom CSS file
+import './ViewCards.css'; // Import custom CSS file
 import matheyImage from './media/mathey.png';
 
 //  Gets time and gives greeting
@@ -28,11 +28,11 @@ const getGreeting = () => {
   // Checks current time of day
   if (timeOfDay >= 0 && timeOfDay < 12) {
     return "Good morning";
-} else if (timeOfDay >= 12 && timeOfDay < 17) {
+  } else if (timeOfDay >= 12 && timeOfDay < 17) {
     return "Good afternoon";
-} else {
+  } else {
     return "Good evening";
-}
+  }
 };
 
 const ViewCards = () => {
@@ -64,8 +64,12 @@ const ViewCards = () => {
   // Handle deleting cards
   const handleDeleteCard = async (cardId) => {
     try {
-      await fetch(`/api/cards/${cardId}`, { method: 'DELETE' });
+      const response = await fetch(`/api/cards/${cardId}`, { method: 'DELETE' });
+      if (response.ok) {
       setCards(cards.filter(card => card.card_id !== cardId));
+      } else {
+        console.warn('Backend delete endpoint not available.')
+      }
     } catch (error) {
       console.error('Error deleting card:', error);
     }
@@ -73,22 +77,23 @@ const ViewCards = () => {
 
   // Handle editing carda
   const handleEditCard = (cardId) => {
-    navigate(`/edit/${cardId}`);
+    navigate(`/edit/${cardId}`, {state: {cardId}});
 };
 
   return (
     <div className="homepage">
       {/* Navigation Bar */}
       <nav className = "navigationbar">
-                {/* Div to organize items on the left of the navbar */}
-                    <button className="navigation-button">
-                        <Link to="/">
-                            <h1>TigerFoodies</h1>
-                        </Link>
-                    </button>
-            </nav>
+        {/* Div to organize items on the left of the navbar */}
+        <a href="/"><h1>TigerFoodies</h1></a>
+          {/* Placeholder for netid login*/}
+      <div className="login-box">
+      <button className="login-button">Login</button>
+      </div>
+      </nav>
       <h2> My Cards </h2>
       <main>
+
       {/* Display list of active free food cards */}
       <div className="card-list">
         {cards.map((card) => (
@@ -123,7 +128,7 @@ const ViewCards = () => {
                 <p className="posted-at">posted at</p>
             </div>
             {/* Makes the edit and delete buttons */}
-            <div className="card-actions">
+        <div className="card-actions">
                 <button 
                     className="edit-button"
                     onClick={() => handleEditCard(cards.card_id)}
@@ -152,7 +157,8 @@ const ViewCards = () => {
                 <p>allergens</p>
                 <p className="posted-at">posted at</p>
             </div>
-            <div className="card-actions">
+            {/* Makes the edit and delete buttons */}
+        <div className="card-actions">
                 <button 
                     className="edit-button"
                     onClick={() => handleEditCard(cards.card_id)}
@@ -168,6 +174,7 @@ const ViewCards = () => {
             </div>
         </div>
         {/* Fake card for design purposes */}
+        {/* Makes the card */}
         <div className="card">
             <div 
                 className="card-image"
@@ -181,7 +188,39 @@ const ViewCards = () => {
                 <p>allergens</p>
                 <p className="posted-at">posted at</p>
             </div>
-            <div className="card-actions">
+            {/* Makes the edit and delete buttons */}
+        <div className="card-actions">
+                <button 
+                    className="edit-button"
+                    onClick={() => handleEditCard(cards.card_id)}
+                >
+                    EDIT
+                </button>
+                <button 
+                    className="delete-button"
+                    onClick={() => handleDeleteCard(cards.card_id)}
+                >
+                    DELETE
+                </button>
+            </div>
+        </div>
+        {/* Fake card for design purposes */}
+        {/* Makes the card */}
+        <div className="card">
+            <div 
+                className="card-image"
+                style={{ backgroundImage: `url(${matheyImage})`}}
+            >
+            </div>
+            <div className="card-content"> 
+                <h3>title</h3>
+                <p>location</p>
+                <p>dietary restrictions</p>
+                <p>allergens</p>
+                <p className="posted-at">posted at</p>
+            </div>
+            {/* Makes the edit and delete buttons */}
+        <div className="card-actions">
                 <button 
                     className="edit-button"
                     onClick={() => handleEditCard(cards.card_id)}
