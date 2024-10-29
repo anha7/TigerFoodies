@@ -89,6 +89,7 @@ const ViewCards = () => {
           {/* Placeholder for netid login*/}
       <div className="login-box">
       <button className="login-button">Login</button>
+      <input type='text' />
       </div>
       </nav>
       <h2> My Cards </h2>
