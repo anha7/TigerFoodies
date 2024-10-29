@@ -56,6 +56,12 @@ function CreateEditCard() {
     const handleImageChange = (event) => {
         console.log(event.target.files)
         setPhoto(URL.createObjectURL(event.target.files[0]));
+        if (photo && photo.type.startsWith('image/')) {
+            setSelectedFile(photo);
+          } else {
+            alert('Please select an image file.');
+            event.target.value = null; 
+          }
     }
 
     const handleSubmit = (e) => {
