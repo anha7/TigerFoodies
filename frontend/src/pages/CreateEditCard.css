@@ -184,7 +184,7 @@ button[type="submit"] {
     padding: 10px 20px;
     font-size: 1.1rem;
     color: #fff;
-    background-color: #0073e6;
+    background-color: #F6AE99;
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -192,5 +192,35 @@ button[type="submit"] {
 }
 
 .dataContainer button:hover {
-    background-color: #005bb5;
+    background-color: #F6AE99;
+}
+
+/* Responsive design */
+@media screen and (max-width: 840px) {
+    .dataContainer {
+        padding: 1rem;
+    }
+
+    button[type="submit"] {
+        font-size: 0.9rem;
+        padding: 0.5rem 1rem;
+    }
+}
+
+/* Button specific to mobile view */
+@media screen and (max-width: 460px) {
+    button[type="submit"] {
+        font-size: 0.8rem;
+        padding: 0.5rem 0.75rem;
+    }
+    .form textarea {
+        display: inline;
+        width: 10%;
+        padding: 4px;
+        box-sizing: border-box;
+        border: 1px solid #ddd;
+        border-radius: 0px;
+        gap: 0px;
+        font-size: 6px;
+    }
 }
