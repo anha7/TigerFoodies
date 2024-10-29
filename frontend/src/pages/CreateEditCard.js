@@ -103,7 +103,7 @@ function CreateEditCard() {
                     type="file" 
                     name = "photo_url"
                     onChange={handleImageChange} />
-                    <img src={file}/>
+                    <img src={photo}/>
                 </h4>
 
                 <h4> Location: * <br/> 
