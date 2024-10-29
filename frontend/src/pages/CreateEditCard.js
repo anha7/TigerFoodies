@@ -66,10 +66,10 @@ function CreateEditCard() {
                 {/* Div to organize items on the left of the navbar */}
                 <a href="/"><h1>TigerFoodies</h1></a>
             </nav>
-            <div className='body'></div>
+            <br/>
         <div className='main' style={{ height: '610px', overflowY: 'scroll' }}>
-        <h2> Make A Card </h2>
             <form onSubmit={handleSubmit}>
+            <h2> Make A Card </h2>
                 <div className="formGroup">
                 <h4> Net ID: * <br/>
                 <input 
@@ -77,60 +77,47 @@ function CreateEditCard() {
                     name="net_id"
                     value={temp_id} 
                     onChange={(e) => setNetID(e.target.value)}/></h4>
-                </div>
 
-                <div className="formGroup">
                 <h4>Title: * <br/>
                 <input 
                     type="text" 
                     name = "title"
                     value={title} 
                     onChange={(e) => setTitle(e.target.value)}/> </h4>
-                </div>
 
-                <div className="formGroup">
                 <h4>Description: <br/>
                 <textarea
                     name = "description" 
-                    cols="150"
-                    rows="40"
+                    cols="80"
+                    rows="3"
                     value={description} 
                     onChange={(e) => setDescription(e.target.value)}> </textarea> </h4>
-                </div>
 
-                <div className="formGroup">
                 <h4>Image: * <br/>
                 <input 
                     type="url" 
                     name = "photo_url"
                     value={photo} 
                     onChange={(e) => setPhoto(e.target.value)}/> </h4>
-                </div>
 
-                <div className="formGroup">
                 <h4> Location: * <br/> 
                 <input 
                     type="text" 
                     name = "location"
                     value={location} 
                     onChange={(e) => setLocation(e.target.value)}/> </h4>
-                </div>
 
-                <div className="formGroup">
-                    <h4>Dietary Tags (Select all that apply)</h4>
+                    <h4>Dietary Tags (Select all that apply): </h4>
                     <label><input type="checkbox" name="dietary" value="Halal" checked={dietary.includes('Halal')} onChange={handleDietaryChange}/> Halal</label>
                     <label><input type="checkbox" name="dietary" value="Kosher" checked={dietary.includes('Kosher')} onChange={handleDietaryChange}/> Kosher</label>
                     <label><input type="checkbox" name="dietary" value="Vegetarian" checked={dietary.includes('Vegetarian')} onChange={handleDietaryChange}/> Vegetarian</label>
                     <label><input type="checkbox" name="dietary" value="Vegan" checked={dietary.includes('Vegan')} onChange={handleDietaryChange}/> Vegan</label>
                     <label><input type="checkbox" name="dietary" value="Gluten Free" checked={dietary.includes('Gluten Free')} onChange={handleDietaryChange}/> Gluten Free</label>
-                </div>
 
-                <div className="allergies">
-                    <h4>Allergens (Select all that apply)</h4>
+                    <h4>Allergens (Select all that apply): </h4>
                     <label><input type="checkbox" name="allergies" value="Contains Nuts" checked={allergies.includes('Contains Nuts')} onChange={handleAllergiesChange}/> Contains Nuts</label>
                     <label><input type="checkbox" name="allergies" value="Contains Dairy" checked={allergies.includes('Contains Dairy')} onChange={handleAllergiesChange}/> Contains Dairy</label>
                     <label><input type="checkbox" name="allergies" value="Contains Shellfish" checked={allergies.includes('Contains Shellfish')} onChange={handleAllergiesChange}/> Contains Shellfish</label>
-                <br/>
                 </div>         
                <div className="button">
                 <br/>
