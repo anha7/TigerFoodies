@@ -27,7 +27,7 @@
 }
 
 /* Style list of cards */
-.card-list {
+.viewcards-card-list {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
@@ -36,7 +36,7 @@
 }
 
 /* Style each card */
-.card {
+.viewcards-card {
   background-color: #F6AE99;
   border-radius: 15px;
   align-items: center;
@@ -48,7 +48,7 @@
 }
 
 /* Style the card's image */
-.card-image {
+.viewcards-card-image {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -56,7 +56,7 @@
 }
 
 /* Style the text content of the cards */
-.card-content {
+.viewcards-card-content {
   display: flex;
   flex-direction: column;
   padding: 1rem;
