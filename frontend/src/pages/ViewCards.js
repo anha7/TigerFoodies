@@ -85,16 +85,12 @@ const ViewCards = () => {
       {/* Navigation Bar */}
       <nav className = "navigationbar">
         {/* Div to organize items on the left of the navbar */}
-          <button className="navigation-button">
-              <Link to="/">
-                  <h1>TigerFoodies</h1>
-              </Link>
-          </button>
-      </nav>
-      {/* Placeholder for netid login*/}
+        <a href="/"><h1>TigerFoodies</h1></a>
+          {/* Placeholder for netid login*/}
       <div className="login-box">
       <button className="login-button">Login</button>
       </div>
+      </nav>
       <h2> My Cards </h2>
       <main>
 
