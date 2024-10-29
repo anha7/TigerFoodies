@@ -59,31 +59,36 @@ def get_data():
 # API Route for creating cards
 @app.route('/api/food-cards', methods=['POST'])
 def create_card():
-    with psycopg2.connect(DATABASE_URL) as conn:
-        with conn.cursor as cursor:
-            # fill in with obj later
-            o = objdct code
-            # Execute query to retrieve all active cards' information
-            cursor.execute(
-                'INSERT INTO cards (card_id, net_id, title, description, photo_url, location, dietery_tags, allergies, expiration) VALUES (?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP + interval \'3 hours\')'
-            , [o])
-            rows = cursor.fetchall()
+    try:
+        # retrieve json object
+        card_data = app.request.get_json()
+        # get relevant fields
+        card_id = card_data.get('card_id')
+        net_id = card_data.get('card_id') #Change this to net id
+        title = card_data.get('card_id')
+        description = card_data.get('card_id')
+        photo_url = card_data.get('card_id')
+        location = card_data.get('card_id')
+        dietary_tags = card_data.get('card_id', '')
+        allergies = card_data.get('card_id', '')
+        new_card = [card_id, net_id, title, description, photo_url, location, dietary_tags, allergies]
 
-            # Package queried data and send it over
-            cards = []
-            for row in rows:
-                cards.append({
-                    'card_id': row[0],
-                    'title': row[1],
-                    'photo_url': row[2],
-                    'location': row[3],
-                    'dietary_tags': row[4],
-                    'allergies': row[5],
-                    'posted_at': row[6]
-                })
+        # check new card attributes (Should we?)
+        if not all(new_card):
+            return jsonify("error: Missing required fields")
+        
+        # connect to database
+        with psycopg2.connect(DATABASE_URL) as conn:
+            with conn.cursor as cursor:
+                # define insertion query
+                insertion_query = 'INSERT INTO cards (card_id, net_id, title, description, photo_url, location, dietery_tags, allergies, expiration) VALUES (?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP + interval \'3 hours\')'
+                # Execute query to retrieve all active cards' information
+                cursor.execute(insertion_query, new_card)
+                # Commit to database
+                conn.commit()
 
-            cards = []
-            return jsonify(cards)
+    except Exception as ex:
+        print(ex)
 
 #-----------------------------------------------------------------------
 
