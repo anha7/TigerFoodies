@@ -7,49 +7,17 @@
     box-shadow: 1px 0 3px black;
 }
 
-.dataContainer a, .dataContainer a:visited, .dataContainer a:hover, 
-.dataContainer a:focus, .dataContainer a:active {
-    font-weight: 800;
-    color: #ffffff;
-    text-decoration: none;
-    font-size: large;
-    margin-left: 20px;
-    width: 0;
-}
-
-.dataContainer h1{
-    color: white;
-    margin: 10px;
-    font-size: 24px;
-}
 
 .dataContainer .main {
     overflow: auto;
     padding-bottom: 180px;
 }
 
-.dataContainer .footer1 {
-    background-color: #716F81;
-    text-align: center;
-    color: white;
-    padding: 1vh 0;
-    position: relative;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    box-shadow: 1px 0 3px black;
-    height: 180px;
-    margin-top: -180px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.8em;
-    clear: both;
-}
 .nav h1 {
     margin: 0;
     font-size: 24px;
     color: white;
+    text-decoration: none;
 }
 
 /* Page Title */
@@ -70,22 +38,14 @@ form {
     gap: 0px;
 }
 
-.form .h2 {
-    margin-top: 20px;
-}
-
 .input-wrap {
   position: relative;
 }
+
 .input-wrap .input {
   position: absolute;
   width: 100%;
   left: 0;
-}
-
-.formGroup .star {
-    display: inline;
-    color: red;
 }
 
 .dataContainer label {
@@ -97,42 +57,14 @@ form {
     font-weight: bold;
 }
 
-.dataContainer .footer {
-    position: fixed;
-    padding: 5px;
-    bottom: 0;
-    width: 100%;
-    height: 50px;
-    background: rgb(55, 61, 55);
-    color: white;
-    font-size: 30px;
-}
-
-
 .dataContainer .dietary {
     margin-right: 10px;
     margin-left: 20px;
 }
 
-.dataContainer .dietary label {
-    font-weight:normal;
-}
-
 .dataContainer .allergies {
     margin-right: 10px;
     margin-left: 20px;
-}
-
-.dataContainer .footer{
-    background-color: #716F81;
-    text-align: center;
-    color: white;
-    padding: 1vh 2vw;
-    position: fixed;
-    left: 0;
-    margin-bottom: 0;
-    width: 100%;
-    text-align: center;
 }
 
 /* Button */
@@ -145,30 +77,15 @@ form {
 
 /* Button styling */
 button[type="submit"] {
-    background-color: #F6AE99;
-    border: none;
-    border-radius: 10px;
-    font-size: 2rem;
-    font-weight: bold;
-    color: #ffffff;
-    padding: 0.2rem 2.5rem;
-    font-family: "Quicksand", sans-serif;
-    align-items: right;
-}
-
-button[type="submit"] {
     padding: 10px 20px;
+    font-weight: bold;
     font-size: 1.1rem;
     color: #fff;
-    background-color: #F6AE99;
+    background-color: #ff9271;
+    font-family: "Quicksand", sans-serif;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.dataContainer button:hover {
-    background-color: #F6AE99;
 }
 
 /* Responsive design */
