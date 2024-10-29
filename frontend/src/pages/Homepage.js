@@ -59,10 +59,10 @@ const Homepage = () => {
             vegan: false,
             halal: false,
             kosher: false,
+            gluten: false,
         },
         allergies: {
             nuts: false,
-            gluten: false,
             dairy: false,
             shellfish: false
         }
@@ -265,6 +265,10 @@ const Homepage = () => {
                                 <input type="checkbox" name="kosher" checked={foodFilters.dietary.kosher} onChange={(filter) => handleFilter(filter, 'dietary')} />
                                 Kosher
                             </label>
+                            <label>
+                                <input type="checkbox" name="gluten" checked={foodFilters.dietary.gluten} onChange={(filter) => handleFilter(filter, 'dietary')} />
+                                Gluten-Free
+                            </label>
                         </div>
 
                         {/* Section for allergy filtering */}
@@ -273,10 +277,6 @@ const Homepage = () => {
                             <label>
                                 <input type="checkbox" name="nuts" checked={foodFilters.allergies.nuts} onChange={(filter) => handleFilter(filter, 'allergies')} />
                                 Nuts
-                            </label>
-                            <label>
-                                <input type="checkbox" name="gluten" checked={foodFilters.allergies.gluten} onChange={(filter) => handleFilter(filter, 'allergies')} />
-                                Gluten
                             </label>
                             <label>
                                 <input type="checkbox" name="dairy" checked={foodFilters.allergies.dairy} onChange={(filter) => handleFilter(filter, 'allergies')} />
@@ -391,6 +391,10 @@ const Homepage = () => {
                             <input type="checkbox" name="kosher" checked={foodFilters.dietary.kosher} onChange={(filter) => handleFilter(filter, 'dietary')} />
                             Kosher
                         </label>
+                        <label>
+                            <input type="checkbox" name="gluten" checked={foodFilters.dietary.gluten} onChange={(filter) => handleFilter(filter, 'dietary')} />
+                            Gluten-Free
+                        </label>
                     </div>
 
                     {/* Section for allergy filtering */}
@@ -399,10 +403,6 @@ const Homepage = () => {
                         <label>
                             <input type="checkbox" name="nuts" checked={foodFilters.allergies.nuts} onChange={(filter) => handleFilter(filter, 'allergies')} />
                             Nuts
-                        </label>
-                        <label>
-                            <input type="checkbox" name="gluten" checked={foodFilters.allergies.gluten} onChange={(filter) => handleFilter(filter, 'allergies')} />
-                            Gluten
                         </label>
                         <label>
                             <input type="checkbox" name="dairy" checked={foodFilters.allergies.dairy} onChange={(filter) => handleFilter(filter, 'allergies')} />
