@@ -71,49 +71,49 @@ function CreateEditCard() {
         <h2> Make A Card </h2>
             <form onSubmit={handleSubmit}>
                 <div className="formGroup">
-                <h4> Net ID: </h4>
+                <h4> Net ID: * <br/>
                 <input 
                     type="text" 
                     name="net_id"
                     value={temp_id} 
-                    onChange={(e) => setNetID(e.target.value)}/>
+                    onChange={(e) => setNetID(e.target.value)}/></h4>
                 </div>
 
                 <div className="formGroup">
-                <h4>Title: </h4>
+                <h4>Title: * <br/>
                 <input 
                     type="text" 
                     name = "title"
                     value={title} 
-                    onChange={(e) => setTitle(e.target.value)}/>
+                    onChange={(e) => setTitle(e.target.value)}/> </h4>
                 </div>
 
                 <div className="formGroup">
-                <h4>Description: </h4>
+                <h4>Description: <br/>
                 <textarea
                     name = "description" 
                     cols="150"
                     rows="40"
                     value={description} 
-                    onChange={(e) => setDescription(e.target.value)}> </textarea>
+                    onChange={(e) => setDescription(e.target.value)}> </textarea> </h4>
                 </div>
 
                 <div className="formGroup">
-                <h4>Image: </h4>
+                <h4>Image: * <br/>
                 <input 
                     type="url" 
                     name = "photo_url"
                     value={photo} 
-                    onChange={(e) => setPhoto(e.target.value)}/>
+                    onChange={(e) => setPhoto(e.target.value)}/> </h4>
                 </div>
 
                 <div className="formGroup">
-                <h4> Location: </h4>
+                <h4> Location: * <br/> 
                 <input 
                     type="text" 
                     name = "location"
                     value={location} 
-                    onChange={(e) => setLocation(e.target.value)}/>
+                    onChange={(e) => setLocation(e.target.value)}/> </h4>
                 </div>
 
                 <div className="formGroup">
@@ -130,11 +130,14 @@ function CreateEditCard() {
                     <label><input type="checkbox" name="allergies" value="Contains Nuts" checked={allergies.includes('Contains Nuts')} onChange={handleAllergiesChange}/> Contains Nuts</label>
                     <label><input type="checkbox" name="allergies" value="Contains Dairy" checked={allergies.includes('Contains Dairy')} onChange={handleAllergiesChange}/> Contains Dairy</label>
                     <label><input type="checkbox" name="allergies" value="Contains Shellfish" checked={allergies.includes('Contains Shellfish')} onChange={handleAllergiesChange}/> Contains Shellfish</label>
+                <br/>
                 </div>         
                <div className="button">
+                <br/>
                 <button type="submit">Add Card</button>
                 </div>
             </form>
+            <br/>
             </div>
             {/* Footer */}
             <footer>
