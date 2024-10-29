@@ -53,6 +53,11 @@ function CreateEditCard() {
         );
     };
 
+    const handleImageChange = (event) => {
+        console.log(event.target.files)
+        setPhoto(URL.createObjectURL(event.target.files[0]));
+    }
+
     const handleSubmit = (e) => {
         e.preventDefault(); // Prevent default form submission
         const cardData = {temp_id, title, description, photo, location, 
@@ -95,10 +100,11 @@ function CreateEditCard() {
 
                 <h4>Image: * <br/>
                 <input 
-                    type="url" 
+                    type="file" 
                     name = "photo_url"
-                    value={photo} 
-                    onChange={(e) => setPhoto(e.target.value)}/> </h4>
+                    onChange={handleImageChange} />
+                    <img src={file}/>
+                </h4>
 
                 <h4> Location: * <br/> 
                 <input 
