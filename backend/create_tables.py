@@ -15,7 +15,7 @@ def main():
             # Create the users table
             cursor.execute('''
                 CREATE TABLE IF NOT EXISTS users (
-                        net_id CHAR(6) PRIMARY KEY NOT NULL,
+                        net_id VARCHAR(10) PRIMARY KEY NOT NULL,
                         full_name VARCHAR(100) NOT NULL,
                         email VARCHAR(100) UNIQUE NOT NULL,
                         dietary_preferences VARCHAR[] DEFAULT '{}',
@@ -31,7 +31,7 @@ def main():
             cursor.execute('''
             CREATE TABLE IF NOT EXISTS cards (
                         card_id SERIAL PRIMARY KEY NOT NULL,
-                        net_id CHAR(6) REFERENCES users(net_id) NOT NULL,
+                        net_id VARCHAR(10) REFERENCES users(net_id) NOT NULL,
                         title VARCHAR(100) NOT NULL,
                         description VARCHAR(250),
                         photo_url VARCHAR(255),
@@ -50,7 +50,7 @@ def main():
             CREATE TABLE IF NOT EXISTS comments(
                         comment_id SERIAL PRIMARY KEY NOT NULL,
                         card_id INT REFERENCES cards(card_id) ON DELETE CASCADE NOT NULL,
-                        net_id CHAR(6) REFERENCES users(net_id) NOT NULL,
+                        net_id VARCHAR(10) REFERENCES users(net_id) NOT NULL,
                         comment VARCHAR(100) NOT NULL,
                         posted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
                         updated_at TIMESTAMP

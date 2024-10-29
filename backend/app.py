@@ -53,6 +53,37 @@ def get_data():
 
             cards = []
             return jsonify(cards)
+        
+#-----------------------------------------------------------------------
+
+# API Route for creating cards
+@app.route('/api/food-cards', methods=['POST'])
+def create_card():
+    with psycopg2.connect(DATABASE_URL) as conn:
+        with conn.cursor as cursor:
+            # fill in with obj later
+            o = objdct code
+            # Execute query to retrieve all active cards' information
+            cursor.execute(
+                'INSERT INTO cards (card_id, net_id, title, description, photo_url, location, dietery_tags, allergies, expiration) VALUES (?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP + interval \'3 hours\')'
+            , [o])
+            rows = cursor.fetchall()
+
+            # Package queried data and send it over
+            cards = []
+            for row in rows:
+                cards.append({
+                    'card_id': row[0],
+                    'title': row[1],
+                    'photo_url': row[2],
+                    'location': row[3],
+                    'dietary_tags': row[4],
+                    'allergies': row[5],
+                    'posted_at': row[6]
+                })
+
+            cards = []
+            return jsonify(cards)
 
 #-----------------------------------------------------------------------
 
