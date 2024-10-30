@@ -1,3 +1,4 @@
+/* Style nav bar */
 .nav {
     height: 5vh;
     display: flex;
@@ -5,15 +6,19 @@
     background-color: #716F81;
     padding: 1vh 2vw;
     box-shadow: 1px 0 3px black;
+    margin-bottom: 0;
+} 
+
+/* Style main content */
+.main {
+    display: flex;
+    flex-direction: column;
+    height: 88vh;
+    width: 100%;
+    overflow-y: scroll;
 }
 
-
-.dataContainer .main {
-    overflow: auto;
-    padding-bottom: 180px;
-    height: 88;
-}
-
+/* Button back to homepage */ 
 .nav h1 {
     margin: 0;
     font-size: 24px;
@@ -23,54 +28,57 @@
 
 /* Page Title */
 h2 {
+    margin-top: 9;
+    margin-bottom: 0;
     text-align: center;
     font-size: 2.5em;
     color: #333333;
-    margin-top: 10px;
 }
 
 /* Form Container */
 form {
     line-height: 1.2em;
-    margin:0px; 
-    padding:0px; 
-    margin-left: 5%;
+    margin-left: 2vw;
     flex-direction: column;
     gap: 0px;
+    margin-bottom: 0;
+    margin-top: 0;
 }
 
-.input-wrap {
-  position: relative;
+/* Style input for netid field */
+.net_id input {
+    width: 130px;
+    height: 3vh;
+    font-family: "Quicksand", sans-serif;
 }
 
-.input-wrap .input {
-  position: absolute;
-  width: 100%;
-  left: 0;
+/* Style input form for title and locations fields */
+.title input, .location input {
+    width: 40%;
+    height: 3vh;
+    font-family: "Quicksand", sans-serif;
 }
 
-.dataContainer label {
-    width: 100%;
-    margin-top: 8px;
-    margin-bottom: 5px;
-    text-align: left;
-    color: #ffffff;
-    font-weight: bold;
+/* Style input for description field */
+.description input {
+    width: 40%;
+    height: 10vh;
+    font-family: "Quicksand", sans-serif;
 }
 
-.dataContainer .dietary {
-    margin-right: 10px;
-    margin-left: 20px;
+/* Style dietary preferences and allergies */
+.dietary label, .allergies label {
+    display: flex;
+    flex-direction: row;
 }
 
-.dataContainer .allergies {
-    margin-right: 10px;
-    margin-left: 20px;
+/* Style labels for dietary preferences and allergies */
+.allergies h4, .dietary h4 {
+    margin-bottom: 0;
 }
 
-/* Button */
+/* Style submit button  */
 .button {
-    margin-top: 1rem;
     display: flex;
     margin-right: 10pc;
     float: left;
@@ -78,7 +86,6 @@ form {
 
 /* Button styling */
 button[type="submit"] {
-    padding: 10px 20px;
     font-weight: bold;
     font-size: 1.1rem;
     color: #fff;
@@ -87,34 +94,43 @@ button[type="submit"] {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    margin-bottom: 10px;
 }
 
-/* Responsive design */
+/* Responsive design for mobile */
 @media screen and (max-width: 840px) {
-    .dataContainer {
-        padding: 1rem;
+    .dietary {
+        display: flex;
+        flex-direction: column;
     }
 
-    button[type="submit"] {
-        font-size: 0.9rem;
-        padding: 0.5rem 1rem;
+    .allergies {
+        display: flex;
+        flex-direction: column;
     }
-}
 
-/* Button specific to mobile view */
-@media screen and (max-width: 460px) {
-    button[type="submit"] {
-        font-size: 0.8rem;
-        padding: 0.5rem 0.75rem;
+    /* Style input for netid field */
+    .net_id input {
+        width: 50%;
+        height: 3vh;
     }
-    .form textarea {
-        display: inline;
-        width: 10%;
-        padding: 4px;
-        box-sizing: border-box;
-        border: 1px solid #ddd;
-        border-radius: 0px;
-        gap: 0px;
-        font-size: 6px;
+
+    /* Style input form for title and locations fields */
+    .title input, .location input {
+        width: 95%;
+        height: 3vh;
     }
+
+    /* Style input for image fields */
+    .photo {
+        max-width: 50vw;
+        max-height: 50vh;
+    }
+
+    /* Style input for description field */
+    .description input {
+        width: 95%;
+        height: 10vh;
+    }
+
 }
