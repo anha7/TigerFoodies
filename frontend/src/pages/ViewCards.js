@@ -93,8 +93,8 @@ const ViewCards = () => {
       </div>
       </nav>
       <h2> My Cards </h2>
+      
       <main>
-
       {/* Display list of active free food cards */}
       <div className="viewcards-card-list">
         {cards.map((card) => (
@@ -115,21 +115,23 @@ const ViewCards = () => {
         ))}
         {/* Fake card for design purposes */}
         {/* Makes the card */}
-        <div className="viewcards-card">
-            <div 
-                className="viewcards-card-image"
-                style={{ backgroundImage: `url(${matheyImage})`}}
-            >
-            </div>
-            <div className="viewcards-card-content"> 
-                <h3>title</h3>
-                <p>location</p>
-                <p>dietary restrictions</p>
-                <p>allergens</p>
-                <p className="posted-at">posted at</p>
+        <div className="viewcards-container">
+            <div className="viewcards-card">
+                <div 
+                    className="viewcards-card-image"
+                    style={{ backgroundImage: `url(${matheyImage})`}}
+                >
+                </div>
+                <div className="viewcards-card-content"> 
+                    <h3>title</h3>
+                    <p>location</p>
+                    <p>dietary restrictions</p>
+                    <p>allergens</p>
+                    <p className="posted-at">posted at</p>
+                </div>
             </div>
             {/* Makes the edit and delete buttons */}
-        <div className="card-actions">
+            <div className="card-actions">
                 <button 
                     className="edit-button"
                     onClick={() => handleEditCard(cards.card_id)}
@@ -145,52 +147,23 @@ const ViewCards = () => {
             </div>
         </div>
         {/* Fake card for design purposes */}
-        <div className="viewcards-card">
-            <div 
-                className="viewcards-card-image"
-                style={{ backgroundImage: `url(${matheyImage})`}}
-            >
-            </div>
-            <div className="viewcards-card-content"> 
-                <h3>title</h3>
-                <p>location</p>
-                <p>dietary restrictions</p>
-                <p>allergens</p>
-                <p className="posted-at">posted at</p>
+        <div className="viewcards-container">
+            <div className="viewcards-card">
+                <div 
+                    className="viewcards-card-image"
+                    style={{ backgroundImage: `url(${matheyImage})`}}
+                >
+                </div>
+                <div className="viewcards-card-content"> 
+                    <h3>title</h3>
+                    <p>location</p>
+                    <p>dietary restrictions</p>
+                    <p>allergens</p>
+                    <p className="posted-at">posted at</p>
+                </div>
             </div>
             {/* Makes the edit and delete buttons */}
-        <div className="card-actions">
-                <button 
-                    className="edit-button"
-                    onClick={() => handleEditCard(cards.card_id)}
-                >
-                    EDIT
-                </button>
-                <button 
-                    className="delete-button"
-                    onClick={() => handleDeleteCard(cards.card_id)}
-                >
-                    DELETE
-                </button>
-            </div>
-        </div>
-        {/* Fake card for design purposes */}
-        {/* Makes the card */}
-        <div className="viewcards-card">
-            <div 
-                className="viewcards-card-image"
-                style={{ backgroundImage: `url(${matheyImage})`}}
-            >
-            </div>
-            <div className="viewcards-card-content"> 
-                <h3>title</h3>
-                <p>location</p>
-                <p>dietary restrictions</p>
-                <p>allergens</p>
-                <p className="posted-at">posted at</p>
-            </div>
-            {/* Makes the edit and delete buttons */}
-        <div className="card-actions">
+            <div className="card-actions">
                 <button 
                     className="edit-button"
                     onClick={() => handleEditCard(cards.card_id)}
@@ -207,21 +180,56 @@ const ViewCards = () => {
         </div>
         {/* Fake card for design purposes */}
         {/* Makes the card */}
-        <div className="viewcards-card">
-            <div 
-                className="viewcards-card-image"
-                style={{ backgroundImage: `url(${matheyImage})`}}
-            >
-            </div>
-            <div className="viewcards-card-content"> 
-                <h3>title</h3>
-                <p>location</p>
-                <p>dietary restrictions</p>
-                <p>allergens</p>
-                <p className="posted-at">posted at</p>
+        <div className="viewcards-container">
+            <div className="viewcards-card">
+                <div 
+                    className="viewcards-card-image"
+                    style={{ backgroundImage: `url(${matheyImage})`}}
+                >
+                </div>
+                <div className="viewcards-card-content"> 
+                    <h3>title</h3>
+                    <p>location</p>
+                    <p>dietary restrictions</p>
+                    <p>allergens</p>
+                    <p className="posted-at">posted at</p>
+                </div>
             </div>
             {/* Makes the edit and delete buttons */}
-        <div className="card-actions">
+            <div className="card-actions">
+                <button 
+                    className="edit-button"
+                    onClick={() => handleEditCard(cards.card_id)}
+                >
+                    EDIT
+                </button>
+                <button 
+                    className="delete-button"
+                    onClick={() => handleDeleteCard(cards.card_id)}
+                >
+                    DELETE
+                </button>
+            </div>
+        </div>
+        {/* Fake card for design purposes */}
+        {/* Makes the card */}
+        <div className="viewcards-container">
+            <div className="viewcards-card">
+                <div 
+                    className="viewcards-card-image"
+                    style={{ backgroundImage: `url(${matheyImage})`}}
+                >
+                </div>
+                <div className="viewcards-card-content"> 
+                    <h3>title</h3>
+                    <p>location</p>
+                    <p>dietary restrictions</p>
+                    <p>allergens</p>
+                    <p className="posted-at">posted at</p>
+                </div>
+            </div>
+            {/* Makes the edit and delete buttons */}
+            <div className="card-actions">
                 <button 
                     className="edit-button"
                     onClick={() => handleEditCard(cards.card_id)}

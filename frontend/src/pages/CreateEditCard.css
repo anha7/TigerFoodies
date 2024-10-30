@@ -11,6 +11,7 @@
 .dataContainer .main {
     overflow: auto;
     padding-bottom: 180px;
+    height: 88;
 }
 
 .nav h1 {

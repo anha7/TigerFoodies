@@ -26,22 +26,37 @@
   font-weight: bold;
 }
 
+/* Style the main content layout */
+main {
+  display: flex;
+  height: 88vh;
+  width: 100%;
+}
+
+.viewcards-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: scroll;
+}
+
 /* Style list of cards */
 .viewcards-card-list {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
-  padding: 1vh 1vw;
-  width: 98%;
+  padding: 1% 1%;
+  width: 100%;
 }
 
 /* Style each card */
-.viewcards-card {
+.viewcards-card { 
   background-color: #F6AE99;
   border-radius: 15px;
   align-items: center;
   justify-content: center;
-  height: 100%;
+  min-height: 20vh;
+  max-height: 50vh;
   /* width: 280px; */
   overflow-y: scroll;
   box-shadow: 0.25px 0.25px 2px black;
@@ -110,13 +125,18 @@
 }
 
 .footer {
-  background-color: #8A7D8A; /* Adjust the color as needed */
-  color: white;
+  background-color: #716F81;
   text-align: center;
-  padding: 10px 20px;
-  position: relative;
-  width: 100%;
+  color: white;
+  padding: 1vh 2vw;
+  position: absolute;
   bottom: 0;
+  width: 96vw;
+  box-shadow: 1px 0 3px black;
+  height: 3vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .footer {
