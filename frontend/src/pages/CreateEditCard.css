@@ -56,8 +56,8 @@ form {
     font-family: "Quicksand", sans-serif;
 }
 
-/* Style input form for title and locations fields */
-.title input, .location input {
+/* Style input form for title, locations, and photo fields */
+.title input, .location input, .photo input {
     width: 40%;
     height: 3vh;
     font-family: "Quicksand", sans-serif;
@@ -119,16 +119,10 @@ button[type="submit"] {
         height: 3vh;
     }
 
-    /* Style input form for title and locations fields */
-    .title input, .location input {
+    /* Style input form for title, locations, and photo fields */
+    .title input, .location input, .photo input {
         width: 95%;
         height: 3vh;
-    }
-
-    /* Style input for image fields */
-    .photo {
-        max-width: 50vw;
-        max-height: 50vh;
     }
 
     /* Style input for description field */
