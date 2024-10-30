@@ -1,9 +1,11 @@
 from flask import Flask, send_from_directory, jsonify
+from dotenv import load_dotenv
 import os
 import psycopg2
 
 #-----------------------------------------------------------------------
 # Initialize the database
+load_dotenv()
 DATABASE_URL = os.environ.get('DATABASE_URL')
 conn = psycopg2.connect(DATABASE_URL)
 
