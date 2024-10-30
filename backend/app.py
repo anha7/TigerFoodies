@@ -115,7 +115,6 @@ def create_card():
         # retrieve json object
         card_data = app.request.get_json()
         # get relevant fields
-        card_id = card_data.get('card_id')
         net_id = card_data.get('net_id')
         title = card_data.get('title')
         description = card_data.get('description')
@@ -123,10 +122,10 @@ def create_card():
         location = card_data.get('location')
         dietary_tags = card_data.get('dietary_tags')
         allergies = card_data.get('allergies')
-        new_card = [card_id, net_id, title, description, photo_url, location, dietary_tags, allergies]
+        new_card = [net_id, title, description, photo_url, location, dietary_tags, allergies]
 
         # check new card attributes (Should we?)
-        if not all([card_id, net_id, title, location]):
+        if not all([net_id, title, location]):
             return jsonify("error: Missing required fields")
         
         # connect to database
@@ -135,7 +134,7 @@ def create_card():
                 # define insertion query
                 insertion_query = 'INSERT INTO cards (card_id, net_id, title, description, photo_url'
                 insertion_query += ', location, dietery_tags, allergies, expiration, posted_at) VALUES'
-                insertion_query += ' (%s, %s, %s, %s, %s, %s, %s, %s, CURRENT_TIMESTAMP + interval \'3 hours\', CURRENT_TIMESTAMP)'
+                insertion_query += ' (%s, %s, %s, %s, %s, %s, %s, CURRENT_TIMESTAMP + interval \'3 hours\', CURRENT_TIMESTAMP)'
                 # Execute query to create this new card 
                 cursor.execute(insertion_query, new_card)
                 # Commit to database
@@ -148,13 +147,12 @@ def create_card():
 
 
 # API Route for editing cards
-@app.route('/api/cards/id', methods=['PUT'])
-def edit_card():
+@app.route('/api/cards/<int:card_id>', methods=['PUT'])
+def edit_card(card_id):
     try:
         # retrieve json object
         card_data = app.request.get_json()
         # get relevant fields
-        card_id = card_data.get('card_id')
         title = card_data.get('title')
         description = card_data.get('description')
         photo_url = card_data.get('photo_url')
@@ -164,7 +162,7 @@ def edit_card():
         new_card = [title, description, photo_url, location, dietary_tags, allergies, card_id]
 
         # check new card attributes (Should we?)
-        if not all([card_id, title, location]):
+        if not all([title, location]):
             return jsonify("error: Missing required fields")
         
         # connect to database
