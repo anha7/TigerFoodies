@@ -10,42 +10,54 @@ import matheyImage from './media/mathey.png';
 
 const ViewCards = () => {
     // State to store fetched cards
+    const [user_id, setNetID] = useState("");
     const [cards, setCards] = useState([]);
     const navigate = useNavigate();
 
     // Hook that fetches user's cards from the back-end
-    useEffect(() => {
-    const fetchCards = async () => {
-        try{
-            // Fetch and wait for card data from backend
-            const response = await fetch('/api/cards');
+    const fetchUserCards = async () => {
+        try {
+            const response = await fetch('/api/cards/id', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ user_id: user_id }),
+            });
             const data = await response.json();
-            // Store fetched data in state
             setCards(data);
-        } catch(error) {
-            console.error('Error fetching cards:', error);
+        } catch (error) {
+            console.error('Error fetching user cards:', error);
         }
     };
 
-    fetchCards();
-    }, []);
+    // Handle sending net_id to the backend to retrieve cards
+    const handleSendNetId = async () => {
+        await fetchUserCards();
+    }
 
     // Handle deleting cards
     const handleDeleteCard = async (cardId) => {
         try {
-            const response = await fetch(`/api/cards/${cardId}`, { method: 'DELETE' });
+            const response = await fetch('/api/cards', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ card_id: cardId }), // Send card_id in the body
+            });
             if (response.ok) {
-            setCards(cards.filter(card => card.card_id !== cardId));
+                setCards(cards.filter((card) => card.card_id !== cardId));
             } else {
-            console.warn('Backend delete endpoint not available.')
+                console.warn('Backend delete endpoint not available.');
             }
         } catch (error) {
             console.error('Error deleting card:', error);
         }
-        };
+    };
 
-        // Handle editing carda
-        const handleEditCard = (cardId) => {
+    // Handle editing cards
+    const handleEditCard = (cardId) => {
         navigate(`/edit/${cardId}`, {state: {cardId}});
     };
 
@@ -62,6 +74,21 @@ const ViewCards = () => {
             {/* Main content container for user's card dashboard */}
             <div className="viewcards-main">
                 <div className="page-name"> <h2> My Cards </h2> </div>
+                <div className='logIn'>
+                    <h4> Net ID:
+                        <input
+                            required
+                            type="text" 
+                            name="user_id"
+                            value={user_id}
+                            onChange={(e) => setNetID(e.target.value)}
+                        /> 
+                        <button 
+                            type="submit" onClick={() => handleSendNetId()}>
+                                Submit
+                        </button>
+                    </h4>
+                </div> 
                 
                 {/* Display list of user's free food cards */}
                 <div className="viewcards-card-list">

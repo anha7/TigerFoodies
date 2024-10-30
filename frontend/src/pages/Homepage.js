@@ -132,9 +132,11 @@ const Homepage = () => {
         if(isHamburgerOpen) {
             mobileNavbar.style.height = "5vh";
             mobileNavbar.style.top = "7vh";
+            mobileNavbar.style.zIndex = "0";
         } else {
             mobileNavbar.style.height = "0px";
             mobileNavbar.style.top = "3.5vh";
+            mobileNavbar.style.zIndex = "-1";
         }
     }
 

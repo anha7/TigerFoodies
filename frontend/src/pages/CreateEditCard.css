@@ -9,6 +9,10 @@
     margin-bottom: 0;
 } 
 
+.nav a {
+    text-decoration: none;
+}
+
 /* Style main content */
 .main {
     display: flex;
@@ -46,7 +50,7 @@ form {
 }
 
 /* Style input for netid field */
-.net_id input {
+.user_id input {
     width: 130px;
     height: 3vh;
     font-family: "Quicksand", sans-serif;
@@ -67,13 +71,13 @@ form {
 }
 
 /* Style dietary preferences and allergies */
-.dietary label, .allergies label {
+.dietary_tags label, .allergies label {
     display: flex;
     flex-direction: row;
 }
 
 /* Style labels for dietary preferences and allergies */
-.allergies h4, .dietary h4 {
+.allergies h4, .dietary_tags h4 {
     margin-bottom: 0;
 }
 
@@ -99,7 +103,7 @@ button[type="submit"] {
 
 /* Responsive design for mobile */
 @media screen and (max-width: 840px) {
-    .dietary {
+    .dietary_tags {
         display: flex;
         flex-direction: column;
     }
@@ -110,7 +114,7 @@ button[type="submit"] {
     }
 
     /* Style input for netid field */
-    .net_id input {
+    .user_id input {
         width: 50%;
         height: 3vh;
     }
@@ -132,5 +136,7 @@ button[type="submit"] {
         width: 95%;
         height: 10vh;
     }
-
+    button[type="submit"] {
+        float: center;
+    }
 }

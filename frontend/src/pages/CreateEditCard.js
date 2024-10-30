@@ -8,34 +8,34 @@ import { Link } from 'react-router-dom';
 import './CreateEditCard.css'; // Import custom CSS file
 
 
-// Functional component that retrieves current time of day
-const getTime = () => {
-    const currentDate = new Date();
+// // Functional component that retrieves current time of day
+// const getTime = () => {
+//     const currentDate = new Date();
 
-    // Convert UTC time to Eastern Time (Princeton's timezone)
-    const estOffset = -5;
-    const edtOffset = -4; // Different offset for daylight savings
+//     // Convert UTC time to Eastern Time (Princeton's timezone)
+//     const estOffset = -5;
+//     const edtOffset = -4; // Different offset for daylight savings
 
-    // Checks whether it is currently daylight savings time
-    const isDaylightSaving = currentDate.toLocaleString(
-        'en-US', { timeZoneName: 'short'}).includes('EDT');
-    const offset = isDaylightSaving ? edtOffset : estOffset;
+//     // Checks whether it is currently daylight savings time
+//     const isDaylightSaving = currentDate.toLocaleString(
+//         'en-US', { timeZoneName: 'short'}).includes('EDT');
+//     const offset = isDaylightSaving ? edtOffset : estOffset;
 
-    // Adjusts timezone to Eastern Time
-    const timeOfDay = new Date(
-        currentDate.getTime() + offset * 60 * 60 * 1000).getUTCHours();
+//     // Adjusts timezone to Eastern Time
+//     const timeOfDay = new Date(
+//         currentDate.getTime() + offset * 60 * 60 * 1000).getUTCHours();
 
-    // Checks current time of day
-    return timeOfDay
-};
+//     // Checks current time of day
+//     return timeOfDay
+// };
 
 function CreateEditCard() {
-    const [temp_id, setNetID] = useState('')
+    const [user_id, setNetID] = useState('')
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
     const [photo, setPhoto] = useState('')
     const [location, setLocation] = useState('')
-    const [dietary, setDietary] = useState([])
+    const [dietary_tags, setDietary] = useState([])
     const [allergies, setAllergies] = useState([])
     // const [postTime, setPostTime] = useState('')
     // const [updateTime, setUpdateTime] = useState('')
@@ -92,14 +92,30 @@ function CreateEditCard() {
     // };
 
     // Handles submitting the card to the database
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault(); // Prevent default form submission
-        const cardData = {net_id: temp_id, title: title, 
+        const cardData = {user_id: user_id, title: title, 
             description: description, photo_url: photo, 
-            location: location, dietary: dietary, 
-            allergie: allergies, expiration: getTime + 3, 
-            posted_at: getTime, updated_at: getTime}
-        console.log(cardData); // Handle form data
+            location: location, dietary_tags: dietary_tags, 
+            allergie: allergies};
+        
+        try {
+            const response = await fetch('/api/cards', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(cardData), // Send card data as JSON
+            });
+
+            if (response.ok) {
+                console.log('Card successfully created');
+            } else {
+                console.error('Error creating card');
+            }
+        } catch (error) {
+            console.error('Error submitting the card:', error);
+        }
     };
 
     return (
@@ -117,13 +133,13 @@ function CreateEditCard() {
 
                 <form onSubmit={handleSubmit}>
                     {/* Temporary NetID field until we set up CAS */}
-                    <div className="net_id">
+                    <div className="user_id">
                         <h4> Net ID: * <br/>
                         <input
                             required
                             type="text" 
-                            name="net_id"
-                            value={temp_id} 
+                            name="user_id"
+                            value={user_id} 
                             onChange={(e) => setNetID(e.target.value)}/></h4>
                     </div>
 
@@ -164,13 +180,13 @@ function CreateEditCard() {
                     </div>
 
                     {/* Dietary preferences field */}
-                    <div className="dietary">
+                    <div className="dietary_tags">
                         <h4>Dietary Tags (Select all that apply): </h4>
-                        <label><input type="checkbox" name="dietary" value="Halal" checked={dietary.includes('Halal')} onChange={handleDietaryChange}/> Halal</label>
-                        <label><input type="checkbox" name="dietary" value="Kosher" checked={dietary.includes('Kosher')} onChange={handleDietaryChange}/> Kosher</label>
-                        <label><input type="checkbox" name="dietary" value="Vegetarian" checked={dietary.includes('Vegetarian')} onChange={handleDietaryChange}/> Vegetarian</label>
-                        <label><input type="checkbox" name="dietary" value="Vegan" checked={dietary.includes('Vegan')} onChange={handleDietaryChange}/> Vegan</label>
-                        <label><input type="checkbox" name="dietary" value="Gluten Free" checked={dietary.includes('Gluten Free')} onChange={handleDietaryChange}/> Gluten Free</label>
+                        <label><input type="checkbox" name="dietary_tags" value="Halal" checked={dietary_tags.includes('Halal')} onChange={handleDietaryChange}/> Halal</label>
+                        <label><input type="checkbox" name="dietary_tags" value="Kosher" checked={dietary_tags.includes('Kosher')} onChange={handleDietaryChange}/> Kosher</label>
+                        <label><input type="checkbox" name="dietary_tags" value="Vegetarian" checked={dietary_tags.includes('Vegetarian')} onChange={handleDietaryChange}/> Vegetarian</label>
+                        <label><input type="checkbox" name="dietary_tags" value="Vegan" checked={dietary_tags.includes('Vegan')} onChange={handleDietaryChange}/> Vegan</label>
+                        <label><input type="checkbox" name="dietary_tags" value="Gluten Free" checked={dietary_tags.includes('Gluten Free')} onChange={handleDietaryChange}/> Gluten Free</label>
                     </div>
                     
                     {/* Allergens field */}
@@ -211,15 +227,3 @@ function CreateEditCard() {
 };
 
 export default CreateEditCard;
-
-    // card_id SERIAL PRIMARY KEY NOT NULL,
-    // net_id CHAR(6) REFERENCES users(net_id) NOT NULL,
-    // title VARCHAR(100) NOT NULL,
-    // description VARCHAR(250),
-    // photo_url VARCHAR(255),
-    // location VARCHAR(255) NOT NULL,
-    // dietary_tags VARCHAR[] DEFAULT '{}',
-    // allergies VARCHAR[] DEFAULT '{}',
-    // expiration TIMESTAMP NOT NULL,
-    // posted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    // updated_at TIMESTAMP
