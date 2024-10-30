@@ -82,7 +82,7 @@ const Homepage = () => {
         const fetchCards = async () => {
             try{
                 // Fetch and wait for card data from backend
-                const response = await fetch('/api/cards');
+                const response = await fetch(`/api/cards`);
                 const data = await response.json();
                 // Store fetched data in state
                 setCards(data);

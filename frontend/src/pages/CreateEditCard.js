@@ -94,13 +94,18 @@ function CreateEditCard() {
     // Handles submitting the card to the database
     const handleSubmit = async (e) => {
         e.preventDefault(); // Prevent default form submission
-        const cardData = {user_id: user_id, title: title, 
-            description: description, photo_url: photo, 
-            location: location, dietary_tags: dietary_tags, 
-            allergie: allergies};
+        const cardData = {
+            user_id: user_id,
+            title: title, 
+            description: description,
+            photo_url: photo, 
+            location: location,
+            dietary_tags: dietary_tags, 
+            allergies: allergies
+        };
         
         try {
-            const response = await fetch('/api/cards', {
+            const response = await fetch(`/api/cards`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

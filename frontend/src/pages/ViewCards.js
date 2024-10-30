@@ -8,16 +8,20 @@ import { Link, useNavigate } from 'react-router-dom';
 import './ViewCards.css'; // Import custom CSS file
 import matheyImage from './media/mathey.png';
 
+//----------------------------------------------------------------------
+
 const ViewCards = () => {
     // State to store fetched cards
-    const [user_id, setNetID] = useState("");
+    const [user_id, setUserId] = useState("");
     const [cards, setCards] = useState([]);
     const navigate = useNavigate();
 
-    // Hook that fetches user's cards from the back-end
+//----------------------------------------------------------------------
+
+    // Send request to fetch user's cards from the back-end
     const fetchUserCards = async () => {
         try {
-            const response = await fetch('/api/cards/id', {
+            const response = await fetch(`/api/cards/?${user_id}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -36,18 +40,20 @@ const ViewCards = () => {
         await fetchUserCards();
     }
 
-    // Handle deleting cards
-    const handleDeleteCard = async (cardId) => {
+//----------------------------------------------------------------------
+
+    // Send request to delete cards
+    const handleDeleteCard = async (card_id) => {
         try {
-            const response = await fetch('/api/cards', {
+            const response = await fetch(`/api/cards/${card_id}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ card_id: cardId }), // Send card_id in the body
+                body: JSON.stringify({ card_id: card_id }), // Send card_id in the body
             });
             if (response.ok) {
-                setCards(cards.filter((card) => card.card_id !== cardId));
+                setCards(cards.filter((card) => card.card_id !== card_id));
             } else {
                 console.warn('Backend delete endpoint not available.');
             }
@@ -56,10 +62,14 @@ const ViewCards = () => {
         }
     };
 
+//----------------------------------------------------------------------
+
     // Handle editing cards
     const handleEditCard = (cardId) => {
         navigate(`/edit/${cardId}`, {state: {cardId}});
     };
+
+//----------------------------------------------------------------------
 
     return (
         <div className="viewcards">
@@ -84,7 +94,7 @@ const ViewCards = () => {
                             type="text" 
                             name="user_id"
                             value={user_id}
-                            onChange={(e) => setNetID(e.target.value)}
+                            onChange={(e) => setUserId(e.target.value)}
                         /> 
                         <button 
                             type="submit" onClick={() => handleSendNetId()}>
