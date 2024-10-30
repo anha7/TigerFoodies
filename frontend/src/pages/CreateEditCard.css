@@ -50,7 +50,7 @@ form {
 }
 
 /* Style input for netid field */
-.user_id input {
+.net_id input {
     width: 130px;
     height: 3vh;
     font-family: "Quicksand", sans-serif;
@@ -114,7 +114,7 @@ button[type="submit"] {
     }
 
     /* Style input for netid field */
-    .user_id input {
+    .net_id input {
         width: 50%;
         height: 3vh;
     }

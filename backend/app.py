@@ -1,9 +1,10 @@
-from flask import Flask, send_from_directory, jsonify
+from flask import Flask, send_from_directory, jsonify, request
 from dotenv import load_dotenv
 import os
 import psycopg2
-
+import sys
 #-----------------------------------------------------------------------
+
 # Initialize the database
 load_dotenv()
 DATABASE_URL = os.environ.get('DATABASE_URL')
@@ -26,18 +27,18 @@ def serve_static_files(path):
 
 #-----------------------------------------------------------------------
 
-# API Route for fetching cards for the homepage
+# API Route for fetching all active cards for the homepage
 @app.route('/api/cards', methods=['GET'])
 def get_data():
     try:
         with psycopg2.connect(DATABASE_URL) as conn:
             with conn.cursor() as cursor:
                 
-                # Execute query to retrieve all active cards' information
+                # Execute query to retrieve all active cards information
                 cursor.execute('''
-                    'SELECT card_id, title, photo_url, location, 
+                    SELECT card_id, title, photo_url, location, 
                     dietary_tags, allergies, posted_at
-                    FROM cards;'
+                    FROM cards;
                 ''')
                 rows = cursor.fetchall()
 
@@ -57,29 +58,26 @@ def get_data():
                 return jsonify(cards)
     except Exception as ex:
         print(ex)
+        return jsonify([False, str(ex)])
         
 #-----------------------------------------------------------------------
         
-# API Route for retrieving cards from user
-@app.route('/api/cards/<int:user_id>', methods=['GET'])
-def retrieve_user_cards(user_id):
+# API Route for retrieving cards for a specific user
+@app.route('/api/cards/<string:net_id>', methods=['GET'])
+def retrieve_user_cards(net_id):
     try:
-        # # check new card attributes (Should we?)
-        # if not user_id:
-        #     return jsonify("error: Missing required fields")
-        
-        # Connect to the database and establish a cursor
+        # Connect to the database a nd establish a cursor
         with psycopg2.connect(DATABASE_URL) as conn:
             with conn.cursor() as cursor:
                 # Define insertion query
                 insertion_query = '''SELECT card_id, title, photo_url, 
                     location, dietary_tags, allergies, 
                     posted_at FROM cards
+                    WHERE net_id = %s;
                 '''
-                insertion_query += 'WHERE user_id = %s;'
-            
+                            
                 # Execute query to retrieve user's cards
-                cursor.execute(insertion_query, [user_id])
+                cursor.execute(insertion_query, [net_id])
                 rows = cursor.fetchall()
 
                 # Package queried data and send it over
@@ -98,6 +96,7 @@ def retrieve_user_cards(user_id):
                 return jsonify(cards)
     except Exception as ex:
         print(ex)
+        return jsonify([False, str(ex)])
 
 #----------------------------------------------------------------------- 
 
@@ -116,8 +115,10 @@ def delete_card(card_id):
 
                 # Commit to the database
                 conn.commit()
+            return jsonify([True, 'Successfully removed the card!'])
     except Exception as ex:
-        print(ex)
+        print(ex, file = sys.stderr)
+        return jsonify([False, str(ex)])
 
 #-----------------------------------------------------------------------
         
@@ -126,7 +127,7 @@ def delete_card(card_id):
 def create_card():
     try:
         # Retrieve JSON object containing new card data
-        card_data = app.request.get_json()
+        card_data = request.get_json()
 
         # Parse relevant fields
         net_id = card_data.get('net_id')
@@ -152,7 +153,7 @@ def create_card():
                 # Define insertion query
                 insertion_query = '''INSERT INTO cards (net_id, 
                     title, description, photo_url, location, 
-                    dietery_tags, allergies, expiration, posted_at)
+                    dietary_tags, allergies, expiration, posted_at)
                     VALUES (%s, %s, %s, %s, %s, %s, %s, 
                     CURRENT_TIMESTAMP + interval \'3 hours\', 
                     CURRENT_TIMESTAMP)
@@ -163,8 +164,11 @@ def create_card():
 
                 # Commit to the database
                 conn.commit()
+
+                return jsonify([True, 'Successfully created a card!'])
     except Exception as ex:
         print(ex)
+        return jsonify([False, str(ex)])
 
 #-----------------------------------------------------------------------
 
@@ -193,7 +197,7 @@ def create_card():
 #             with conn.cursor() as cursor:
 #                 # define update query
 #                 update_query = 'UPDATE cards SET (title, description, photo_url'
-#                 update_query += ', location, dietery_tags, allergies, updated_at)'
+#                 update_query += ', location, dietary_tags, allergies, updated_at)'
 #                 update_query += ' = (%s, %s, %s, %s, %s, %s, CURRENT_TIMESTAMP)'
 #                 update_query += ' WHERE card_id = %s'
 #                 # Execute query to update row in the database

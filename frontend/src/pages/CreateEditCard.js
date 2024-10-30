@@ -30,7 +30,7 @@ import './CreateEditCard.css'; // Import custom CSS file
 // };
 
 function CreateEditCard() {
-    const [user_id, setNetID] = useState('');
+    const [net_id, setNetID] = useState('');
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [photo, setPhoto] = useState('');
@@ -97,7 +97,7 @@ function CreateEditCard() {
     const handleSubmit = async (e) => {
         e.preventDefault(); // Prevent default form submission
         const cardData = {
-            user_id: user_id,
+            net_id: net_id,
             title: title, 
             description: description,
             photo_url: photo, 
@@ -141,13 +141,13 @@ function CreateEditCard() {
 
                 <form onSubmit={handleSubmit}>
                     {/* Temporary NetID field until we set up CAS */}
-                    <div className="user_id">
+                    <div className="net_id">
                         <h4> Net ID: * <br/>
                         <input
                             required
                             type="text" 
-                            name="user_id"
-                            value={user_id} 
+                            name="net_id"
+                            value={net_id} 
                             onChange={(e) => setNetID(e.target.value)}/></h4>
                     </div>
 
