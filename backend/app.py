@@ -27,37 +27,102 @@ def serve_static_files(path):
 # API Route for fetching cards for the homepage
 @app.route('/api/cards', methods=['GET'])
 def get_data():
-    with psycopg2.connect(DATABASE_URL) as conn:
-        with conn.cursor as cursor:
-            
-            # Execute query to retrieve all active cards' information
-            cursor.execute('''
-                'SELECT card_id, title, photo_url, location, 
-                dietary_tags, allergies, posted_at
-                FROM cards;'
-            ''')
-            rows = cursor.fetchall()
+    try:
+        with psycopg2.connect(DATABASE_URL) as conn:
+            with conn.cursor as cursor:
+                
+                # Execute query to retrieve all active cards' information
+                cursor.execute('''
+                    'SELECT card_id, title, photo_url, location, 
+                    dietary_tags, allergies, posted_at
+                    FROM cards;'
+                ''')
+                rows = cursor.fetchall()
 
-            # Package queried data and send it over
-            cards = []
-            for row in rows:
-                cards.append({
-                    'card_id': row[0],
-                    'title': row[1],
-                    'photo_url': row[2],
-                    'location': row[3],
-                    'dietary_tags': row[4],
-                    'allergies': row[5],
-                    'posted_at': row[6]
-                })
+                # Package queried data and send it over
+                cards = []
+                for row in rows:
+                    cards.append({
+                        'card_id': row[0],
+                        'title': row[1],
+                        'photo_url': row[2],
+                        'location': row[3],
+                        'dietary_tags': row[4],
+                        'allergies': row[5],
+                        'posted_at': row[6]
+                    })
 
-            cards = []
-            return jsonify(cards)
+                cards = []
+                return jsonify(cards)
+    except Exception as ex:
+        print(ex)
         
 #-----------------------------------------------------------------------
+        
 
+# API Route for retrieving cards from user
+@app.route('/api/cards/id', methods=['GET'])
+def retrieve_user_cards():
+    try:
+        # retrieve json object
+        card_data = app.request.get_json()
+        # get relevant fields
+        user_id = card_data.get('user_id')
+
+        # check new card attributes (Should we?)
+        if not user_id:
+            return jsonify("error: Missing required fields")
+        
+        # connect to database
+        with psycopg2.connect(DATABASE_URL) as conn:
+            with conn.cursor as cursor:
+                # define insertion query
+                insertion_query = ''' SELECT card_id, title, photo_url, location, 
+                    dietary_tags, allergies, posted_at FROM cards '''
+                insertion_query += ' WHERE user_id = ?;'
+                # Execute query to retrieve all active cards' information
+                cursor.execute(insertion_query, [user_id])
+                row = cursor.fetchall()
+                return jsonify(row)
+
+    except Exception as ex:
+        print(ex)
+
+#-----------------------------------------------------------------------
+        
+
+# API Route for deleting cards
+# is the first arg of route wrong?
+@app.route('/api/cards', methods=['DELETE'])
+def delete_card():
+    try:
+        # retrieve json object
+        card_data = app.request.get_json()
+        # get relevant fields
+        card_id = card_data.get('card_id')
+
+        # check new card attributes (Should we?)
+        if not card_id:
+            return jsonify("error: Missing required fields")
+        
+        # connect to database
+        with psycopg2.connect(DATABASE_URL) as conn:
+            with conn.cursor as cursor:
+                # define deletion query
+                deletion_query = 'DELETE FROM cards WHERE card_id = ?;'
+                # Execute query to retrieve all active cards' information
+                cursor.execute(deletion_query, [card_id])
+                # Commit to database
+                conn.commit()
+
+    except Exception as ex:
+        print(ex)
+
+#-----------------------------------------------------------------------
+
+        
 # API Route for creating cards
-@app.route('/api/food-cards', methods=['POST'])
+@app.route('/api/cards', methods=['POST'])
 def create_card():
     try:
         # retrieve json object
@@ -94,6 +159,75 @@ def create_card():
 
 #-----------------------------------------------------------------------
 
+
+# API Route for editing cards
+@app.route('/api/edit', methods=['PUT'])
+def edit_card():
+    try:
+        # retrieve json object
+        card_data = app.request.get_json()
+        # get relevant fields
+        card_id = card_data.get('card_id')
+        title = card_data.get('title')
+        description = card_data.get('description')
+        photo_url = card_data.get('photo_url')
+        location = card_data.get('location')
+        dietary_tags = card_data.get('dietary_tags')
+        allergies = card_data.get('allergies')
+        new_card = [title, description, photo_url, location, dietary_tags, allergies, card_id]
+
+        # check new card attributes (Should we?)
+        if not all([card_id, title, location]):
+            return jsonify("error: Missing required fields")
+        
+        # connect to database
+        with psycopg2.connect(DATABASE_URL) as conn:
+            with conn.cursor as cursor:
+                # define insertion query
+                insertion_query = 'UPDATE cards SET (title, description, photo_url'
+                insertion_query += ', location, dietery_tags, allergies, updated_at)'
+                insertion_query += ' = (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)'
+                insertion_query += ' WHERE card_id = ?'
+                # Execute query to retrieve all active cards' information
+                cursor.execute(insertion_query, new_card)
+                # Commit to database
+                conn.commit()
+
+    except Exception as ex:
+        print(ex)
+
+#-----------------------------------------------------------------------
+        
+# API Route for retrieving cards
+# is the first arg of route wrong?
+@app.route('/api/cards/id', methods=['GET'])
+def retrieve_card():
+    try:
+        # retrieve json object
+        card_data = app.request.get_json()
+        # get relevant fields
+        card_id = card_data.get('card_id')
+
+        # check new card attributes (Should we?)
+        if not card_id:
+            return jsonify("error: Missing required fields")
+        
+        # connect to database
+        with psycopg2.connect(DATABASE_URL) as conn:
+            with conn.cursor as cursor:
+                # define insertion query
+                retrieval_query = ''' SELECT card_id, title, photo_url, location, 
+                    dietary_tags, allergies, posted_at FROM cards '''
+                retrieval_query += ' WHERE card_id = ?;'
+                # Execute query to retrieve all active cards' information
+                cursor.execute(retrieval_query, [card_id])
+                row = cursor.fetchall()
+                return jsonify(row)
+
+    except Exception as ex:
+        print(ex)
+
+#-----------------------------------------------------------------------
 # Start the Flask app
 if __name__ == '__main__':
     app.run()
