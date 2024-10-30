@@ -171,8 +171,8 @@ main {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 1rem;
-    padding: 1vh 1vw;
-    width: 98%;
+    padding: 1% 1%;
+    width: 95%;
 }
 
 /* Style each card */
