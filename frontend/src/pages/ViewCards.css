@@ -1,22 +1,24 @@
-/*Navigation to homepage*/
-.navigationbar {
+/* Style nav bar */
+.nav {
   height: 5vh;
   display: flex;
   align-items: center;
-  justify-content: space-between; 
   background-color: #716F81;
   padding: 1vh 2vw;
   box-shadow: 1px 0 3px black;
-}
-.navigationbar h1 {
+  margin-bottom: 0;
+} 
+
+/* Button back to homepage */ 
+.viewcards-header {
   margin: 0;
   font-size: 24px;
   color: white;
-  background-color: transparent;
   text-decoration: none;
-  font-weight: bold;
 }
-.login-box{
+
+/* Style temporary net_id entry field */
+.login-box {
   color: white;
   font-size: 1em;
   text-decoration: none;
@@ -26,94 +28,53 @@
   font-weight: bold;
 }
 
+/* Style page name */
+.page-name {
+  margin-top: 3vh;
+  margin-bottom: 3vh;
+}
+
 /* Style the main content layout */
-main {
+.viewcards-main {
   display: flex;
+  flex-direction: column;
   height: 88vh;
   width: 100%;
+  overflow-y: scroll;
 }
 
 .viewcards-container {
   display: flex;
   flex-direction: column;
   height: 100%;
-  overflow-y: scroll;
 }
 
 /* Style list of cards */
 .viewcards-card-list {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1rem;
-  padding: 1% 1%;
-  width: 100%;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1vw;
+  padding: 1vh 1vw;
+  width: 98vw;
 }
 
-/* Style each card */
-.viewcards-card { 
-  background-color: #F6AE99;
-  border-radius: 15px;
-  align-items: center;
-  justify-content: center;
-  min-height: 20vh;
-  max-height: 50vh;
-  /* width: 280px; */
-  overflow-y: scroll;
-  box-shadow: 0.25px 0.25px 2px black;
-}
-
-/* Style the card's image */
-.viewcards-card-image {
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  height: 125px;
-}
-
-/* Style the text content of the cards */
-.viewcards-card-content {
-  display: flex;
-  flex-direction: column;
-  padding: 1rem;
-}
-
-.card h3 {
-  text-align: left;
-  font-size: 1.3rem;
-  margin-top: 0.5px;
-  margin-bottom: 0;
-}
-
-.card p {
-  text-align: left;
-  margin-bottom: 0.25rem;
-  margin-top: 0.2rem;
-}
-
-.posted-at {
-  color: #716F81;
-  font-style: italic;
-  align-self: end;
-  font-size: 0.75rem;
-}
-
-/* Card actions */
+/* Style edit and delete buttons */
 .card-actions {
   display: flex;
-  gap: 10px;
+  gap: 4vw;
   margin-top: 10px;
+  margin-bottom: 3vh;
   justify-content: center;
 }
 
-/* Button styling */
 .edit-button, .delete-button {
-  padding: 5px 15px;
   font-size: 0.9em;
   border: none;
   border-radius: 20px; /* Rounded buttons */
   cursor: pointer;
   background-color: white;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 1vh 1vw;
 }
 
 .edit-button {
@@ -124,22 +85,26 @@ main {
   color: #f44336; /* Red text for Delete */
 }
 
-.footer {
-  background-color: #716F81;
-  text-align: center;
-  color: white;
-  padding: 1vh 2vw;
-  position: absolute;
-  bottom: 0;
-  width: 96vw;
-  box-shadow: 1px 0 3px black;
-  height: 3vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* Media query for screens between 840px and 1240px */
+@media screen and (max-width: 1280px) {
+  /* On a smaller screen, less cards appear in one row */
+  .viewcards-card-list {
+      grid-template-columns: repeat(4, 1fr);
+  }
 }
 
-.footer {
-  font-size: 12px;
-  font-style: italic;
+/* Media query for screens between 480px and 840px */
+@media screen and (max-width: 840px) {
+  /* On a smaller screen, less cards appear in one row */
+  .viewcards-card-list {
+      grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Media query for screens between 0px and 480px */
+@media screen and (max-width: 460px) {
+  /* On a smaller screen, less cards appear in one row */
+  .viewcards-card-list {
+      grid-template-columns: repeat(1, 1fr);
+  }
 }
