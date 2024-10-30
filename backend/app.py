@@ -77,8 +77,8 @@ def retrieve_user_cards():
         with psycopg2.connect(DATABASE_URL) as conn:
             with conn.cursor as cursor:
                 # define insertion query
-                insertion_query = ''' SELECT card_id, title, photo_url, location, 
-                    dietary_tags, allergies, posted_at FROM cards '''
+                insertion_query = '''SELECT card_id, title, photo_url, location, 
+                    dietary_tags, allergies, posted_at FROM cards'''
                 insertion_query += ' WHERE user_id = ?;'
                 # Execute query to retrieve all active cards' information
                 cursor.execute(insertion_query, [user_id])
@@ -161,7 +161,7 @@ def create_card():
 
 
 # API Route for editing cards
-@app.route('/api/edit', methods=['PUT'])
+@app.route('/api/cards/id', methods=['PUT'])
 def edit_card():
     try:
         # retrieve json object
