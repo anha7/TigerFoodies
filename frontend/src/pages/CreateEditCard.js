@@ -4,7 +4,7 @@
 
 // Imports
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import './CreateEditCard.css'; // Import custom CSS file
 
 
@@ -30,15 +30,17 @@ import './CreateEditCard.css'; // Import custom CSS file
 // };
 
 function CreateEditCard() {
-    const [user_id, setNetID] = useState('')
-    const [title, setTitle] = useState('')
-    const [description, setDescription] = useState('')
-    const [photo, setPhoto] = useState('')
-    const [location, setLocation] = useState('')
-    const [dietary_tags, setDietary] = useState([])
-    const [allergies, setAllergies] = useState([])
+    const [user_id, setNetID] = useState('');
+    const [title, setTitle] = useState('');
+    const [description, setDescription] = useState('');
+    const [photo, setPhoto] = useState('');
+    const [location, setLocation] = useState('');
+    const [dietary_tags, setDietary] = useState([]);
+    const [allergies, setAllergies] = useState([]);
     // const [postTime, setPostTime] = useState('')
     // const [updateTime, setUpdateTime] = useState('')
+
+    const navigate = useNavigate(); // Initialize useNavigate
 
     // Sets dietary preferences
     const handleDietaryChange = (event) => {
@@ -115,6 +117,7 @@ function CreateEditCard() {
 
             if (response.ok) {
                 console.log('Card successfully created');
+                navigate('/'); // Redirect to homepage after successful card creation
             } else {
                 console.error('Error creating card');
             }
