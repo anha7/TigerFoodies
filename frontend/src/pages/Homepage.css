@@ -411,4 +411,9 @@ footer p {
     .search-icon {
         padding-top: 8px;
     }
+
+    /* Center greeting on mobile screens */
+    .greeting {
+        text-align: center;
+    }
 }

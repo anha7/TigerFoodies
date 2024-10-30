@@ -73,9 +73,12 @@ const ViewCards = () => {
             
             {/* Main content container for user's card dashboard */}
             <div className="viewcards-main">
+                {/* Page name */}
                 <div className="page-name"> <h2> My Cards </h2> </div>
+
+                {/* Temporarily manually submit your Net ID */}
                 <div className='logIn'>
-                    <h4> Net ID:
+                    <h4> Net ID: 
                         <input
                             required
                             type="text" 

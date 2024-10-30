@@ -1,115 +1,144 @@
 /* Style nav bar */
 .nav {
-  height: 5vh;
-  display: flex;
-  align-items: center;
-  background-color: #716F81;
-  padding: 1vh 2vw;
-  box-shadow: 1px 0 3px black;
-  margin-bottom: 0;
+    height: 5vh;
+    display: flex;
+    align-items: center;
+    background-color: #716F81;
+    padding: 1vh 1vw;
+    box-shadow: 1px 0 3px black;
+    margin-bottom: 0;
 } 
 
 /* Button back to homepage */ 
 .viewcards-header {
-  margin: 0;
-  font-size: 24px;
-  color: white;
+    margin: 0;
+    font-size: 24px;
+    color: white;
 }
 
 .nav a {
-  text-decoration: none;
-}
-
-/* Style temporary net_id entry field */
-.logIn button{
-  background-color: #000000; /* Green */
-  border: none;
-  color: white;
-  padding: 5px 5px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 12px;
-  border-radius: 10%;
+    text-decoration: none;
 }
 
 /* Style page name */
 .page-name {
-  margin-top: 3vh;
-  margin-bottom: 3vh;
+    margin-top: 3vh;
+    margin-bottom: 3vh;
+}
+
+/* Style temporary net_id entry field */
+.logIn {
+    display: flex;
+    justify-content: center;
+}
+
+.logIn h4 {
+    margin-left: 1vw;
+}
+
+.logIn input {
+    margin-left: 0.5vw;
+    width: 130px;
+    height: 3vh;
+    font-family: "Quicksand", sans-serif;
+}
+
+.logIn button {
+    background-color: #F6AE99;
+    border: none;
+    color: rgb(0, 0, 0);
+    padding: 5px 5px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+    border-radius: 10%;
+    margin-left: 0.5vw;
+    font-family: "Quicksand", sans-serif;
+    box-shadow: 0.1px 0.1px 2px black;
 }
 
 /* Style the main content layout */
 .viewcards-main {
-  display: flex;
-  flex-direction: column;
-  height: 88vh;
-  width: 100%;
-  overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    height: 88vh;
+    width: 100%;
+    overflow-y: scroll;
 }
 
 .viewcards-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 /* Style list of cards */
 .viewcards-card-list {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 1vw;
-  padding: 1vh 1vw;
-  width: 98vw;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1vw;
+    padding: 1vh 1vw;
+    width: 98vw;
 }
 
 /* Style edit and delete buttons */
 .card-actions {
-  display: flex;
-  gap: 4vw;
-  margin-top: 10px;
-  margin-bottom: 3vh;
-  justify-content: center;
+    display: flex;
+    gap: 4vw;
+    margin-top: 10px;
+    margin-bottom: 3vh;
+    justify-content: center;
 }
 
 .edit-button, .delete-button {
-  font-size: 0.9em;
-  border: none;
-  border-radius: 20px; /* Rounded buttons */
-  cursor: pointer;
-  background-color: white;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 1vh 1vw;
+    font-size: 0.9em;
+    border: none;
+    border-radius: 20px; /* Rounded buttons */
+    cursor: pointer;
+    background-color: white;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 1vh 1vw;
 }
 
 .edit-button {
-  color: #4CAF50; /* Green text for Edit */
+    color: #4CAF50; /* Green text for Edit */
 }
 
 .delete-button {
-  color: #f44336; /* Red text for Delete */
+    color: #f44336; /* Red text for Delete */
 }
 
 /* Media query for screens between 840px and 1240px */
 @media screen and (max-width: 1280px) {
-  /* On a smaller screen, less cards appear in one row */
-  .viewcards-card-list {
-      grid-template-columns: repeat(4, 1fr);
-  }
+    /* On a smaller screen, less cards appear in one row */
+    .viewcards-card-list {
+        grid-template-columns: repeat(4, 1fr);
+    }
 }
 
 /* Media query for screens between 480px and 840px */
 @media screen and (max-width: 840px) {
-  /* On a smaller screen, less cards appear in one row */
-  .viewcards-card-list {
-      grid-template-columns: repeat(2, 1fr);
-  }
+    /* On a smaller screen, less cards appear in one row */
+    .viewcards-card-list {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* Make gap between edit and delete button larger on smaller screen */
+    .card-actions {
+    gap: 15vw;
+    }
 }
 
 /* Media query for screens between 0px and 480px */
 @media screen and (max-width: 460px) {
-  /* On a smaller screen, less cards appear in one row */
-  .viewcards-card-list {
-      grid-template-columns: repeat(1, 1fr);
-  }
+    /* On a smaller screen, less cards appear in one row */
+    .viewcards-card-list {
+    grid-template-columns: repeat(1, 1fr);
+    }
+
+    /* Make gap between edit and delete button larger on mobile */
+    .card-actions {
+    gap: 40vw;
+    }
 }
