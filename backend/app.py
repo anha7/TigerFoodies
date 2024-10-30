@@ -29,7 +29,7 @@ def serve_static_files(path):
 def get_data():
     try:
         with psycopg2.connect(DATABASE_URL) as conn:
-            with conn.cursor as cursor:
+            with conn.cursor() as cursor:
                 
                 # Execute query to retrieve all active cards' information
                 cursor.execute('''
@@ -75,11 +75,11 @@ def retrieve_user_cards():
         
         # connect to database
         with psycopg2.connect(DATABASE_URL) as conn:
-            with conn.cursor as cursor:
+            with conn.cursor() as cursor:
                 # define insertion query
                 insertion_query = '''SELECT card_id, title, photo_url, location, 
                     dietary_tags, allergies, posted_at FROM cards'''
-                insertion_query += ' WHERE user_id = ?;'
+                insertion_query += ' WHERE user_id = %s;'
                 # Execute query to retrieve all active cards' information
                 cursor.execute(insertion_query, [user_id])
                 row = cursor.fetchall()
@@ -107,9 +107,9 @@ def delete_card():
         
         # connect to database
         with psycopg2.connect(DATABASE_URL) as conn:
-            with conn.cursor as cursor:
+            with conn.cursor() as cursor:
                 # define deletion query
-                deletion_query = 'DELETE FROM cards WHERE card_id = ?;'
+                deletion_query = 'DELETE FROM cards WHERE card_id = %s;'
                 # Execute query to retrieve all active cards' information
                 cursor.execute(deletion_query, [card_id])
                 # Commit to database
@@ -144,11 +144,11 @@ def create_card():
         
         # connect to database
         with psycopg2.connect(DATABASE_URL) as conn:
-            with conn.cursor as cursor:
+            with conn.cursor() as cursor:
                 # define insertion query
                 insertion_query = 'INSERT INTO cards (card_id, net_id, title, description, photo_url'
                 insertion_query += ', location, dietery_tags, allergies, expiration, posted_at) VALUES'
-                insertion_query += ' (?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP + interval \'3 hours\', CURRENT_TIMESTAMP)'
+                insertion_query += ' (%s, %s, %s, %s, %s, %s, %s, %s, CURRENT_TIMESTAMP + interval \'3 hours\', CURRENT_TIMESTAMP)'
                 # Execute query to retrieve all active cards' information
                 cursor.execute(insertion_query, new_card)
                 # Commit to database
@@ -182,12 +182,12 @@ def edit_card():
         
         # connect to database
         with psycopg2.connect(DATABASE_URL) as conn:
-            with conn.cursor as cursor:
+            with conn.cursor() as cursor:
                 # define insertion query
                 insertion_query = 'UPDATE cards SET (title, description, photo_url'
                 insertion_query += ', location, dietery_tags, allergies, updated_at)'
-                insertion_query += ' = (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)'
-                insertion_query += ' WHERE card_id = ?'
+                insertion_query += ' = (%s, %s, %s, %s, %s, %s, CURRENT_TIMESTAMP)'
+                insertion_query += ' WHERE card_id = %s'
                 # Execute query to retrieve all active cards' information
                 cursor.execute(insertion_query, new_card)
                 # Commit to database
@@ -214,11 +214,11 @@ def retrieve_card():
         
         # connect to database
         with psycopg2.connect(DATABASE_URL) as conn:
-            with conn.cursor as cursor:
+            with conn.cursor() as cursor:
                 # define insertion query
                 retrieval_query = ''' SELECT card_id, title, photo_url, location, 
                     dietary_tags, allergies, posted_at FROM cards '''
-                retrieval_query += ' WHERE card_id = ?;'
+                retrieval_query += ' WHERE card_id = %s;'
                 # Execute query to retrieve all active cards' information
                 cursor.execute(retrieval_query, [card_id])
                 row = cursor.fetchall()
