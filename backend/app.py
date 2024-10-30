@@ -148,7 +148,7 @@ def create_card():
             with conn.cursor() as cursor:
                 
                 # Define insertion query
-                insertion_query = '''INSERT INTO cards (card_id, net_id, 
+                insertion_query = '''INSERT INTO cards (net_id, 
                     title, description, photo_url, location, 
                     dietery_tags, allergies, expiration, posted_at)
                     VALUES (%s, %s, %s, %s, %s, %s, %s, 
