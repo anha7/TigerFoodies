@@ -64,24 +64,26 @@ def create_card():
         card_data = app.request.get_json()
         # get relevant fields
         card_id = card_data.get('card_id')
-        net_id = card_data.get('card_id') #Change this to net id
-        title = card_data.get('card_id')
-        description = card_data.get('card_id')
-        photo_url = card_data.get('card_id')
-        location = card_data.get('card_id')
-        dietary_tags = card_data.get('card_id', '')
-        allergies = card_data.get('card_id', '')
+        net_id = card_data.get('net_id') #Change this to net id
+        title = card_data.get('title')
+        description = card_data.get('description')
+        photo_url = card_data.get('photo_url')
+        location = card_data.get('location')
+        dietary_tags = card_data.get('dietary_tags')
+        allergies = card_data.get('allergies')
         new_card = [card_id, net_id, title, description, photo_url, location, dietary_tags, allergies]
 
         # check new card attributes (Should we?)
-        if not all(new_card):
+        if not all([card_id, net_id, title, location]):
             return jsonify("error: Missing required fields")
         
         # connect to database
         with psycopg2.connect(DATABASE_URL) as conn:
             with conn.cursor as cursor:
                 # define insertion query
-                insertion_query = 'INSERT INTO cards (card_id, net_id, title, description, photo_url, location, dietery_tags, allergies, expiration) VALUES (?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP + interval \'3 hours\')'
+                insertion_query = 'INSERT INTO cards (card_id, net_id, title, description, photo_url'
+                insertion_query += ', location, dietery_tags, allergies, expiration, posted_at) VALUES'
+                insertion_query += ' (?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP + interval \'3 hours\', CURRENT_TIMESTAMP)'
                 # Execute query to retrieve all active cards' information
                 cursor.execute(insertion_query, new_card)
                 # Commit to database
