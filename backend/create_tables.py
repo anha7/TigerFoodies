@@ -15,19 +15,18 @@ def main():
     with psycopg2.connect(DATABASE_URL) as conn:
         with conn.cursor() as cursor:
             # Create the users table
-            # cursor.execute('''
-            #     CREATE TABLE IF NOT EXISTS users (
-            #             net_id VARCHAR(10) PRIMARY KEY NOT NULL,
-            #             full_name VARCHAR(100) NOT NULL,
-            #             email VARCHAR(100) UNIQUE NOT NULL,
-            #             dietary_preferences VARCHAR[] DEFAULT '{}',
-            #             allergies VARCHAR[] DEFAULT '{}',
-            #             subscribed_to_text_notifications BOOLEAN DEFAULT FALSE,
-            #             phone_number VARCHAR(20) DEFAULT '',
-            #             subscribed_to_desktop_notifications BOOLEAN DEFAULT FALSE
-            #     );
-            # ''')
-            # print("Successfully created users table!")
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS users (
+                        net_id VARCHAR(10) PRIMARY KEY NOT NULL,
+                        email VARCHAR(100) UNIQUE,
+                        dietary_preferences VARCHAR[] DEFAULT '{}',
+                        allergies VARCHAR[] DEFAULT '{}',
+                        subscribed_to_text_notifications BOOLEAN DEFAULT FALSE,
+                        phone_number VARCHAR(20) DEFAULT '',
+                        subscribed_to_desktop_notifications BOOLEAN DEFAULT FALSE
+                );
+            ''')
+            print("Successfully created users table!")
 
             # Create the food cards table
             cursor.execute('''
@@ -36,7 +35,7 @@ def main():
                         net_id VARCHAR(10),
                         title VARCHAR(100) NOT NULL,
                         description VARCHAR(250),
-                        photo_url VARCHAR(255),
+                        photo_url TEXT,
                         location VARCHAR(255) NOT NULL,
                         dietary_tags VARCHAR[] DEFAULT '{}',
                         allergies VARCHAR[] DEFAULT '{}',
