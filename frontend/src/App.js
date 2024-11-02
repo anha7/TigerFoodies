@@ -18,7 +18,13 @@ function App() {
             try {
                 const response = await fetch(`/get_user`);
                 const data = await response.json();
-                setNetID(data.net_id);
+                if (data.net_id) {
+                    setNetID(data.net_id);
+                } else {
+                    // Retry or prompt login if net_id is missing
+                    console.warn('Net ID is not set, retrying...');
+                    setTimeout(authenticate, 2000); // Retry after a delay
+                }
             } catch (error) {
                 console.error('Error fetching user data:', error);
             }
