@@ -67,6 +67,7 @@ const Homepage = () => {
             shellfish: false
         }
     });
+    const [filteredCards, setFilteredCards] = useState([]);
     // State that stores whether mobile hamburger menu is open
     const [isHamburgerOpen, setHamburgerOpen] = useState(false);
     // State that stores whether mobile preferences is open
@@ -86,6 +87,7 @@ const Homepage = () => {
                 const data = await response.json();
                 // Store fetched data in state
                 setCards(data);
+                setFilteredCards(data);
             } catch(error) {
                 console.error('Error fetching cards:', error);
             }
@@ -97,17 +99,21 @@ const Homepage = () => {
 //----------------------------------------------------------------------
 
     // Function that handles the search functionality
-    const handleSearch = (query) => {
-        // Prevent page from reloading
-        query.preventDefault();
-        
-        // Placeholder for search functionality
-        console.log("This is the search query", query);
+    const handleSearch = (event) => {
+        // Update search input state
+        const query = event.target.value.toLowerCase();
+        setSearchInput(query);
+
+        // Call filter cards function to filter cards based on search query
+        setFilteredCards(filterCards());
+
+        console.log("Search query:", query);
+        console.log("Filtered cards:", filteredCards);
     }
 
 //----------------------------------------------------------------------
 
-    // Function that toggles dietary filters and allergen filters
+    // Function that toggles dietary filters and allergen filters checkboxes
     const handleFilter = (filter, type) => {
         const { name, checked } = filter.target;
 
@@ -118,6 +124,72 @@ const Homepage = () => {
                 [name]: checked,
             },
         }));
+    };
+
+//----------------------------------------------------------------------
+
+    // Function to filter cards based on search query and preferences
+    const filterCards = () => {
+        return cards.filter((card) => {
+            // Ensure card.allergies and card.dietary_tags are arrays
+            const cardAllergies = Array.isArray(card.allergies) ? card.allergies : [];
+            const cardDietaryTags = Array.isArray(card.dietary_tags) ? card.dietary_tags : [];
+
+            // Normalize data for case sensitivity
+            const normalizedAllergies = cardAllergies.map((a) => a.toLowerCase());
+            const normalizedDietaryTags = cardDietaryTags.map((tag) => tag.toLowerCase());
+            
+            // Search filtering functionality
+            if (searchInput.trim() !== '') {
+                const combinedCardText = [
+                    card.title,
+                    card.location,
+                    ...card.dietary_tags,
+                    ...card.allergies
+                ].join(' ').toLowerCase(); // Combine and normalize case
+    
+                if (!combinedCardText.includes(searchInput.toLowerCase())) {
+                    return false; // Exclude if the search query doesn't match
+                }
+            }
+
+            // Check for allergy filters (allergies take precedence)
+            const selectedAllergens = Object.keys(foodFilters.allergies).filter(
+                (allergen) => foodFilters.allergies[allergen]
+            ).map((a) => a.toLowerCase()); // Normalize selected allergens for comparison
+
+            if (selectedAllergens.length > 0) {
+                const hasAllergen = selectedAllergens.some((allergen) =>
+                    normalizedAllergies.includes(allergen)
+                );
+                if (hasAllergen) {
+                    return false; // Exclude card if it has a selected allergen
+                }
+            }
+
+            // Check for dietary preference filters
+            const activeDietaryPreferences = Object.keys(foodFilters.dietary).filter(
+                (preference) => foodFilters.dietary[preference]
+            ).map((p) => p.toLowerCase()); // Normalize for comparison
+
+            // No dietary preferences selected, include all cards that pass the allergen check
+            if (activeDietaryPreferences.length === 0) {
+                return true;
+            }
+
+            // Check if card matches any of the selected dietary preferences
+            const matchesDietaryPreferences = activeDietaryPreferences.every((preference) => {
+                return normalizedDietaryTags.includes(preference);
+            });
+
+            // Exclude a card if it doesn't match dietary prefs
+            if (!matchesDietaryPreferences) {
+                return false;
+            }
+
+            // Include card if it passes dietary preference check
+            return true;
+        });
     };
 
 //----------------------------------------------------------------------
@@ -200,8 +272,7 @@ const Homepage = () => {
                                 type="text"
                                 placeholder="Search for locations, titles, etc..."
                                 value={searchInput}
-                                onChange={(query) => 
-                                    setSearchInput(query.target.value)}
+                                onChange={handleSearch}
                                 className="search-bar"
                             />
                         </div>
@@ -293,7 +364,7 @@ const Homepage = () => {
                     
                     {/* Display list of active free food cards */}
                     <div className="card-list">
-                        {cards.map((card) => (
+                        {filterCards().map((card) => (
                             <div key={card.card_id} className="card">
                                 <div 
                                     className="card-image"
@@ -310,7 +381,7 @@ const Homepage = () => {
                             </div>
                         ))}
 
-                        {/* Fake card for filter testing purposes */}
+                        {/* Fake card for filter testing purposes
                         <div className="card">
                             <div 
                                 className="card-image"
@@ -324,7 +395,7 @@ const Homepage = () => {
                                 <p>allergens</p>
                                 <p className="posted-at">posted at</p>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
                 

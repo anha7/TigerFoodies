@@ -1,4 +1,4 @@
-from flask import Flask, send_from_directory, jsonify, request, render_template, session
+from flask import Flask, send_from_directory, jsonify, request, session
 from dotenv import load_dotenv
 from authenticate import authenticate
 import os
@@ -272,4 +272,4 @@ def create_card():
 
 # Start the Flask app
 if __name__ == '__main__':
-    app.run(port=2999)
+    app.run(port=3000)
