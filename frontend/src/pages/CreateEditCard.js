@@ -3,7 +3,7 @@
 //----------------------------------------------------------------------
 
 // Imports
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './CreateEditCard.css'; // Import custom CSS file
 
@@ -171,15 +171,15 @@ function CreateEditCard( { net_id } ) {
                         <label><input type="checkbox" name="dietary_tags" value="Kosher" checked={dietary_tags.includes('Kosher')} onChange={handleDietaryChange}/> Kosher</label>
                         <label><input type="checkbox" name="dietary_tags" value="Vegetarian" checked={dietary_tags.includes('Vegetarian')} onChange={handleDietaryChange}/> Vegetarian</label>
                         <label><input type="checkbox" name="dietary_tags" value="Vegan" checked={dietary_tags.includes('Vegan')} onChange={handleDietaryChange}/> Vegan</label>
-                        <label><input type="checkbox" name="dietary_tags" value="Gluten Free" checked={dietary_tags.includes('Gluten Free')} onChange={handleDietaryChange}/> Gluten Free</label>
+                        <label><input type="checkbox" name="dietary_tags" value="Gluten-Free" checked={dietary_tags.includes('Gluten-Free')} onChange={handleDietaryChange}/> Gluten-Free</label>
                     </div>
                     
                     {/* Allergens field */}
                     <div className="allergies">
                         <h4>Allergens (Select all that apply): </h4>
-                        <label><input type="checkbox" name="allergies" value="Contains Nuts" checked={allergies.includes('Contains Nuts')} onChange={handleAllergiesChange}/> Contains Nuts</label>
-                        <label><input type="checkbox" name="allergies" value="Contains Dairy" checked={allergies.includes('Contains Dairy')} onChange={handleAllergiesChange}/> Contains Dairy</label>
-                        <label><input type="checkbox" name="allergies" value="Contains Shellfish" checked={allergies.includes('Contains Shellfish')} onChange={handleAllergiesChange}/> Contains Shellfish</label>
+                        <label><input type="checkbox" name="allergies" value="Nuts" checked={allergies.includes('Nuts')} onChange={handleAllergiesChange}/> Nuts</label>
+                        <label><input type="checkbox" name="allergies" value="Dairy" checked={allergies.includes(' Dairy')} onChange={handleAllergiesChange}/> Dairy</label>
+                        <label><input type="checkbox" name="allergies" value="Shellfish" checked={allergies.includes('Shellfish')} onChange={handleAllergiesChange}/> Shellfish</label>
                     </div>
 
                     {/* Description field */}    
