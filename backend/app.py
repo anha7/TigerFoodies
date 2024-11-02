@@ -28,8 +28,7 @@ def serve():
     username = authenticate()
     if username:
         session['username'] = username
-
-
+        add_user(username)
     return send_from_directory(app.static_folder, 'index.html')
 
 # Route to serve static files (like CSS, JS, images, etc.)

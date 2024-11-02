@@ -18,12 +18,7 @@ function App() {
             try {
                 const response = await fetch(`/get_user`);
                 const data = await response.json();
-                if (data.net_id) {
-                    setNetID(data.net_id);
-                } else {
-                    const CAS_LOGIN_URL = `https://fed.princeton.edu/cas/login?service=${encodeURIComponent(window.location.href)}` // Redirect if not authenticated
-                    window.location.href = CAS_LOGIN_URL;
-                }
+                setNetID(data.net_id);
             } catch (error) {
                 console.error('Error fetching user data:', error);
             }
