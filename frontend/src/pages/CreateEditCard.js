@@ -178,7 +178,7 @@ function CreateEditCard( { net_id } ) {
                     <div className="allergies">
                         <h4>Allergens (Select all that apply): </h4>
                         <label><input type="checkbox" name="allergies" value="Nuts" checked={allergies.includes('Nuts')} onChange={handleAllergiesChange}/> Nuts</label>
-                        <label><input type="checkbox" name="allergies" value="Dairy" checked={allergies.includes(' Dairy')} onChange={handleAllergiesChange}/> Dairy</label>
+                        <label><input type="checkbox" name="allergies" value="Dairy" checked={allergies.includes('Dairy')} onChange={handleAllergiesChange}/> Dairy</label>
                         <label><input type="checkbox" name="allergies" value="Shellfish" checked={allergies.includes('Shellfish')} onChange={handleAllergiesChange}/> Shellfish</label>
                     </div>
 
