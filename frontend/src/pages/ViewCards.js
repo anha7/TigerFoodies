@@ -20,40 +20,37 @@ const ViewCards = () => {
 
     // Fetch net_id when the component loads
     useEffect(() => {
-        fetch(`/get_user`)
-            .then(response => response.json())
-            .then(data => {
+        const fetchNetIDandCards = async() => {
+            try {
+                // Fetch NetID
+                const response = await fetch(`/get_user`);
+                const data = await response.json();
                 if (data.net_id) {
                     setNetID(data.net_id);
                 } else {
                     window.location.href = '/'; // Redirect to homepage if not authenticated
                 }
-            })
-            .catch(error => {
+                
+                // Fetch user cards
+                try {
+                    const response = await fetch(`/api/cards/${net_id}`, {
+                        method: 'GET'
+                    });
+                    const data = await response.json();
+                    setCards(data);
+                } catch (error) {
+                    console.error('Error fetching user cards:', error);
+                }
+
+            } catch (error) {
                 console.error('Error fetching net_id:', error);
                 window.location.href = '/';
-            })
+            }
+        };
+
+        fetchNetIDandCards();
+
     }, []);
-
-//----------------------------------------------------------------------
-
-    // Send request to fetch user's cards from the back-end
-    const fetchUserCards = async () => {
-        try {
-            const response = await fetch(`/api/cards/${net_id}`, {
-                method: 'GET'
-            });
-            const data = await response.json();
-            setCards(data);
-        } catch (error) {
-            console.error('Error fetching user cards:', error);
-        }
-    };
-
-    // Handle sending net_id to the backend to retrieve cards
-    const handleSendNetId = async () => {
-        await fetchUserCards();
-    }
 
 //----------------------------------------------------------------------
 

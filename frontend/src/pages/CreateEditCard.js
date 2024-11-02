@@ -25,19 +25,23 @@ function CreateEditCard() {
 
     // Fetch net_id when the component loads
     useEffect(() => {
-        fetch(`/get_user`)
-            .then(response => response.json())
-            .then(data => {
+        const fetchNetID = async() => {
+            try {
+                // Fetch NetID
+                const response = await fetch(`/get_user`);
+                const data = await response.json();
                 if (data.net_id) {
                     setNetID(data.net_id);
                 } else {
                     window.location.href = '/'; // Redirect to homepage if not authenticated
                 }
-            })
-            .catch(error => {
+            } catch (error) {
                 console.error('Error fetching net_id:', error);
                 window.location.href = '/';
-            })
+            }
+        };
+        
+        fetchNetID();
     }, []);
 
 //----------------------------------------------------------------------

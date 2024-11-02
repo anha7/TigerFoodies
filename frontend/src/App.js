@@ -14,18 +14,25 @@ function App() {
     
     // Assure user is CAS authenticated
     useEffect(() => {
-        fetch(`/get_user`)
-            .then(response => response.json())
-            .then(data => {
+        const authenticate = async () => {
+            try {
+                const response = await fetch(`/get_user`);
+                const data = await response.json();
                 if (data.net_id) {
                     setNetID(data.net_id);
                 } else {
                     const CAS_LOGIN_URL = `https://fed.princeton.edu/cas/login?service=${encodeURIComponent(window.location.href)}` // Redirect if not authenticated
                     window.location.href = CAS_LOGIN_URL;
                 }
-            })
-            .catch(error => console.error('Error fetching user data:', error));
-    }, []);
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            }
+        }
+
+        if (!net_id) {
+            authenticate();
+        }
+    }, [net_id]);
 
     return (
         <Router>
