@@ -26,12 +26,12 @@ const ViewCards = () => {
                 if (data.net_id) {
                     setNetID(data.net_id);
                 } else {
-                    // window.location.href = '/'; // Redirect to homepage if not authenticated
+                    window.location.href = '/'; // Redirect to homepage if not authenticated
                 }
             })
             .catch(error => {
                 console.error('Error fetching net_id:', error);
-                // window.location.href = '/';
+                window.location.href = '/';
             })
     }, []);
 
