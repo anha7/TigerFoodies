@@ -1,6 +1,6 @@
 from flask import Flask, send_from_directory, jsonify, request, render_template, session
 from dotenv import load_dotenv
-from .authenticate import authenticate
+from authenticate import authenticate
 import os
 import psycopg2
 import sys
@@ -272,4 +272,4 @@ def create_card():
 
 # Start the Flask app
 if __name__ == '__main__':
-    app.run()
+    app.run(port=2999)

@@ -309,6 +309,22 @@ const Homepage = () => {
                                 </div>
                             </div>
                         ))}
+
+                        {/* Fake card for filter testing purposes */}
+                        <div className="card">
+                            <div 
+                                className="card-image"
+                                style={{ backgroundImage: `url(${matheyImage})`}}
+                            >
+                            </div>
+                            <div className="card-content"> 
+                                <h3>title</h3>
+                                <p>location</p>
+                                <p>dietary restrictions</p>
+                                <p>allergens</p>
+                                <p className="posted-at">posted at</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
