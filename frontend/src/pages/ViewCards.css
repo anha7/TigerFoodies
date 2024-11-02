@@ -26,38 +26,6 @@
     margin-bottom: 3vh;
 }
 
-/* Style temporary net_id entry field */
-.logIn {
-    display: flex;
-    justify-content: center;
-}
-
-.logIn h4 {
-    margin-left: 1vw;
-}
-
-.logIn input {
-    margin-left: 0.5vw;
-    width: 130px;
-    height: 3vh;
-    font-family: "Quicksand", sans-serif;
-}
-
-.logIn button {
-    background-color: #F6AE99;
-    border: none;
-    color: rgb(0, 0, 0);
-    padding: 5px 5px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 12px;
-    border-radius: 10%;
-    margin-left: 0.5vw;
-    font-family: "Quicksand", sans-serif;
-    box-shadow: 0.1px 0.1px 2px black;
-}
-
 /* Style the main content layout */
 .viewcards-main {
     display: flex;

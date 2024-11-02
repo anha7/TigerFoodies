@@ -7,27 +7,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './CreateEditCard.css'; // Import custom CSS file
 
-
-// // Functional component that retrieves current time of day
-// const getTime = () => {
-//     const currentDate = new Date();
-
-//     // Convert UTC time to Eastern Time (Princeton's timezone)
-//     const estOffset = -5;
-//     const edtOffset = -4; // Different offset for daylight savings
-
-//     // Checks whether it is currently daylight savings time
-//     const isDaylightSaving = currentDate.toLocaleString(
-//         'en-US', { timeZoneName: 'short'}).includes('EDT');
-//     const offset = isDaylightSaving ? edtOffset : estOffset;
-
-//     // Adjusts timezone to Eastern Time
-//     const timeOfDay = new Date(
-//         currentDate.getTime() + offset * 60 * 60 * 1000).getUTCHours();
-
-//     // Checks current time of day
-//     return timeOfDay
-// };
+//----------------------------------------------------------------------
 
 function CreateEditCard() {
     const [net_id, setNetID] = useState('');
@@ -39,8 +19,28 @@ function CreateEditCard() {
     const [allergies, setAllergies] = useState([]);
     // const [postTime, setPostTime] = useState('')
     // const [updateTime, setUpdateTime] = useState('')
-
     const navigate = useNavigate(); // Initialize useNavigate
+
+//----------------------------------------------------------------------
+
+    // Fetch net_id when the component loads
+    useEffect(() => {
+        fetch(`/get_user`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.net_id) {
+                    setNetID(data.net_id);
+                } else {
+                    // window.location.href = '/'; // Redirect to homepage if not authenticated
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching net_id:', error);
+                // window.location.href = '/';
+            })
+    }, []);
+
+//----------------------------------------------------------------------
 
     // Sets dietary preferences
     const handleDietaryChange = (event) => {
@@ -49,6 +49,8 @@ function CreateEditCard() {
           checked ? [...prevDietary, value] : prevDietary.filter((d) => d !== value)
         );
     };
+
+//----------------------------------------------------------------------
     
     // Sets allergens
     const handleAllergiesChange = (event) => {
@@ -57,6 +59,8 @@ function CreateEditCard() {
           checked ? [...prevAllergies, value] : prevAllergies.filter((d) => d !== value)
         );
     };
+
+//----------------------------------------------------------------------
 
     // const CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1/devcgtjkx/image/upload';
     // const CLOUDINARY_UPLOAD_PRESET = 'TigerFoodies';
@@ -93,6 +97,8 @@ function CreateEditCard() {
     //       };
     // };
 
+//----------------------------------------------------------------------
+
     // Handles submitting the card to the database
     const handleSubmit = async (e) => {
         e.preventDefault(); // Prevent default form submission
@@ -126,6 +132,8 @@ function CreateEditCard() {
         }
     };
 
+//----------------------------------------------------------------------
+
     return (
         <div className="CreateEditCard">
 
@@ -140,17 +148,6 @@ function CreateEditCard() {
                 <div className="page-name"> <h2> Make a Card </h2> </div>
 
                 <form onSubmit={handleSubmit}>
-                    {/* Temporary NetID field until we set up CAS */}
-                    <div className="net_id">
-                        <h4> Net ID: * <br/>
-                        <input
-                            required
-                            type="text" 
-                            name="net_id"
-                            value={net_id} 
-                            onChange={(e) => setNetID(e.target.value)}/></h4>
-                    </div>
-
                     {/* Title field */}
                     <div className="title">
                         <h4>Title: * <br/>

@@ -49,13 +49,6 @@ form {
     margin-top: 0;
 }
 
-/* Style input for netid field */
-.net_id input {
-    width: 130px;
-    height: 3vh;
-    font-family: "Quicksand", sans-serif;
-}
-
 /* Style input form for title, locations, and photo fields */
 .title input, .location input, .photo input {
     width: 40%;
@@ -112,13 +105,7 @@ button[type="submit"] {
         display: flex;
         flex-direction: column;
     }
-
-    /* Style input for netid field */
-    .net_id input {
-        width: 50%;
-        height: 3vh;
-    }
-
+    
     /* Style input form for title, locations, and photo fields */
     .title input, .location input, .photo input {
         width: 95%;

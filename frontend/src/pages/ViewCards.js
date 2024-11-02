@@ -18,6 +18,25 @@ const ViewCards = () => {
 
 //----------------------------------------------------------------------
 
+    // Fetch net_id when the component loads
+    useEffect(() => {
+        fetch(`/get_user`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.net_id) {
+                    setNetID(data.net_id);
+                } else {
+                    // window.location.href = '/'; // Redirect to homepage if not authenticated
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching net_id:', error);
+                // window.location.href = '/';
+            })
+    }, []);
+
+//----------------------------------------------------------------------
+
     // Send request to fetch user's cards from the back-end
     const fetchUserCards = async () => {
         try {
@@ -77,23 +96,6 @@ const ViewCards = () => {
             <div className="viewcards-main">
                 {/* Page name */}
                 <div className="page-name"> <h2> My Cards </h2> </div>
-
-                {/* Temporarily manually submit your Net ID */}
-                <div className='logIn'>
-                    <h4> Net ID: 
-                        <input
-                            required
-                            type="text" 
-                            name="net_id"
-                            value={net_id}
-                            onChange={(e) => setUserId(e.target.value)}
-                        /> 
-                        <button 
-                            type="submit" onClick={() => handleSendNetId()}>
-                                Submit
-                        </button>
-                    </h4>
-                </div> 
                 
                 {/* Display list of user's free food cards */}
                 <div className="viewcards-card-list">

@@ -1,6 +1,6 @@
 from flask import Flask, send_from_directory, jsonify, request, render_template, session
 from dotenv import load_dotenv
-from .authenticate import authenticate
+from authenticate import authenticate
 import os
 import psycopg2
 import sys
