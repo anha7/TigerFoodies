@@ -28,11 +28,9 @@ function App() {
                 console.error('Error fetching user data:', error);
             }
         }
-
-        if (!net_id) {
-            authenticate();
-        }
-    }, [net_id]);
+        
+        authenticate();
+    }, []);
 
     return (
         <Router>

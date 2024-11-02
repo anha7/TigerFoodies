@@ -41,7 +41,8 @@ def main():
                         allergies VARCHAR[] DEFAULT '{}',
                         expiration TIMESTAMP NOT NULL,
                         posted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-                        updated_at TIMESTAMP
+                        updated_at TIMESTAMP,
+                        FOREIGN KEY (net_id) REFERENCES users(net_id) ON DELETE CASCADE
                 );
             ''')
             print("Successfully created food cards table!")

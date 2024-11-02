@@ -9,8 +9,7 @@ import './CreateEditCard.css'; // Import custom CSS file
 
 //----------------------------------------------------------------------
 
-function CreateEditCard() {
-    const [net_id, setNetID] = useState('');
+function CreateEditCard( { net_id } ) {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [photo, setPhoto] = useState('');
@@ -20,29 +19,6 @@ function CreateEditCard() {
     // const [postTime, setPostTime] = useState('')
     // const [updateTime, setUpdateTime] = useState('')
     const navigate = useNavigate(); // Initialize useNavigate
-
-//----------------------------------------------------------------------
-
-    // Fetch net_id when the component loads
-    useEffect(() => {
-        const fetchNetID = async() => {
-            try {
-                // Fetch NetID
-                const response = await fetch(`/get_user`);
-                const data = await response.json();
-                if (data.net_id) {
-                    setNetID(data.net_id);
-                } else {
-                    window.location.href = '/'; // Redirect to homepage if not authenticated
-                }
-            } catch (error) {
-                console.error('Error fetching net_id:', error);
-                window.location.href = '/';
-            }
-        };
-        
-        fetchNetID();
-    }, []);
 
 //----------------------------------------------------------------------
 

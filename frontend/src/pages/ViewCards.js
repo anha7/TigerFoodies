@@ -4,52 +4,34 @@
 
 // Imports
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import './ViewCards.css'; // Import custom CSS file
 import matheyImage from './media/mathey.png';
 
 //----------------------------------------------------------------------
 
-const ViewCards = () => {
+const ViewCards = ({ net_id }) => {
     // State to store fetched cards
-    const [net_id, setUserId] = useState("");
     const [cards, setCards] = useState([]);
     const navigate = useNavigate();
 
 //----------------------------------------------------------------------
 
-    // Fetch net_id when the component loads
+    // Send request to fetch user's cards from the back-end
     useEffect(() => {
-        const fetchNetIDandCards = async() => {
+        const fetchUserCards = async () => {
             try {
-                // Fetch NetID
-                const response = await fetch(`/get_user`);
+                const response = await fetch(`/api/cards/${net_id}`, {
+                    method: 'GET'
+                });
                 const data = await response.json();
-                if (data.net_id) {
-                    setNetID(data.net_id);
-                } else {
-                    window.location.href = '/'; // Redirect to homepage if not authenticated
-                }
-                
-                // Fetch user cards
-                try {
-                    const response = await fetch(`/api/cards/${net_id}`, {
-                        method: 'GET'
-                    });
-                    const data = await response.json();
-                    setCards(data);
-                } catch (error) {
-                    console.error('Error fetching user cards:', error);
-                }
-
+                setCards(data);
             } catch (error) {
-                console.error('Error fetching net_id:', error);
-                window.location.href = '/';
+                console.error('Error fetching user cards:', error);
             }
         };
 
-        fetchNetIDandCards();
-
+        fetchUserCards();
     }, []);
 
 //----------------------------------------------------------------------
