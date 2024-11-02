@@ -64,6 +64,19 @@ def get_user():
         return jsonify({'net_id': session['username']})
     else:
         return ([False, 'User not logged in'])
+    
+#-----------------------------------------------------------------------
+
+# Clean expired cards
+def clean_expired_cards():
+    try:
+        with psycopg2.connect(DATABASE_URL) as conn:
+            with conn.cursor() as cursor:
+                cursor.execute("""
+                    DELETE FROM cards WHERE expiration <= NOW();
+                """)
+    except Exception as ex:
+        print(str(ex))
 
 #-----------------------------------------------------------------------
 
@@ -71,6 +84,9 @@ def get_user():
 @app.route('/api/cards', methods=['GET'])
 def get_data():
     try:
+        # Clean expired cards before fetching data
+        clean_expired_cards()
+
         with psycopg2.connect(DATABASE_URL) as conn:
             with conn.cursor() as cursor:
                 # Execute query to retrieve all active cards information

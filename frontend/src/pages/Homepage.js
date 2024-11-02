@@ -194,6 +194,25 @@ const Homepage = () => {
 
 //----------------------------------------------------------------------
 
+    // Function to format the time into a relative "time ago" format
+    const formatTimeAgo = (timestamp) => {
+        const currentTime = new Date();
+        const postedTime = new Date(timestamp);
+        const differenceInSeconds = Math.floor((currentTime - postedTime) / 1000);
+
+        if (differenceInSeconds < 60) {
+            return `${differenceInSeconds} second${differenceInSeconds !== 1 ? 's' : ''} ago`;
+        } else if (differenceInSeconds < 3600) {
+            const minutes = Math.floor(differenceInSeconds / 60);
+            return `${minutes} minute${minutes !== 1 ? 's' : ''} ago`;
+        } else {
+            const hours = Math.floor(differenceInSeconds / 3600);
+            return `${hours} hour${hours !== 1 ? 's' : ''} ago`;
+        }
+    }
+
+//----------------------------------------------------------------------
+
     // Function that toggles hamburger menu (for mobile)
     const toggleHamburger = () => {
         setHamburgerOpen(!isHamburgerOpen);
@@ -376,7 +395,7 @@ const Homepage = () => {
                                     <p>Location: {card.location}</p>
                                     <p>Dietary Restrictions: {card.dietary_tags.join(', ')}</p>
                                     <p>Allergens: {card.allergies.join(', ')}</p>
-                                    <p className="posted-at">Posted at {card.posted_at}</p>
+                                    <p className="posted-at">Posted {formatTimeAgo(card.posted_at)}</p>
                                 </div>
                             </div>
                         ))}
