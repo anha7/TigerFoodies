@@ -1,0 +1,14 @@
+/* Style the card's image */
+.modal-card-image {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 125px;
+}
+
+/* Style the text content of the cards */
+.modal-card-content {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+}

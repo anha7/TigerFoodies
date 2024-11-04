@@ -7,6 +7,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './ViewCards.css'; // Import custom CSS file
 import matheyImage from './media/mathey.png';
+import ViewCardModal from './ViewCardModal'; // to view extended card info
 
 //----------------------------------------------------------------------
 
