@@ -55,16 +55,16 @@ const Homepage = () => {
     // State that stores food filters
     const [foodFilters, setFoodFilters] = useState({
         dietary: {
-            vegetarian: false,
-            vegan: false,
-            halal: false,
-            kosher: false,
-            gluten: false,
+            "vegetarian": false,
+            "vegan": false,
+            "halal": false,
+            "kosher": false,
+            "gluten-free": false,
         },
         allergies: {
-            nuts: false,
-            dairy: false,
-            shellfish: false
+            "nuts": false,
+            "dairy": false,
+            "shellfish": false
         }
     });
     const [filteredCards, setFilteredCards] = useState([]);
@@ -342,23 +342,23 @@ const Homepage = () => {
                         <div className="mobile-food-preference-selection">
                             <h3>Dietary Preferences</h3>
                             <label>
-                                <input type="checkbox" name="vegetarian" checked={foodFilters.dietary.vegetarian} onChange={(filter) => handleFilter(filter, 'dietary')} />
+                                <input type="checkbox" name="vegetarian" checked={foodFilters.dietary['vegetarian']} onChange={(filter) => handleFilter(filter, 'dietary')} />
                                 Vegetarian
                             </label>
                             <label>
-                                <input type="checkbox" name="vegan" checked={foodFilters.dietary.vegan} onChange={(filter) => handleFilter(filter, 'dietary')} />
+                                <input type="checkbox" name="vegan" checked={foodFilters.dietary['vegan']} onChange={(filter) => handleFilter(filter, 'dietary')} />
                                 Vegan
                             </label>
                             <label>
-                                <input type="checkbox" name="halal" checked={foodFilters.dietary.halal} onChange={(filter) => handleFilter(filter, 'dietary')} />
+                                <input type="checkbox" name="halal" checked={foodFilters.dietary['halal']} onChange={(filter) => handleFilter(filter, 'dietary')} />
                                 Halal
                             </label>
                             <label>
-                                <input type="checkbox" name="kosher" checked={foodFilters.dietary.kosher} onChange={(filter) => handleFilter(filter, 'dietary')} />
+                                <input type="checkbox" name="kosher" checked={foodFilters.dietary['kosher']} onChange={(filter) => handleFilter(filter, 'dietary')} />
                                 Kosher
                             </label>
                             <label>
-                                <input type="checkbox" name="gluten" checked={foodFilters.dietary.gluten} onChange={(filter) => handleFilter(filter, 'dietary')} />
+                                <input type="checkbox" name="gluten-free" checked={foodFilters.dietary['gluten-free']} onChange={(filter) => handleFilter(filter, 'dietary')} />
                                 Gluten-Free
                             </label>
                         </div>
@@ -367,15 +367,15 @@ const Homepage = () => {
                         <div className="mobile-food-preference-selection">
                             <h3>Allergies</h3>
                             <label>
-                                <input type="checkbox" name="nuts" checked={foodFilters.allergies.nuts} onChange={(filter) => handleFilter(filter, 'allergies')} />
+                                <input type="checkbox" name="nuts" checked={foodFilters.allergies['nuts']} onChange={(filter) => handleFilter(filter, 'allergies')} />
                                 Nuts
                             </label>
                             <label>
-                                <input type="checkbox" name="dairy" checked={foodFilters.allergies.dairy} onChange={(filter) => handleFilter(filter, 'allergies')} />
+                                <input type="checkbox" name="dairy" checked={foodFilters.allergies['dairy']} onChange={(filter) => handleFilter(filter, 'allergies')} />
                                 Dairy
                             </label>
                             <label>
-                                <input type="checkbox" name="shellfish" checked={foodFilters.allergies.shellfish} onChange={(filter) => handleFilter(filter, 'allergies')} />
+                                <input type="checkbox" name="shellfish" checked={foodFilters.allergies['shellfish']} onChange={(filter) => handleFilter(filter, 'allergies')} />
                                 Shellfish
                             </label>
                         </div>
@@ -392,9 +392,9 @@ const Homepage = () => {
                                 </div>
                                 <div className="card-content">
                                     <h3>{card.title}</h3>
-                                    <p>Location: {card.location}</p>
-                                    <p>Dietary Restrictions: {card.dietary_tags.join(', ')}</p>
-                                    <p>Allergens: {card.allergies.join(', ')}</p>
+                                    <p><b>Location:</b> {card.location}</p>
+                                    <p><b>Dietary Preferences:</b> {card.dietary_tags.join(', ')}</p>
+                                    <p><b>Allergens:</b> {card.allergies.join(', ')}</p>
                                     <p className="posted-at">Posted {formatTimeAgo(card.posted_at)}</p>
                                 </div>
                             </div>
@@ -424,23 +424,23 @@ const Homepage = () => {
                     <div className="food-preferences-selection">
                         <h3>Dietary Preferences</h3>
                         <label>
-                            <input type="checkbox" name="vegetarian" checked={foodFilters.dietary.vegetarian} onChange={(filter) => handleFilter(filter, 'dietary')} />
+                            <input type="checkbox" name="vegetarian" checked={foodFilters.dietary['vegetarian']} onChange={(filter) => handleFilter(filter, 'dietary')} />
                             Vegetarian
                         </label>
                         <label>
-                            <input type="checkbox" name="vegan" checked={foodFilters.dietary.vegan} onChange={(filter) => handleFilter(filter, 'dietary')} />
+                            <input type="checkbox" name="vegan" checked={foodFilters.dietary['vegan']} onChange={(filter) => handleFilter(filter, 'dietary')} />
                             Vegan
                         </label>
                         <label>
-                            <input type="checkbox" name="halal" checked={foodFilters.dietary.halal} onChange={(filter) => handleFilter(filter, 'dietary')} />
+                            <input type="checkbox" name="halal" checked={foodFilters.dietary['halal']} onChange={(filter) => handleFilter(filter, 'dietary')} />
                             Halal
                         </label>
                         <label>
-                            <input type="checkbox" name="kosher" checked={foodFilters.dietary.kosher} onChange={(filter) => handleFilter(filter, 'dietary')} />
+                            <input type="checkbox" name="kosher" checked={foodFilters.dietary['kosher']} onChange={(filter) => handleFilter(filter, 'dietary')} />
                             Kosher
                         </label>
                         <label>
-                            <input type="checkbox" name="gluten" checked={foodFilters.dietary.gluten} onChange={(filter) => handleFilter(filter, 'dietary')} />
+                            <input type="checkbox" name="gluten-free" checked={foodFilters.dietary['gluten-free']} onChange={(filter) => handleFilter(filter, 'dietary')} />
                             Gluten-Free
                         </label>
                     </div>
@@ -449,15 +449,15 @@ const Homepage = () => {
                     <div className="food-preferences-selection">
                         <h3>Allergies</h3>
                         <label>
-                            <input type="checkbox" name="nuts" checked={foodFilters.allergies.nuts} onChange={(filter) => handleFilter(filter, 'allergies')} />
+                            <input type="checkbox" name="nuts" checked={foodFilters.allergies['nuts']} onChange={(filter) => handleFilter(filter, 'allergies')} />
                             Nuts
                         </label>
                         <label>
-                            <input type="checkbox" name="dairy" checked={foodFilters.allergies.dairy} onChange={(filter) => handleFilter(filter, 'allergies')} />
+                            <input type="checkbox" name="dairy" checked={foodFilters.allergies['dairy']} onChange={(filter) => handleFilter(filter, 'allergies')} />
                             Dairy
                         </label>
                         <label>
-                            <input type="checkbox" name="shellfish" checked={foodFilters.allergies.shellfish} onChange={(filter) => handleFilter(filter, 'allergies')} />
+                            <input type="checkbox" name="shellfish" checked={foodFilters.allergies['shellfish']} onChange={(filter) => handleFilter(filter, 'allergies')} />
                             Shellfish
                         </label>
                     </div>
