@@ -3,34 +3,13 @@
 //----------------------------------------------------------------------
 
 // Imports
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './CreateEditCard.css'; // Import custom CSS file
 
+//----------------------------------------------------------------------
 
-// // Functional component that retrieves current time of day
-// const getTime = () => {
-//     const currentDate = new Date();
-
-//     // Convert UTC time to Eastern Time (Princeton's timezone)
-//     const estOffset = -5;
-//     const edtOffset = -4; // Different offset for daylight savings
-
-//     // Checks whether it is currently daylight savings time
-//     const isDaylightSaving = currentDate.toLocaleString(
-//         'en-US', { timeZoneName: 'short'}).includes('EDT');
-//     const offset = isDaylightSaving ? edtOffset : estOffset;
-
-//     // Adjusts timezone to Eastern Time
-//     const timeOfDay = new Date(
-//         currentDate.getTime() + offset * 60 * 60 * 1000).getUTCHours();
-
-//     // Checks current time of day
-//     return timeOfDay
-// };
-
-function CreateEditCard() {
-    const [net_id, setNetID] = useState('');
+function CreateEditCard( { net_id } ) {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [photo, setPhoto] = useState('');
@@ -39,8 +18,9 @@ function CreateEditCard() {
     const [allergies, setAllergies] = useState([]);
     // const [postTime, setPostTime] = useState('')
     // const [updateTime, setUpdateTime] = useState('')
-
     const navigate = useNavigate(); // Initialize useNavigate
+
+//----------------------------------------------------------------------
 
     // Sets dietary preferences
     const handleDietaryChange = (event) => {
@@ -49,6 +29,8 @@ function CreateEditCard() {
           checked ? [...prevDietary, value] : prevDietary.filter((d) => d !== value)
         );
     };
+
+//----------------------------------------------------------------------
     
     // Sets allergens
     const handleAllergiesChange = (event) => {
@@ -57,6 +39,8 @@ function CreateEditCard() {
           checked ? [...prevAllergies, value] : prevAllergies.filter((d) => d !== value)
         );
     };
+
+//----------------------------------------------------------------------
 
     // const CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1/devcgtjkx/image/upload';
     // const CLOUDINARY_UPLOAD_PRESET = 'TigerFoodies';
@@ -93,6 +77,8 @@ function CreateEditCard() {
     //       };
     // };
 
+//----------------------------------------------------------------------
+
     // Handles submitting the card to the database
     const handleSubmit = async (e) => {
         e.preventDefault(); // Prevent default form submission
@@ -126,6 +112,8 @@ function CreateEditCard() {
         }
     };
 
+//----------------------------------------------------------------------
+
     return (
         <div className="CreateEditCard">
 
@@ -140,17 +128,6 @@ function CreateEditCard() {
                 <div className="page-name"> <h2> Make a Card </h2> </div>
 
                 <form onSubmit={handleSubmit}>
-                    {/* Temporary NetID field until we set up CAS */}
-                    <div className="net_id">
-                        <h4> Net ID: * <br/>
-                        <input
-                            required
-                            type="text" 
-                            name="net_id"
-                            value={net_id} 
-                            onChange={(e) => setNetID(e.target.value)}/></h4>
-                    </div>
-
                     {/* Title field */}
                     <div className="title">
                         <h4>Title: * <br/>
@@ -194,15 +171,15 @@ function CreateEditCard() {
                         <label><input type="checkbox" name="dietary_tags" value="Kosher" checked={dietary_tags.includes('Kosher')} onChange={handleDietaryChange}/> Kosher</label>
                         <label><input type="checkbox" name="dietary_tags" value="Vegetarian" checked={dietary_tags.includes('Vegetarian')} onChange={handleDietaryChange}/> Vegetarian</label>
                         <label><input type="checkbox" name="dietary_tags" value="Vegan" checked={dietary_tags.includes('Vegan')} onChange={handleDietaryChange}/> Vegan</label>
-                        <label><input type="checkbox" name="dietary_tags" value="Gluten Free" checked={dietary_tags.includes('Gluten Free')} onChange={handleDietaryChange}/> Gluten Free</label>
+                        <label><input type="checkbox" name="dietary_tags" value="Gluten-Free" checked={dietary_tags.includes('Gluten-Free')} onChange={handleDietaryChange}/> Gluten-Free</label>
                     </div>
                     
                     {/* Allergens field */}
                     <div className="allergies">
                         <h4>Allergens (Select all that apply): </h4>
-                        <label><input type="checkbox" name="allergies" value="Contains Nuts" checked={allergies.includes('Contains Nuts')} onChange={handleAllergiesChange}/> Contains Nuts</label>
-                        <label><input type="checkbox" name="allergies" value="Contains Dairy" checked={allergies.includes('Contains Dairy')} onChange={handleAllergiesChange}/> Contains Dairy</label>
-                        <label><input type="checkbox" name="allergies" value="Contains Shellfish" checked={allergies.includes('Contains Shellfish')} onChange={handleAllergiesChange}/> Contains Shellfish</label>
+                        <label><input type="checkbox" name="allergies" value="Nuts" checked={allergies.includes('Nuts')} onChange={handleAllergiesChange}/> Nuts</label>
+                        <label><input type="checkbox" name="allergies" value="Dairy" checked={allergies.includes('Dairy')} onChange={handleAllergiesChange}/> Dairy</label>
+                        <label><input type="checkbox" name="allergies" value="Shellfish" checked={allergies.includes('Shellfish')} onChange={handleAllergiesChange}/> Shellfish</label>
                     </div>
 
                     {/* Description field */}    

@@ -1,8 +1,11 @@
-from flask import Flask, send_from_directory, jsonify, request
+from flask import Flask, send_from_directory, jsonify, request, session
 from dotenv import load_dotenv
+from authenticate import authenticate
 import os
 import psycopg2
 import sys
+import secrets
+
 #-----------------------------------------------------------------------
 
 # Initialize the database
@@ -13,11 +16,19 @@ conn = psycopg2.connect(DATABASE_URL)
 # Initialize Flask app
 app = Flask(__name__, static_folder='build', static_url_path='')
 
+# Set up secret key
+app.secret_key = secrets.token_hex(32)
+
 #-----------------------------------------------------------------------
 
 # Route to serve the React app's index.html
 @app.route('/')
 def serve():
+    # Authenticate user when they access the site and store username
+    username = authenticate()
+    if username:
+        session['username'] = username
+        add_user(username)
     return send_from_directory(app.static_folder, 'index.html')
 
 # Route to serve static files (like CSS, JS, images, etc.)
@@ -27,13 +38,57 @@ def serve_static_files(path):
 
 #-----------------------------------------------------------------------
 
+# Add user the the database once they're CAS authenticated
+def add_user(net_id):
+    try:
+        with psycopg2.connect(DATABASE_URL) as conn:
+            with conn.cursor() as cursor:
+                # Execute query to add a user to the database
+                cursor.execute('''
+                    INSERT INTO users (net_id)
+                    VALUES(%s)
+                    ON CONFLICT (net_id) DO NOTHING;
+                ''', (net_id,))
+
+                # Commit to the database
+                conn.commit()
+    except Exception as ex:
+        print(ex)
+
+#-----------------------------------------------------------------------
+
+# Retrieve current user's NetID
+@app.route('/get_user')
+def get_user():
+    if 'username' in session:
+        return jsonify({'net_id': session['username']})
+    else:
+        return ([False, 'User not logged in'])
+    
+#-----------------------------------------------------------------------
+
+# Clean expired cards
+def clean_expired_cards():
+    try:
+        with psycopg2.connect(DATABASE_URL) as conn:
+            with conn.cursor() as cursor:
+                cursor.execute("""
+                    DELETE FROM cards WHERE expiration <= NOW();
+                """)
+    except Exception as ex:
+        print(str(ex))
+
+#-----------------------------------------------------------------------
+
 # API Route for fetching all active cards for the homepage
 @app.route('/api/cards', methods=['GET'])
 def get_data():
     try:
+        # Clean expired cards before fetching data
+        clean_expired_cards()
+
         with psycopg2.connect(DATABASE_URL) as conn:
             with conn.cursor() as cursor:
-                
                 # Execute query to retrieve all active cards information
                 cursor.execute('''
                     SELECT card_id, title, photo_url, location, 
@@ -233,4 +288,4 @@ def create_card():
 
 # Start the Flask app
 if __name__ == '__main__':
-    app.run()
+    app.run(port=3000)

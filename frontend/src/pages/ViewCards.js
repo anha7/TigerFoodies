@@ -4,37 +4,36 @@
 
 // Imports
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import './ViewCards.css'; // Import custom CSS file
 import matheyImage from './media/mathey.png';
+import ViewCardModal from './ViewCardModal'; // to view extended card info
 
 //----------------------------------------------------------------------
 
-const ViewCards = () => {
+const ViewCards = ({ net_id }) => {
     // State to store fetched cards
-    const [net_id, setUserId] = useState("");
     const [cards, setCards] = useState([]);
     const navigate = useNavigate();
 
 //----------------------------------------------------------------------
 
     // Send request to fetch user's cards from the back-end
-    const fetchUserCards = async () => {
-        try {
-            const response = await fetch(`/api/cards/${net_id}`, {
-                method: 'GET'
-            });
-            const data = await response.json();
-            setCards(data);
-        } catch (error) {
-            console.error('Error fetching user cards:', error);
-        }
-    };
+    useEffect(() => {
+        const fetchUserCards = async () => {
+            try {
+                const response = await fetch(`/api/cards/${net_id}`, {
+                    method: 'GET'
+                });
+                const data = await response.json();
+                setCards(data);
+            } catch (error) {
+                console.error('Error fetching user cards:', error);
+            }
+        };
 
-    // Handle sending net_id to the backend to retrieve cards
-    const handleSendNetId = async () => {
-        await fetchUserCards();
-    }
+        fetchUserCards();
+    }, [net_id]);
 
 //----------------------------------------------------------------------
 
@@ -77,23 +76,6 @@ const ViewCards = () => {
             <div className="viewcards-main">
                 {/* Page name */}
                 <div className="page-name"> <h2> My Cards </h2> </div>
-
-                {/* Temporarily manually submit your Net ID */}
-                <div className='logIn'>
-                    <h4> Net ID: 
-                        <input
-                            required
-                            type="text" 
-                            name="net_id"
-                            value={net_id}
-                            onChange={(e) => setUserId(e.target.value)}
-                        /> 
-                        <button 
-                            type="submit" onClick={() => handleSendNetId()}>
-                                Submit
-                        </button>
-                    </h4>
-                </div> 
                 
                 {/* Display list of user's free food cards */}
                 <div className="viewcards-card-list">
