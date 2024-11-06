@@ -228,40 +228,40 @@ def create_card():
 #-----------------------------------------------------------------------
 
 
-# # API Route for editing cards
-# @app.route('/api/cards<int:card_id>', methods=['PUT'])
-# def edit_card(card_id):
-#     try:
-#         # retrieve json object
-#         card_data = app.request.get_json()
-#         # get relevant fields
-#         title = card_data.get('title')
-#         description = card_data.get('description')
-#         photo_url = card_data.get('photo_url')
-#         location = card_data.get('location')
-#         dietary_tags = card_data.get('dietary_tags')
-#         allergies = card_data.get('allergies')
-#         new_card = [title, description, photo_url, location, dietary_tags, allergies, card_id]
+# API Route for editing cards
+@app.route('/api/cards/<int:card_id>', methods=['PUT'])
+def edit_card(card_id):
+    try:
+        # retrieve json object
+        card_data = request.get_json()
+        # get relevant fields
+        title = card_data.get('title')
+        description = card_data.get('description')
+        photo_url = card_data.get('photo_url')
+        location = card_data.get('location')
+        dietary_tags = card_data.get('dietary_tags')
+        allergies = card_data.get('allergies')
+        new_card = [title, description, photo_url, location, dietary_tags, allergies, card_id]
 
-#         # check new card attributes (Should we?)
-#         if not all([title, location]):
-#             return jsonify("error: Missing required fields")
+        # check new card attributes (Should we?)
+        if not all([title, location]):
+            return jsonify("error: Missing required fields")
         
-#         # connect to database
-#         with psycopg2.connect(DATABASE_URL) as conn:
-#             with conn.cursor() as cursor:
-#                 # define update query
-#                 update_query = 'UPDATE cards SET (title, description, photo_url'
-#                 update_query += ', location, dietary_tags, allergies, updated_at)'
-#                 update_query += ' = (%s, %s, %s, %s, %s, %s, CURRENT_TIMESTAMP)'
-#                 update_query += ' WHERE card_id = %s'
-#                 # Execute query to update row in the database
-#                 cursor.execute(update_query, new_card)
-#                 # Commit to database
-#                 conn.commit()
+        # connect to database
+        with psycopg2.connect(DATABASE_URL) as conn:
+            with conn.cursor() as cursor:
+                # define update query
+                update_query = 'UPDATE cards SET title, description, photo_url'
+                update_query += ', location, dietary_tags, allergies, updated_at'
+                update_query += ' = %s, %s, %s, %s, %s, %s, CURRENT_TIMESTAMP'
+                update_query += ' WHERE card_id = %s'
+                # Execute query to update row in the database
+                cursor.execute(update_query, new_card)
+                # Commit to database
+                conn.commit()
 
-#     except Exception as ex:
-#         print(ex)
+    except Exception as ex:
+        print(ex)
 
 # #-----------------------------------------------------------------------
         
