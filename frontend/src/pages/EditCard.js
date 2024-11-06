@@ -3,14 +3,20 @@
 //----------------------------------------------------------------------
 
 // Imports
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import './CreateEditCard.css'; // Import custom CSS file
 
 //----------------------------------------------------------------------
 
-function EditCard( { card_id } ) {
+function EditCard() {
     const {card_id} = useParams();
+    const [title, setTitle] = useState('');
+    const [description, setDescription] = useState('');
+    const [photo, setPhoto] = useState('');
+    const [location, setLocation] = useState('');
+    const [dietary_tags, setDietary] = useState([]);
+    const [allergies, setAllergies] = useState([]);
     const navigate = useNavigate();
     const [values, setValues] = useState ({
         card_id: card_id,
@@ -69,7 +75,7 @@ function EditCard( { card_id } ) {
     const handleSubmit = async (e) => {
         e.preventDefault(); // Prevent default form submission
         const cardData = {
-            net_id: net_id,
+            // net_id: net_id,
             title: title, 
             description: description,
             photo_url: photo, 
