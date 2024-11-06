@@ -251,9 +251,9 @@ def edit_card(card_id):
         with psycopg2.connect(DATABASE_URL) as conn:
             with conn.cursor() as cursor:
                 # define update query
-                update_query = 'UPDATE cards SET title, description, photo_url'
-                update_query += ', location, dietary_tags, allergies, updated_at'
-                update_query += ' = %s, %s, %s, %s, %s, %s, CURRENT_TIMESTAMP'
+                update_query = 'UPDATE cards SET (title, description, photo_url'
+                update_query += ', location, dietary_tags, allergies, updated_at)'
+                update_query += ' = (%s, %s, %s, %s, %s, %s, CURRENT_TIMESTAMP)'
                 update_query += ' WHERE card_id = %s'
                 # Execute query to update row in the database
                 cursor.execute(update_query, new_card)
@@ -265,27 +265,27 @@ def edit_card(card_id):
 
 # #-----------------------------------------------------------------------
         
-# # API Route for retrieving cards
-# @app.route('/api/cards<int:card_id>', methods=['GET'])
-# def retrieve_card(card_id):
-#     try:
-#         # connect to database
-#         with psycopg2.connect(DATABASE_URL) as conn:
-#             with conn.cursor() as cursor:
-#                 # define insertion query
-#                 retrieval_query = ''' SELECT card_id, title, photo_url, location, 
-#                     dietary_tags, allergies, posted_at FROM cards '''
-#                 retrieval_query += ' WHERE card_id = %s;'
-#                 # Execute query to retrieve card with given card_id
-#                 cursor.execute(retrieval_query, [card_id])
-#                 row = cursor.fetchall()
-#                 return jsonify(row)
+# API Route for retrieving cards
+@app.route('/api/cards/<int:card_id>', methods=['GET'])
+def retrieve_card(card_id):
+    try:
+        # connect to database
+        with psycopg2.connect(DATABASE_URL) as conn:
+            with conn.cursor() as cursor:
+                # define insertion query
+                retrieval_query = ''' SELECT card_id, title, description,
+                    photo_url, location, dietary_tags, allergies, 
+                    posted_at FROM cards WHERE card_id = %s;'''
+                # Execute query to retrieve card with given card_id
+                cursor.execute(retrieval_query, [card_id])
+                row = cursor.fetchall()
+                return jsonify(row)
 
-#     except Exception as ex:
-#         print(ex)
+    except Exception as ex:
+        print(ex)
 
 #-----------------------------------------------------------------------
 
 # Start the Flask app
 if __name__ == '__main__':
-    app.run(port=3000)
+    app.run(port=5000)
