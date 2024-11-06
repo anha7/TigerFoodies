@@ -81,20 +81,9 @@ const ViewCards = ({ net_id }) => {
                 <div className="viewcards-card-list">
                     {cards.map((card) => (
                         <div className='viewcards-container'>
-                            <div key={card.card_id} className="card">
-                                <div 
-                                    className="card-image"
-                                    style={{ backgroundImage: `url(${card.photo_url})`}}
-                                >
-                                </div>
-                                <div className="card-content">
-                                    <h3>{card.title}</h3>
-                                    <p>Location: {card.location}</p>
-                                    <p>Dietary Restrictions: {card.dietary_tags.join(', ')}</p>
-                                    <p>Allergens: {card.allergies.join(', ')}</p>
-                                    <p className="posted-at">Posted at {card.posted_at}</p>
-                                </div>
-                            </div>
+                            {filterCards().map((card) => (
+                                <PostingAndModal card = {card}/>
+                            ))}
                             {/* Makes the edit and delete buttons */}
                             <div className="card-actions">
                                 <button 

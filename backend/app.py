@@ -196,10 +196,6 @@ def create_card():
         # Package parse data
         new_card = [net_id, title, description, photo_url, location, 
                     dietary_tags, allergies]
-
-        # # check new card attributes (Should we?)
-        # if not all([net_id, title, location]):
-        #     return jsonify("error: Missing required fields")
         
         # Connect to database and establish a cursor
         with psycopg2.connect(DATABASE_URL) as conn:
@@ -227,30 +223,26 @@ def create_card():
 
 #-----------------------------------------------------------------------
 
-
 # API Route for editing cards
 @app.route('/api/cards/<int:card_id>', methods=['PUT'])
 def edit_card(card_id):
     try:
-        # retrieve json object
+        # Retrieve JSON object
         card_data = request.get_json()
-        # get relevant fields
+        # Get relevant fields
         title = card_data.get('title')
         description = card_data.get('description')
         photo_url = card_data.get('photo_url')
         location = card_data.get('location')
         dietary_tags = card_data.get('dietary_tags')
         allergies = card_data.get('allergies')
-        new_card = [title, description, photo_url, location, dietary_tags, allergies, card_id]
-
-        # check new card attributes (Should we?)
-        if not all([title, location]):
-            return jsonify("error: Missing required fields")
+        new_card = [title, description, photo_url, location, 
+                    dietary_tags, allergies, card_id]
         
-        # connect to database
+        # Connect to database
         with psycopg2.connect(DATABASE_URL) as conn:
             with conn.cursor() as cursor:
-                # define update query
+                # Define update query
                 update_query = 'UPDATE cards SET (title, description, photo_url'
                 update_query += ', location, dietary_tags, allergies, updated_at)'
                 update_query += ' = (%s, %s, %s, %s, %s, %s, CURRENT_TIMESTAMP)'
@@ -269,10 +261,10 @@ def edit_card(card_id):
 @app.route('/api/cards/<int:card_id>', methods=['GET'])
 def retrieve_card(card_id):
     try:
-        # connect to database
+        # Connect to database
         with psycopg2.connect(DATABASE_URL) as conn:
             with conn.cursor() as cursor:
-                # define insertion query
+                # Define insertion query
                 retrieval_query = ''' SELECT card_id, title, description,
                     photo_url, location, dietary_tags, allergies, 
                     posted_at FROM cards WHERE card_id = %s;'''
@@ -288,4 +280,4 @@ def retrieve_card(card_id):
 
 # Start the Flask app
 if __name__ == '__main__':
-    app.run(port=5000)
+    app.run(port=3000)

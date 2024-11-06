@@ -39,6 +39,12 @@ function EditCard() {
                         description: data.description || '', photo_url: data.photo_url || '',
                         location: data.location || '', dietary_tags: data.dietary_tags || [],
                         allergies: data.allergies || []});
+                    setTitle(values.title);
+                    setDescription(values.description);
+                    setPhoto(values.photo_url);
+                    setLocation(values.location);
+                    setDietary(values.dietary_tags);
+                    setAllergies(values.allergies);
                 } else {
                     console.warn('Backend card information not available.');
                 }
@@ -127,7 +133,7 @@ function EditCard() {
                             required
                             type="text" 
                             name = "title"
-                            value={values.title} 
+                            value={title} 
                             onChange={(e) => setTitle(e.target.value)}/> </h4>
                     </div>
 
@@ -138,7 +144,7 @@ function EditCard() {
                             required
                             type="text" 
                             name = "photo_url"
-                            value={values.photo_url}
+                            value={photo_url}
                             // onChange={handleImageChange}
                             onChange={(e) => setPhoto(e.target.value)} />
                             <div className='storeImage'> <img src={photo} style={{ width: 200, height: 200 }} alt="No Images"/> </div>
@@ -152,7 +158,7 @@ function EditCard() {
                             required
                             type="text" 
                             name = "location"
-                            value={values.location} 
+                            value={location} 
                             onChange={(e) => setLocation(e.target.value)}/>
                         </h4>
                     </div>
@@ -161,19 +167,19 @@ function EditCard() {
                     <div className="dietary_tags">
                         <h4>Dietary Tags (Select all that apply): </h4>
                         
-                        <label><input type="checkbox" name="dietary_tags" value="Halal" checked={values.dietary_tags.includes(['Halal'])} onChange={handleDietaryChange}/> Halal</label>
-                        <label><input type="checkbox" name="dietary_tags" value="Kosher" checked={values.dietary_tags.includes(['Kosher'])} onChange={handleDietaryChange}/> Kosher</label>
-                        <label><input type="checkbox" name="dietary_tags" value="Vegetarian" checked={values.dietary_tags.includes(['Vegetarian'])} onChange={handleDietaryChange}/> Vegetarian</label>
-                        <label><input type="checkbox" name="dietary_tags" value="Vegan" checked={values.dietary_tags.includes(['Vegan'])} onChange={handleDietaryChange}/> Vegan</label>
-                        <label><input type="checkbox" name="dietary_tags" value="Gluten-Free" checked={values.dietary_tags.includes(['Gluten-Free'])} onChange={handleDietaryChange}/> Gluten-Free</label>
+                        <label><input type="checkbox" name="dietary_tags" value="Halal" checked={dietary_tags.includes('Halal')} onChange={handleDietaryChange}/> Halal</label>
+                        <label><input type="checkbox" name="dietary_tags" value="Kosher" checked={dietary_tags.includes('Kosher')} onChange={handleDietaryChange}/> Kosher</label>
+                        <label><input type="checkbox" name="dietary_tags" value="Vegetarian" checked={dietary_tags.includes('Vegetarian')} onChange={handleDietaryChange}/> Vegetarian</label>
+                        <label><input type="checkbox" name="dietary_tags" value="Vegan" checked={dietary_tags.includes('Vegan')} onChange={handleDietaryChange}/> Vegan</label>
+                        <label><input type="checkbox" name="dietary_tags" value="Gluten-Free" checked={dietary_tags.includes('Gluten-Free')} onChange={handleDietaryChange}/> Gluten-Free</label>
                     </div>
                     
                     {/* Allergens field */}
                     <div className="allergies">
                         <h4>Allergens (Select all that apply): </h4>
-                        <label><input type="checkbox" name="allergies" value="Nuts" checked={values.allergies.includes(['Nuts'])} onChange={handleAllergiesChange}/> Nuts</label>
-                        <label><input type="checkbox" name="allergies" value="Dairy" checked={values.allergies.includes(['Dairy'])} onChange={handleAllergiesChange}/> Dairy</label>
-                        <label><input type="checkbox" name="allergies" value="Shellfish" checked={values.allergies.includes(['Shellfish'])} onChange={handleAllergiesChange}/> Shellfish</label>
+                        <label><input type="checkbox" name="allergies" value="Nuts" checked={allergies.includes('Nuts')} onChange={handleAllergiesChange}/> Nuts</label>
+                        <label><input type="checkbox" name="allergies" value="Dairy" checked={allergies.includes('Dairy')} onChange={handleAllergiesChange}/> Dairy</label>
+                        <label><input type="checkbox" name="allergies" value="Shellfish" checked={allergies.includes('Shellfish')} onChange={handleAllergiesChange}/> Shellfish</label>
                     </div>
 
                     {/* Description field */}    
@@ -182,7 +188,7 @@ function EditCard() {
                         <input
                             type='text'
                             name = "description" 
-                            value={values.description} 
+                            value={description} 
                             onChange={(e) => setDescription(e.target.value)}/> 
                         </h4>     
                     </div>   

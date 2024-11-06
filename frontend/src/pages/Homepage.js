@@ -384,20 +384,7 @@ const Homepage = () => {
                     {/* Display list of active free food cards */}
                     <div className="card-list">
                         {filterCards().map((card) => (
-                            <div key={card.card_id} className="card">
-                                <div 
-                                    className="card-image"
-                                    style={{ backgroundImage: `url(${card.photo_url})`}}
-                                >
-                                </div>
-                                <div className="card-content">
-                                    <h3>{card.title}</h3>
-                                    <p><b>Location:</b> {card.location}</p>
-                                    <p><b>Dietary Preferences:</b> {card.dietary_tags.join(', ')}</p>
-                                    <p><b>Allergens:</b> {card.allergies.join(', ')}</p>
-                                    <p className="posted-at">Posted {formatTimeAgo(card.posted_at)}</p>
-                                </div>
-                            </div>
+                            <PostingAndModal card = {card}/>
                         ))}
 
                         {/* Fake card for filter testing purposes
