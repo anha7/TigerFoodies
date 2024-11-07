@@ -10,6 +10,7 @@ import './CreateEditCard.css'; // Import custom CSS file
 //----------------------------------------------------------------------
 
 function EditCard() {
+    // Get card_id from URL
     const {card_id} = useParams();
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
@@ -18,33 +19,23 @@ function EditCard() {
     const [dietary_tags, setDietary] = useState([]);
     const [allergies, setAllergies] = useState([]);
     const navigate = useNavigate();
-    const [values, setValues] = useState ({
-        card_id: card_id,
-        title: '',
-        photo_url: '',
-        location: '',
-        dietary_tags: [],
-        allergies: []
-    })
+
+    // Retrieve and populate form with card data for associated id
     useEffect(() => {
-        const fetchCard = async (card_id) => {        
+        const fetchCard = async () => {        
             try {
                 const response = await fetch(`/api/cards/${card_id}`, {
                     method: 'GET',
                 });
                 if (response.ok) {
                     const data = await response.json();
-                    // if (data.len == 0) should we check if card data exists?
-                    setValues({...values, title: data.title || '', 
-                        description: data.description || '', photo_url: data.photo_url || '',
-                        location: data.location || '', dietary_tags: data.dietary_tags || [],
-                        allergies: data.allergies || []});
-                    setTitle(values.title);
-                    setDescription(values.description);
-                    setPhoto(values.photo_url);
-                    setLocation(values.location);
-                    setDietary(values.dietary_tags);
-                    setAllergies(values.allergies);
+                    console.log("Fetched card data:", data);
+                    setTitle(data.title || '');
+                    setDescription(data.description || '');
+                    setPhoto(data.photo_url || '');
+                    setLocation(data.location || '');
+                    setDietary(data.dietary_tags || []);
+                    setAllergies(data.allergies || []);
                 } else {
                     console.warn('Backend card information not available.');
                 }
@@ -100,13 +91,13 @@ function EditCard() {
             });
 
             if (response.ok) {
-                console.log('Card successfully created');
-                navigate('/'); // Redirect to homepage after successful card creation
+                console.log('Card successfully edited');
+                navigate('/view'); // Redirect to view after successful card editing
             } else {
-                console.error('Error creating card');
+                console.error('Error editing card');
             }
         } catch (error) {
-            console.error('Error submitting the card:', error);
+            console.error('Error updating the card:', error);
         }
     };
 
@@ -123,7 +114,7 @@ function EditCard() {
 
             {/* Main content container for form data */}
             <div className='main' >
-                <div className="page-name"> <h2> Make a Card </h2> </div>
+                <div className="page-name"> <h2>Edit Card</h2> </div>
 
                 <form onSubmit={handleSubmit}>
                     {/* Title field */}
@@ -144,7 +135,7 @@ function EditCard() {
                             required
                             type="text" 
                             name = "photo_url"
-                            value={photo_url}
+                            value={photo}
                             // onChange={handleImageChange}
                             onChange={(e) => setPhoto(e.target.value)} />
                             <div className='storeImage'> <img src={photo} style={{ width: 200, height: 200 }} alt="No Images"/> </div>

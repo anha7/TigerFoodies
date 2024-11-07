@@ -196,20 +196,20 @@ main {
 }
 
 /* Style the text content of the cards */
-.card-content {
+.card-content, .modal-card-content {
     display: flex;
     flex-direction: column;
     padding: 1rem;
 }
 
-.card h3 {
+.card h3, .modal-card h3 {
     text-align: left;
     font-size: 1.3rem;
     margin-top: 0.5px;
     margin-bottom: 0;
 }
 
-.card p {
+.card p, .modal-card p {
     text-align: left;
     margin-bottom: 0.25rem;
     margin-top: 0.2rem;
@@ -220,6 +220,39 @@ main {
     font-style: italic;
     align-self: end;
     font-size: 0.75rem;
+}
+
+.modal-root {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5)
+}
+
+/* Style active MODAL */
+.modal-card {
+    position: absolute;
+    background-color: #F6AE99;
+    border-radius: 15px;
+    align-items: center;
+    justify-content: center;
+    height: 75%;
+    width: 33%;
+    overflow-y: scroll;
+    box-shadow: 0.25px 0.25px 2px black;
+}
+
+/* Style the modal card image */
+.modal-card-image {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 275px;
 }
 
 /* Style the sidebar */
@@ -251,7 +284,7 @@ main {
     display: none;
 }
 
-/* Style mobile food preferences moenu */
+/* Style mobile food preferences menu */
 .mobile-preferences-menu {
     display: none; /* Hide mobile preferences selection in normal display */
     align-self: center;
@@ -398,6 +431,11 @@ footer p {
     .search-icon {
         padding-top:px;
     }
+
+    /* Make modal container wider on smaller screens */
+    .modal-card {
+        width: 75%;
+    }
 }
 
 /* Media query for screens between 0px and 480px */
@@ -415,5 +453,10 @@ footer p {
     /* Center greeting on mobile screens */
     .greeting {
         text-align: center;
+    }
+
+    /* Make modal container wider on smaller screens */
+    .modal-card {
+        width: 90%;
     }
 }

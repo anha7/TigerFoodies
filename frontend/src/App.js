@@ -41,7 +41,7 @@ function App() {
                 <Route path="/" element={<Homepage net_id={net_id}/>} />
                 <Route path="/post" element={<CreateEditCard net_id={net_id}/>} />
                 <Route path="/view" element={<ViewCards net_id={net_id}/>} />
-                <Route path="/edit/:card_id" element={<EditCard net_id={net_id}/>} />
+                <Route path="/edit/:card_id" element={<EditCard/>} />
             </Routes>
             </div>
         </Router>

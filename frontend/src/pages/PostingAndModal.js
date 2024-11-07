@@ -62,19 +62,15 @@ function Modal({card, setIsModalActive}) {
             setIsModalActive(false)
         }} className="modal-root">
             <div className = 'modal-card' onClick = {e => e.stopPropagation()}>
-                <div className='modal-card-top'>
-                    <h1>{card.title}</h1>
+                <div className="modal-card-image" style={{ backgroundImage: `url(${card.photo_url})`}} />
+                <div className="modal-card-content">
+                    <h3>{card.title}</h3>
+                    <p><b>Location:</b> {card.location}</p>
+                    <p><b>Dietary Preferences:</b> {card.dietary_tags.join(', ')}</p>
+                    <p><b>Allergens:</b> {card.allergies.join(', ')}</p>
+                    <p><b>Description:</b> {card.description}</p>
                     <p className="posted-at">Posted {formatTimeAgo(card.posted_at)}</p>
                 </div>
-                <div 
-                className="modal-card-image"
-                style={{ backgroundImage: `url(${card.photo_url})`}}
-                >
-                </div>
-                <h3>Location: {card.location}</h3>
-                <h3>Dietary Restrictions: {card.dietary_tags.join(', ')}</h3>
-                <h3>Allergens: {card.allergies.join(', ')}</h3>
-                <h3>Description: {card.description}</h3>
             </div>
         </div>
     );

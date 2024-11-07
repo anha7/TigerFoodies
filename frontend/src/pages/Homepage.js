@@ -12,6 +12,7 @@ import plusIcon from './media/plus.png';
 import matheyImage from './media/mathey.png';
 import hamburgerIcon from './media/hamburger-icon.png';
 import preferencesIcon from './media/preferences.png';
+import PostingAndModal from './PostingAndModal'; // to view extended card info
 
 //----------------------------------------------------------------------
 

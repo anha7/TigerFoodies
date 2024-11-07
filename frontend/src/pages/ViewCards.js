@@ -7,7 +7,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './ViewCards.css'; // Import custom CSS file
 import matheyImage from './media/mathey.png';
-import ViewCardModal from './ViewCardModal'; // to view extended card info
+import PostingAndModal from './PostingAndModal'; // To view extended card info
 
 //----------------------------------------------------------------------
 
@@ -56,8 +56,8 @@ const ViewCards = ({ net_id }) => {
 //----------------------------------------------------------------------
 
     // Handle editing cards
-    const handleEditCard = (cardId) => {
-        navigate(`/edit/${cardId}`, {state: {cardId}});
+    const handleEditCard = (card_id) => {
+        navigate(`/edit/${card_id}`);
     };
 
 //----------------------------------------------------------------------
@@ -81,9 +81,8 @@ const ViewCards = ({ net_id }) => {
                 <div className="viewcards-card-list">
                     {cards.map((card) => (
                         <div className='viewcards-container'>
-                            {filterCards().map((card) => (
-                                <PostingAndModal card = {card}/>
-                            ))}
+                            {/* Get card info */}
+                            <PostingAndModal card = {card}/>
                             {/* Makes the edit and delete buttons */}
                             <div className="card-actions">
                                 <button 

@@ -1,6 +1,5 @@
 from flask import Flask, send_from_directory, jsonify, request, session
 from dotenv import load_dotenv
-from authenticate import authenticate
 import os
 import psycopg2
 import sys
@@ -25,10 +24,8 @@ app.secret_key = secrets.token_hex(32)
 @app.route('/')
 def serve():
     # Authenticate user when they access the site and store username
-    username = authenticate()
-    if username:
-        session['username'] = username
-        add_user(username)
+    session['username'] = 'ab123'
+    add_user('ab123')
     return send_from_directory(app.static_folder, 'index.html')
 
 # Route to serve static files (like CSS, JS, images, etc.)
@@ -127,7 +124,7 @@ def retrieve_user_cards(net_id):
             with conn.cursor() as cursor:
                 # Define insertion query
                 insertion_query = '''SELECT card_id, title, photo_url, 
-                    location, dietary_tags, allergies, description,
+                    location, dietary_tags, allergies, description, 
                     posted_at FROM cards
                     WHERE net_id = %s;
                 '''
@@ -296,4 +293,4 @@ def retrieve_card(card_id):
 
 # Start the Flask app
 if __name__ == '__main__':
-    app.run(port=3000)
+    app.run()
