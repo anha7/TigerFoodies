@@ -37,6 +37,7 @@ function PostingAndModal({card}) {
     );
 }
 
+// Function that displays card for the dashboard
 function Card({ onClick, card }) {
     return (
         <div key={card.card_id} className="card" onClick = {onClick}>
@@ -56,6 +57,7 @@ function Card({ onClick, card }) {
     );
 }
 
+// Function that display all card information for the modal
 function Modal({card, setIsModalActive}) {
     return (
         <div onClick={function() {

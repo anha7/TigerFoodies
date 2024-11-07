@@ -1,4 +1,4 @@
-// src/pages/CreateEditCard.js
+// src/pages/CreateCard.js
 
 //----------------------------------------------------------------------
 
@@ -9,7 +9,7 @@ import './CreateEditCard.css'; // Import custom CSS file
 
 //----------------------------------------------------------------------
 
-function CreateEditCard( { net_id } ) {
+function CreateCard( { net_id } ) {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [photo, setPhoto] = useState('');
@@ -115,7 +115,7 @@ function CreateEditCard( { net_id } ) {
 //----------------------------------------------------------------------
 
     return (
-        <div className="CreateEditCard">
+        <div className="CreateCard">
 
             {/* Navigation Bar */}
             <nav className = "nav">
@@ -211,4 +211,4 @@ function CreateEditCard( { net_id } ) {
     );
 };
 
-export default CreateEditCard;
+export default CreateCard;

@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Homepage from './pages/Homepage';
-import CreateEditCard from './pages/CreateEditCard';
+import CreateCard from './pages/CreateCard';
 import ViewCards from './pages/ViewCards';
 import EditCard from './pages/EditCard'
 
@@ -39,7 +39,7 @@ function App() {
             <div>
             <Routes>
                 <Route path="/" element={<Homepage net_id={net_id}/>} />
-                <Route path="/post" element={<CreateEditCard net_id={net_id}/>} />
+                <Route path="/post" element={<CreateCard net_id={net_id}/>} />
                 <Route path="/view" element={<ViewCards net_id={net_id}/>} />
                 <Route path="/edit/:card_id" element={<EditCard/>} />
             </Routes>
