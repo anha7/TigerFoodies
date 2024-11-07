@@ -12,7 +12,7 @@ import plusIcon from './media/plus.png';
 import matheyImage from './media/mathey.png';
 import hamburgerIcon from './media/hamburger-icon.png';
 import preferencesIcon from './media/preferences.png';
-import PostingAndModal from './PostingAndModal'; // to view extended card info
+import CardDisplay from './CardDisplay'; // to view extended card info
 
 //----------------------------------------------------------------------
 
@@ -195,25 +195,6 @@ const Homepage = () => {
 
 //----------------------------------------------------------------------
 
-    // Function to format the time into a relative "time ago" format
-    const formatTimeAgo = (timestamp) => {
-        const currentTime = new Date();
-        const postedTime = new Date(timestamp);
-        const differenceInSeconds = Math.floor((currentTime - postedTime) / 1000);
-
-        if (differenceInSeconds < 60) {
-            return `${differenceInSeconds} second${differenceInSeconds !== 1 ? 's' : ''} ago`;
-        } else if (differenceInSeconds < 3600) {
-            const minutes = Math.floor(differenceInSeconds / 60);
-            return `${minutes} minute${minutes !== 1 ? 's' : ''} ago`;
-        } else {
-            const hours = Math.floor(differenceInSeconds / 3600);
-            return `${hours} hour${hours !== 1 ? 's' : ''} ago`;
-        }
-    }
-
-//----------------------------------------------------------------------
-
     // Function that toggles hamburger menu (for mobile)
     const toggleHamburger = () => {
         setHamburgerOpen(!isHamburgerOpen);
@@ -385,7 +366,7 @@ const Homepage = () => {
                     {/* Display list of active free food cards */}
                     <div className="card-list">
                         {filterCards().map((card) => (
-                            <PostingAndModal card = {card}/>
+                            <CardDisplay card = {card}/>
                         ))}
 
                         {/* Fake card for filter testing purposes

@@ -7,7 +7,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './ViewCards.css'; // Import custom CSS file
 import matheyImage from './media/mathey.png';
-import PostingAndModal from './PostingAndModal'; // To view extended card info
+import CardDisplay from './CardDisplay'; // To view extended card info
 
 //----------------------------------------------------------------------
 
@@ -82,7 +82,7 @@ const ViewCards = ({ net_id }) => {
                     {cards.map((card) => (
                         <div className='viewcards-container'>
                             {/* Get card info */}
-                            <PostingAndModal card = {card}/>
+                            <CardDisplay card = {card}/>
                             {/* Makes the edit and delete buttons */}
                             <div className="card-actions">
                                 <button 
