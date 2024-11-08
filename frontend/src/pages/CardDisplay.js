@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-
+import commentsIcon from './media/comments-icon.png';
+import mapIcon from './media/location-icon.png';
 //----------------------------------------------------------------------
 
 // Function to format the time into a relative "time ago" format
@@ -19,9 +20,12 @@ const formatTimeAgo = (timestamp) => {
     }
 }
 
+// Manages card and modal states
+// Posting and modal creates card and modal and opens modal when card clicked
 function PostingAndModal({card}) {
     const [isModalActive, setIsModalActive] = useState(false);
 
+    // sets isModalActive to true to signal modal opening
     const handleCardClick = () => {
         setIsModalActive(true);
     };
@@ -60,9 +64,11 @@ function Card({ onClick, card }) {
 // Function that display all card information for the modal
 function Modal({card, setIsModalActive}) {
     return (
+        //Clicking outisde modal allows it to close, hence having modal root
         <div onClick={function() {
             setIsModalActive(false)
         }} className="modal-root">
+            {/* Stopping event propagation prevents clicks inside modal from closing it */}
             <div className = 'modal-card' onClick = {e => e.stopPropagation()}>
                 <div className="modal-card-image" style={{ backgroundImage: `url(${card.photo_url})`}} />
                 <div className="modal-card-content">
@@ -73,7 +79,21 @@ function Modal({card, setIsModalActive}) {
                     <p><b>Description:</b> {card.description}</p>
                     <p className="posted-at">Posted {formatTimeAgo(card.posted_at)}</p>
                 </div>
-            </div>
+                {/* comments and map modals for later
+                <div className = 'modal-footer'>
+                    <div className = 'modal-icons'>
+                     comments button
+                    <button className="comments-button">
+                            <img src={commentsIcon} alt="Comments" height="15px" />
+                    </button>
+                    location button
+                    <button className="location-button">
+                        <img src={mapIcon} alt="Map" height="15px" />
+                    </button>
+                    </div>
+                    <div><p className="posted-at">Posted {formatTimeAgo(card.posted_at)}</p></div>
+                </div> */}
+            </div>npm 
         </div>
     );
 }

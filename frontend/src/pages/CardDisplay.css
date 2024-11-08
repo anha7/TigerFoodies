@@ -1,0 +1,31 @@
+.modal-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f2d5c5;
+  padding: 8px 0;
+}
+
+.modal-icons {
+  margin-left : 8px
+}
+
+.comments-button, .location-button {
+  background: transparent; /* Makes background transparent */
+  border: none;
+  cursor: pointer; /* Adds pointer cursor on hover */
+  padding: 0; /* Removes padding */
+  background-color: #F6AE99;
+  border-radius: 15px;
+  font-size: 0.75rem;
+  font-family: "Quicksand", sans-serif;
+  box-shadow: 0.1px 0.1px 2px black;
+  height: 100%;
+}
+
+.posted-at {
+  color: #716F81;
+  font-style: italic;
+  align-self: end;
+  font-size: 0.75rem;
+}
