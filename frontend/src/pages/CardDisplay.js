@@ -93,7 +93,7 @@ function Modal({card, setIsModalActive}) {
                     </div>
                     <div><p className="posted-at">Posted {formatTimeAgo(card.posted_at)}</p></div>
                 </div> */}
-            </div>
+            </div>npm 
         </div>
     );
 }
