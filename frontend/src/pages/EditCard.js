@@ -176,7 +176,7 @@ function EditCard() {
                     {/* Description field */}    
                     <div className="description"> 
                         <h4>Description: <br/>
-                        <input
+                        <textarea
                             type='text'
                             name = "description" 
                             value={description} 
