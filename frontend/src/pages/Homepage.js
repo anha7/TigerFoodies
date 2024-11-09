@@ -317,7 +317,7 @@ const Homepage = ({ net_id }) => {
                 <div className="content-container">
                     {/* Welcome section */}
                     <div className="greeting">
-                        <h1>{greeting}, welcome to TigerFoodies!</h1>
+                        <h1>{greeting} {net_id}, welcome to TigerFoodies!</h1>
                     </div>
 
                     {/* Div for preferences layout for when screen is smaller */}
