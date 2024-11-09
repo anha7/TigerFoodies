@@ -79,7 +79,7 @@ function Modal({card, setIsModalActive}) {
                     <p><b>Description:</b> {card.description}</p>
                     <p className="posted-at">Posted {formatTimeAgo(card.posted_at)}</p>
                 </div>
-                {/* comments and map modals for later
+                comments and map modals for later
                 <div className = 'modal-footer'>
                     <div className = 'modal-icons'>
                      comments button
@@ -92,7 +92,7 @@ function Modal({card, setIsModalActive}) {
                     </button>
                     </div>
                     <div><p className="posted-at">Posted {formatTimeAgo(card.posted_at)}</p></div>
-                </div> */}
+                </div>
             </div>npm 
         </div>
     );
