@@ -13,6 +13,7 @@ import matheyImage from './media/mathey.png';
 import hamburgerIcon from './media/hamburger-icon.png';
 import preferencesIcon from './media/preferences.png';
 import CardDisplay from './CardDisplay'; // to view extended card info
+import Feedback from './Feedback';
 
 //----------------------------------------------------------------------
 
@@ -46,7 +47,7 @@ const getGreeting = () => {
 //----------------------------------------------------------------------
 
 // Hompage functional component
-const Homepage = () => {
+const Homepage = ({ net_id }) => {
     // State to store fetched cards
     const [cards, setCards] = useState([]);
     // State to store search input
@@ -73,7 +74,13 @@ const Homepage = () => {
     const [isHamburgerOpen, setHamburgerOpen] = useState(false);
     // State that stores whether mobile preferences is open
     const [isPreferencesOpen, setPreferencesOpen] = useState(false);
+    // State for feedback modal
+    const [isFeedbackModalActive, setFeedbackModalActive] = useState(false);
 
+//----------------------------------------------------------------------
+
+    // function that toggles feedback modal
+    const toggleFeedbackModal = () => setFeedbackModalActive(!isFeedbackModalActive);
 
 //----------------------------------------------------------------------
 
@@ -250,7 +257,7 @@ const Homepage = () => {
                         <Link to="/view">View My Cards</Link>
                     </button>
                     {/* Report bugs button */}
-                    <button className="nav-button">
+                    <button className="nav-button" onClick={toggleFeedbackModal}>
                         Report Bugs...
                     </button>
                 </div>
@@ -299,7 +306,7 @@ const Homepage = () => {
                     <Link to="/view">View My Cards</Link>
                 </button>
                 {/* Report bugs button */}
-                <button className="nav-button">
+                <button className="nav-button" onClick={toggleFeedbackModal}>
                     Report Bugs...
                 </button>
             </div>
@@ -310,7 +317,7 @@ const Homepage = () => {
                 <div className="content-container">
                     {/* Welcome section */}
                     <div className="greeting">
-                        <h1>{greeting}, welcome to TigerFoodies!</h1>
+                        <h1>{greeting} {net_id}, welcome to TigerFoodies!</h1>
                     </div>
 
                     {/* Div for preferences layout for when screen is smaller */}
@@ -432,6 +439,9 @@ const Homepage = () => {
                     </div>
                 </aside>
             </main>
+
+            {/* Feedback modal component */}
+            <Feedback isModalActive={isFeedbackModalActive} setIsModalActive={setFeedbackModalActive} net_id={net_id} />
 
             {/* Footer */}
             <footer>

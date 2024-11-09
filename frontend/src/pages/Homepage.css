@@ -75,6 +75,7 @@ p {
     font-family: "Quicksand", sans-serif;
     box-shadow: 0.1px 0.1px 2px black;
     height: 100%;
+    cursor: pointer;
 }
 
 .nav-button:first-child, .navbar-right .nav-button:last-child {
@@ -118,7 +119,7 @@ p {
 .search-icon {
     left: 0;
     position: absolute;
-    padding: 8px 0 0 8px;
+    padding: 1.2vh 0 0 1.25vh;
     pointer-events: none;
 }
 
@@ -142,6 +143,51 @@ p {
     z-index: -1;
     display: flex;
     box-shadow: 1px 0 3px black;
+}
+
+/* Style the feedback form modal */
+.feedback-title {
+    height: 10vh;
+    padding-top: 0px;
+}
+
+.feedback-title h2 {
+    margin-top: 5vh;
+}
+
+.feedback-form {
+    display: flex;
+    height: 57vh;
+    margin: 0vh 3vw 3vh;
+}
+
+.feedback-form textarea {
+    height: 80%;
+    border: none;
+    box-shadow: 1px 0 3px black;
+    font-family: "Quicksand", sans-serif;
+    padding-left: 1vw;
+    padding-top: 2vh;
+    resize: none;
+    box-sizing: border-box;
+    text-wrap: wrap;
+}
+
+.feedback-form textarea::placeholder {
+    font-style: italic;
+}
+
+.feedback-form button {
+    margin-top: 2vh;
+    width: 30%;
+    height: 8%;
+    align-self: center;
+    background-color: #716F81;
+    font-family: "Quicksand", sans-serif;
+    border: none;
+    box-shadow: 1px 0 3px black;
+    font-size: 18px;
+    color: white;
 }
 
 /* Style the main content layout */
@@ -182,9 +228,9 @@ main {
     align-items: center;
     justify-content: center;
     height: 100%;
-    /* width: 280px; */
     overflow-y: scroll;
     box-shadow: 0.25px 0.25px 2px black;
+    cursor: pointer;
 }
 
 /* Style the card's image */
@@ -427,11 +473,6 @@ footer p {
         grid-template-columns: repeat(2, 1fr);
     }
 
-    /* Style the search icon */
-    .search-icon {
-        padding-top:px;
-    }
-
     /* Make modal container wider on smaller screens */
     .modal-card {
         width: 75%;
@@ -447,7 +488,7 @@ footer p {
 
     /* Style the search icon */
     .search-icon {
-        padding-top: 8px;
+        padding-top: 1.2vh;
     }
 
     /* Center greeting on mobile screens */

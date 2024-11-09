@@ -57,10 +57,11 @@ form {
 }
 
 /* Style input for description field */
-.description input {
-    width: 40%;
+.description textarea {
     height: 10vh;
+    width: 40%;
     font-family: "Quicksand", sans-serif;
+    resize: none;
 }
 
 /* Style dietary preferences and allergies */
@@ -113,7 +114,7 @@ button[type="submit"] {
     }
 
     /* Style input for description field */
-    .description input {
+    .description textarea {
         width: 95%;
         height: 10vh;
     }

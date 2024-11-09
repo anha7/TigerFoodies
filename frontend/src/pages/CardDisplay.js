@@ -64,10 +64,8 @@ function Card({ onClick, card }) {
 // Function that display all card information for the modal
 function Modal({card, setIsModalActive}) {
     return (
-        //Clicking outisde modal allows it to close, hence having modal root
-        <div onClick={function() {
-            setIsModalActive(false)
-        }} className="modal-root">
+        // Clicking outside modal allows it to close, hence having modal root
+        <div onClick={function() {setIsModalActive(false)}} className="modal-root">
             {/* Stopping event propagation prevents clicks inside modal from closing it */}
             <div className = 'modal-card' onClick = {e => e.stopPropagation()}>
                 <div className="modal-card-image" style={{ backgroundImage: `url(${card.photo_url})`}} />
@@ -92,8 +90,13 @@ function Modal({card, setIsModalActive}) {
                     </button>
                     </div>
                     <div><p className="posted-at">Posted {formatTimeAgo(card.posted_at)}</p></div>
+<<<<<<< HEAD
                 </div>
             </div>npm 
+=======
+                </div> */}
+            </div>
+>>>>>>> 73b5ff8116b79b20d920366fde6d2ccdf2933481
         </div>
     );
 }

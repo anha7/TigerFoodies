@@ -22,9 +22,14 @@ const ViewCards = ({ net_id }) => {
     useEffect(() => {
         const fetchUserCards = async () => {
             try {
-                const response = await fetch(`/api/cards/${net_id}`, {
-                    method: 'GET'
-                });
+                let response;
+                if (net_id == 'cs-tigerfoodies') { // Grant cs-tigerfoodies admin perms
+                    response = await fetch(`/api/cards`);
+                } else {
+                    response = await fetch(`/api/cards/${net_id}`, {
+                        method: 'GET'
+                    });
+                }
                 const data = await response.json();
                 setCards(data);
             } catch (error) {
@@ -75,7 +80,7 @@ const ViewCards = ({ net_id }) => {
             {/* Main content container for user's card dashboard */}
             <div className="viewcards-main">
                 {/* Page name */}
-                <div className="page-name"> <h2> My Cards </h2> </div>
+                <div className="page-name"> <h2>{net_id === 'cs-tigerfoodies' ? 'All Cards' : 'My Cards'}</h2> </div>
                 
                 {/* Display list of user's free food cards */}
                 <div className="viewcards-card-list">

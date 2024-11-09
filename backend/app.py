@@ -5,6 +5,8 @@ import os
 import psycopg2
 import sys
 import secrets
+from flask_mail import Mail, Message
+import bleach
 
 #-----------------------------------------------------------------------
 
@@ -18,6 +20,16 @@ app = Flask(__name__, static_folder='build', static_url_path='')
 
 # Set up secret key
 app.secret_key = secrets.token_hex(32)
+
+# Email configuration
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USERNAME'] = os.getenv('EMAIL_USER')
+app.config['MAIL_PASSWORD'] = os.getenv('EMAIL_PASS')
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+
+mail = Mail(app)
 
 #-----------------------------------------------------------------------
 
@@ -63,7 +75,7 @@ def get_user():
     if 'username' in session:
         return jsonify({'net_id': session['username']})
     else:
-        return ([False, 'User not logged in'])
+        return jsonify({"success": False, "message": "User not logged in"}), 500
     
 #-----------------------------------------------------------------------
 
@@ -80,7 +92,7 @@ def clean_expired_cards():
 
 #-----------------------------------------------------------------------
 
-# API Route for fetching all active cards for the homepage
+# API Route for fetching all active cards
 @app.route('/api/cards', methods=['GET'])
 def get_data():
     try:
@@ -113,8 +125,8 @@ def get_data():
 
                 return jsonify(cards)
     except Exception as ex:
-        print(ex)
-        return jsonify([False, str(ex)])
+        print(str(ex))
+        return jsonify({"success": False, "message": str(ex)}), 500
         
 #-----------------------------------------------------------------------
         
@@ -127,7 +139,7 @@ def retrieve_user_cards(net_id):
             with conn.cursor() as cursor:
                 # Define insertion query
                 insertion_query = '''SELECT card_id, title, photo_url, 
-                    location, dietary_tags, allergies, description,
+                    location, dietary_tags, allergies, description, 
                     posted_at FROM cards
                     WHERE net_id = %s;
                 '''
@@ -152,8 +164,8 @@ def retrieve_user_cards(net_id):
 
                 return jsonify(cards)
     except Exception as ex:
-        print(ex)
-        return jsonify([False, str(ex)])
+        print(str(ex))
+        return jsonify({"success": False, "message": str(ex)}), 500
 
 #----------------------------------------------------------------------- 
 
@@ -172,10 +184,10 @@ def delete_card(card_id):
 
                 # Commit to the database
                 conn.commit()
-            return jsonify([True, 'Successfully removed the card!'])
+                return jsonify({"success": True, "message": "Action successful!"}), 200
     except Exception as ex:
-        print(ex, file = sys.stderr)
-        return jsonify([False, str(ex)])
+        print(str(ex))
+        return jsonify({"success": False, "message": str(ex)}), 500
 
 #-----------------------------------------------------------------------
         
@@ -188,10 +200,10 @@ def create_card():
 
         # Parse relevant fields
         net_id = card_data.get('net_id')
-        title = card_data.get('title')
-        description = card_data.get('description')
-        photo_url = card_data.get('photo_url')
-        location = card_data.get('location')
+        title = bleach.clean(card_data.get('title'))
+        description = bleach.clean(card_data.get('description'))
+        photo_url = bleach.clean(card_data.get('photo_url'))
+        location = bleach.clean(card_data.get('location'))
         dietary_tags = card_data.get('dietary_tags')
         allergies = card_data.get('allergies')
 
@@ -218,10 +230,10 @@ def create_card():
                 # Commit to the database
                 conn.commit()
 
-                return jsonify([True, 'Successfully created a card!'])
+                return jsonify({"success": True, "message": "Action successful!"}), 200
     except Exception as ex:
-        print(ex)
-        return jsonify([False, str(ex)])
+        print(str(ex))
+        return jsonify({"success": False, "message": str(ex)}), 500
 
 #-----------------------------------------------------------------------
 
@@ -232,12 +244,14 @@ def edit_card(card_id):
         # Retrieve JSON object
         card_data = request.get_json()
         # Get relevant fields
-        title = card_data.get('title')
-        description = card_data.get('description')
-        photo_url = card_data.get('photo_url')
-        location = card_data.get('location')
+        title = bleach.clean(card_data.get('title'))
+        description = bleach.clean(card_data.get('description'))
+        photo_url = bleach.clean(card_data.get('photo_url'))
+        location = bleach.clean(card_data.get('location'))
         dietary_tags = card_data.get('dietary_tags')
         allergies = card_data.get('allergies')
+
+        # Paackage parsed data
         new_card = [title, description, photo_url, location, 
                     dietary_tags, allergies, card_id]
         
@@ -254,14 +268,14 @@ def edit_card(card_id):
                 # Commit to database
                 conn.commit()
 
-                return jsonify([True, 'Successfully updated a card!'])
+                return jsonify({"success": True, "message": "Action successful!"}), 200
     except Exception as ex:
-        print(ex)
-        return jsonify([False, str(ex)])
+        print(str(ex))
+        return jsonify({"success": False, "message": str(ex)}), 500
         
 # #-----------------------------------------------------------------------
         
-# API Route for retrieving cards
+# API Route for retrieving a specific card
 @app.route('/api/cards/<int:card_id>', methods=['GET'])
 def retrieve_card(card_id):
     try:
@@ -290,10 +304,35 @@ def retrieve_card(card_id):
                     return jsonify({"error": "Card not found"}), 404
 
     except Exception as ex:
+        print(str(ex))
+        return jsonify({"success": False, "message": str(ex)}), 500
+    
+#-----------------------------------------------------------------------
+
+# API route for sending feedback email to our service account
+@app.route('/api/feedback', methods=['POST'])
+def submit_feedback():
+    # Retrieve feedback JSON object from frontend and unpackage it
+    feedback_data = request.get_json()
+    feedback_sender = feedback_data.get('net_id')
+    feedback_text = bleach.clean(feedback_data.get('feedback'))
+
+    # Try to send email
+    try:
+        msg = Message(
+            subject="TigerFoodies Bug",
+            sender=app.config['MAIL_USERNAME'],
+            recipients=['cs-tigerfoodies@princeton.edu'],
+            body=f"Feedback received from {feedback_sender}:\n\n{feedback_text}"
+        )
+        mail.send(msg)
+        return jsonify({"success": True, "message": "Action successful!"}), 200
+    except Exception as ex:
         print(ex)
+        return jsonify({"success": False, "message": "Action unsuccessful"}), 500
 
 #-----------------------------------------------------------------------
 
 # Start the Flask app
 if __name__ == '__main__':
-    app.run(port=3000)
+    app.run()
