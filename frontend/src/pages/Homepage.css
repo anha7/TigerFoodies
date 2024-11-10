@@ -403,10 +403,24 @@ footer p {
 }
 
 .modal-footer .posted-at {
-    margin-left: -10%;
+    direction: rtl;
     height: 100%;
+    text-align: right;
+    white-space: nowrap;
+    padding-right: 5%;
+}
+
+.modal-comments-section {
+    background-color: white;
+    height: 50%;
+
 }
   
+.modal-comments-section h3 {
+    text-align: center;
+}
+
+
 /* Force hide mobile menus on screens wider than 840px */
 @media screen and (min-width: 841px) {
     .mobile-preferences-menu, .mobile-food-preference-selection {

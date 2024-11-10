@@ -330,6 +330,40 @@ def submit_feedback():
 
 #-----------------------------------------------------------------------
 
+# API Route for retrieving a specific card's comments
+@app.route('/api/comments/<int:card_id>', methods=['GET'])
+def retrieve_card_comments(card_id):
+    try:
+        # Connect to database
+        with psycopg2.connect(DATABASE_URL) as conn:
+            with conn.cursor() as cursor:
+                # Define insertion query
+                retrieval_query = ''' SELECT net_id, comment, posted_at 
+                FROM comments WHERE card_id = %s;'''
+                # Execute query to retrieve card with given card_id
+                cursor.execute(retrieval_query, [card_id])
+                rows = cursor.fetchall()
+
+                # Package queried data and send it over
+                if rows:
+                    comments = []
+                    for row in rows:
+                        comments.append({
+                            'net_id': row[0],
+                            'comment': row[1],
+                            'posted_at': row[2],
+                        })
+                    return jsonify(comments)
+                else:
+                    return jsonify({"error": "Card not found"}), 404
+
+    except Exception as ex:
+        print(str(ex))
+        return jsonify({"success": False, "message": str(ex)}), 500
+    
+#-----------------------------------------------------------------------
+    
+
 # Start the Flask app
 if __name__ == '__main__':
     app.run()

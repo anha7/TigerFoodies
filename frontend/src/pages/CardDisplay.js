@@ -63,6 +63,53 @@ function Card({ onClick, card }) {
 
 // Function that display all card information for the modal
 function Modal({card, setIsModalActive}) {
+    const [commentsIsActive, setCommentsIsActive] = useState(false)
+     
+    // maps will be implemented later, but state must be changed when
+    // comments button is clicked
+
+    const [mapsIsActive, setMapsIsActive] = useState(false)
+
+    function handleCommentsButtonClick() {
+        setCommentsIsActive(true)
+        setMapsIsActive(false)
+    }
+
+    function CommentsSection({card_id}) {
+        const [comments, setComments] = useState([])
+
+        // Hook that fetches comments data from backend
+        useEffect(() => {
+            const fetchComments = async () => {
+                try{
+                    // Fetch and wait for card data from backend
+                    const response = await fetch(`/api/comments/${card_id}`);
+                    const data = await response.json();
+                    // Store fetched data in state
+                    setComments(data);
+                } catch(error) {
+                    console.error('Error fetching cards:', error);
+                }
+            };
+            fetchComments();
+        }, []);
+
+        return (
+        <div className='modal-comments-section'>
+            {
+                comments.map((comment_info) => (
+                    <div className='modal-comment'>
+                        <p>{comment_info.net_id}</p>
+                        <p>blah</p>
+                        <p>"{comment_info.comment}"</p>
+                    </div>
+                )
+                )
+            }
+        </div>
+        )
+    }
+
     return (
         // Clicking outside modal allows it to close, hence having modal root
         <div onClick={function() {setIsModalActive(false)}} className="modal-root">
@@ -78,7 +125,7 @@ function Modal({card, setIsModalActive}) {
                 </div>
                 <div className = 'modal-footer'>
                     <div className = 'modal-icons'>
-                        <button className = "comments-button">
+                        <button className = "comments-button" onClick = {handleCommentsButtonClick}>
                                 <img src={commentsIcon} alt="Comments" height="15px" />
                         </button>
                         <button className= "location-button">
@@ -87,8 +134,10 @@ function Modal({card, setIsModalActive}) {
                     </div>
                     <div><p className="posted-at">Posted {formatTimeAgo(card.posted_at)}</p></div>
                 </div> 
+                {
+                    commentsIsActive && <CommentsSection card_id={card.card_id}/>
+                }
 
-                
             </div>
         </div>
     );
