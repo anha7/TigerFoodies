@@ -374,6 +374,39 @@ footer p {
     font-style: italic;
 }
 
+
+.modal-footer {
+    background-color: #F6AE99;
+    padding: 8px 0;
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.modal-icons {
+    display: flex;
+    height: 100%;
+    width: 57%;
+    gap: 5%;
+    justify-content: flex-end
+}
+.comments-button .location-button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    background-color: #F6AE99;
+    border-radius: 15px;
+    font-size: 0.75rem;
+    font-family: "Quicksand", sans-serif;
+    box-shadow: 0.1px 0.1px 2px black;
+}
+
+.modal-footer .posted-at {
+    margin-left: -10%;
+    height: 100%;
+}
+  
 /* Force hide mobile menus on screens wider than 840px */
 @media screen and (min-width: 841px) {
     .mobile-preferences-menu, .mobile-food-preference-selection {

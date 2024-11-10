@@ -75,22 +75,20 @@ function Modal({card, setIsModalActive}) {
                     <p><b>Dietary Preferences:</b> {card.dietary_tags.join(', ')}</p>
                     <p><b>Allergens:</b> {card.allergies.join(', ')}</p>
                     <p><b>Description:</b> {card.description}</p>
-                    <p className="posted-at">Posted {formatTimeAgo(card.posted_at)}</p>
                 </div>
-                comments and map modals for later
                 <div className = 'modal-footer'>
                     <div className = 'modal-icons'>
-                     comments button
-                    <button className="comments-button">
-                            <img src={commentsIcon} alt="Comments" height="15px" />
-                    </button>
-                    location button
-                    <button className="location-button">
-                        <img src={mapIcon} alt="Map" height="15px" />
-                    </button>
+                        <button className = "comments-button">
+                                <img src={commentsIcon} alt="Comments" height="15px" />
+                        </button>
+                        <button className= "location-button">
+                            <img src={mapIcon} alt="Map" height="15px" />
+                        </button>
                     </div>
                     <div><p className="posted-at">Posted {formatTimeAgo(card.posted_at)}</p></div>
                 </div> 
+
+                
             </div>
         </div>
     );
