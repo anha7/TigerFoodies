@@ -68,6 +68,43 @@ function EditCard() {
         );
     };
 
+//----------------------------------------------------------------------
+
+
+    const CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1/devcgtjkx/image/upload';
+    const CLOUDINARY_UPLOAD_PRESET = 'TigerFoodies';
+
+
+    // Sets image
+    // Update to handle async function
+    const handleImageChange = async (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+
+        try {
+            const response = await fetch(CLOUDINARY_URL, {
+                method: 'POST',
+                body: formData
+            });
+            const data = await response.json();
+
+            if (data.secure_url) {
+                setPhoto(data.secure_url); // Successfully uploaded
+                console.log('Uploaded Image URL:', data.secure_url); // Confirm URL in console
+            } else {
+                throw new Error('Failed to retrieve image URL from Cloudinary response');
+            }
+        } catch (error) {
+            console.error('Error uploading the image:', error);
+            alert('Image upload failed. Please try again.'); // Inform the user
+        }
+    };
+
+//----------------------------------------------------------------------
     // Handles submitting the card to the database
     const handleSubmit = async (e) => {
         e.preventDefault(); // Prevent default form submission
@@ -130,16 +167,17 @@ function EditCard() {
 
                     {/* Field to upload food image */}
                     <div className="photo">
-                        <h4>Image: * <br/>
-                        <input 
-                            required
-                            type="text" 
-                            name = "photo_url"
-                            value={photo}
-                            // onChange={handleImageChange}
-                            onChange={(e) => setPhoto(e.target.value)} />
-                            <div className='storeImage'> <img src={photo} style={{ width: 200, height: 200 }} alt="No Images"/> </div>
-                        </h4>
+                    <h4>Image: * <br/>
+                    <input
+                        required
+                        type="file"
+                        name="photo_url"
+                        // accept="image/*"
+                        onChange={handleImageChange}
+                        className="upload-button"
+                    />
+                    {photo && <img src={photo} alt="Uploaded preview" style={{ width: 200, height: 200 }} />}
+                    </h4>
                     </div>
 
                     {/* Location field */}
@@ -157,7 +195,7 @@ function EditCard() {
                     {/* Dietary preferences field */}
                     <div className="dietary_tags">
                         <h4>Dietary Tags (Select all that apply): </h4>
-                        
+
                         <label><input type="checkbox" name="dietary_tags" value="Halal" checked={dietary_tags.includes('Halal')} onChange={handleDietaryChange}/> Halal</label>
                         <label><input type="checkbox" name="dietary_tags" value="Kosher" checked={dietary_tags.includes('Kosher')} onChange={handleDietaryChange}/> Kosher</label>
                         <label><input type="checkbox" name="dietary_tags" value="Vegetarian" checked={dietary_tags.includes('Vegetarian')} onChange={handleDietaryChange}/> Vegetarian</label>

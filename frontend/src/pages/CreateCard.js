@@ -16,8 +16,6 @@ function CreateCard( { net_id } ) {
     const [location, setLocation] = useState('');
     const [dietary_tags, setDietary] = useState([]);
     const [allergies, setAllergies] = useState([]);
-    // const [postTime, setPostTime] = useState('')
-    // const [updateTime, setUpdateTime] = useState('')
     const navigate = useNavigate(); // Initialize useNavigate
 
 //----------------------------------------------------------------------
@@ -31,7 +29,7 @@ function CreateCard( { net_id } ) {
     };
 
 //----------------------------------------------------------------------
-    
+
     // Sets allergens
     const handleAllergiesChange = (event) => {
         const { value, checked } = event.target;
@@ -42,40 +40,37 @@ function CreateCard( { net_id } ) {
 
 //----------------------------------------------------------------------
 
-    // const CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1/devcgtjkx/image/upload';
-    // const CLOUDINARY_UPLOAD_PRESET = 'TigerFoodies';
+    const CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1/devcgtjkx/image/upload';
+    const CLOUDINARY_UPLOAD_PRESET = 'TigerFoodies';
 
     // Sets image
-    // const handleImageChange = (event) => {
-    //     const file = event.target.files[0];
-    //     if (!file) return;
-
-    //     // Prepare the form data for Cloudinary upload
-    //     const formData = new FormData();
-    //     formData.append('file', file);
-    //     formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
-
-    //     try {
-    //         const response = await fetch(CLOUDINARY_URL, {
-    //             method: 'POST',
-    //             body: formData
-    //         });
-    //         const data = await response.json();
-    //         setPhoto(data.secure_url); // Store the uploaded image URL from Cloudinary
-    //     } catch (error) {
-    //         console.error('Error uploading the image:', error);
-    // }
-
-    // const handleImageChange = (event) => {
-    //     console.log(event.target.files)
-    //     setPhoto(URL.createObjectURL(event.target.files[0]));
-    //     if (photo && photo.type.startsWith('image/')) {
-    //         setSelectedFile(photo);
-    //       } else {
-    //         alert('Please select an image file.');
-    //         event.target.value = null; 
-    //       };
-    // };
+    // Update to handle async function
+    const handleImageChange = async (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+   
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+   
+        try {
+            const response = await fetch(CLOUDINARY_URL, {
+                method: 'POST',
+                body: formData
+            });
+            const data = await response.json();
+   
+            if (data.secure_url) {
+                setPhoto(data.secure_url); // Successfully uploaded
+                console.log('Uploaded Image URL:', data.secure_url); // Confirm URL in console
+            } else {
+                throw new Error('Failed to retrieve image URL from Cloudinary response');
+            }
+        } catch (error) {
+            console.error('Error uploading the image:', error);
+            alert('Image upload failed. Please try again.'); // Inform the user
+        }
+    };
 
 //----------------------------------------------------------------------
 
@@ -140,16 +135,30 @@ function CreateCard( { net_id } ) {
                     </div>
 
                     {/* Field to upload food image */}
-                    <div className="photo">
+                    {/* <div className="photo">
                         <h4>Image: * <br/>
                         <input 
                             required
                             type="text" 
                             name = "photo_url"
-                            // onChange={handleImageChange}
-                            onChange={(e) => setPhoto(e.target.value)} />
-                            <div className='storeImage'> <img src={photo} style={{ width: 200, height: 200 }} alt="No Images"/> </div>
+                            onChange={handleImageChange}
+                            // onChange={(e) => setPhoto(e.target.value)}
+                            // <div className='storeImage'> <img src={photo} style={{ width: 200, height: 200 }} alt="No Images"/> </div>
+                            />
                         </h4>
+                    </div> */}
+                    <div className="photo">
+                    <h4>Image: * <br/>
+                    <input
+                        required
+                        type="file"
+                        name="photo_url"
+                        // accept="image/*"
+                        onChange={handleImageChange}
+                        className="upload-button"
+                    />
+                    {photo && <img src={photo} alt="Uploaded preview" style={{ width: 200, height: 200, marginTop: '10px' }} />}
+                    </h4>
                     </div>
 
                     {/* Location field */}

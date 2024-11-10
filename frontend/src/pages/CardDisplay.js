@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState } from 'react';
 import commentsIcon from './media/comments-icon.png';
 import mapIcon from './media/location-icon.png';
 //----------------------------------------------------------------------
