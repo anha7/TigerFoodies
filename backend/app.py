@@ -69,6 +69,24 @@ def add_user(net_id):
 
 #-----------------------------------------------------------------------
 
+# Add user the the database once they're CAS authenticated
+def notifyUsers(allergies, dietary_tags):
+    try:
+        with psycopg2.connect(DATABASE_URL) as conn:
+            with conn.cursor() as cursor:
+                # Execute query to add a user to the database
+                cursor.execute('''
+                    INSERT INTO users (net_id)
+                    VALUES(%s)
+                    ON CONFLICT (net_id) DO NOTHING;
+                ''', (net_id,))
+
+                # Commit to the database
+                conn.commit()
+    except Exception as ex:
+        print(ex)
+#-----------------------------------------------------------------------
+
 # Retrieve current user's NetID
 @app.route('/get_user')
 def get_user():
@@ -306,7 +324,39 @@ def retrieve_card(card_id):
     except Exception as ex:
         print(str(ex))
         return jsonify({"success": False, "message": str(ex)}), 500
-    
+
+#-----------------------------------------------------------------------
+
+# API route for updating user preferences
+@app.route('/api/preferences', methods=['PUT'])
+def submit_preferences():
+    try:
+        # Retrieve preferences JSON object from frontend and unpackage it
+        preferences = request.get_json()
+        user = preferences.get('net_id')
+        dietary_tags = preferences.get('dietary_tags')
+        allergies = preferences.get('allergies')
+        desktop_notifications = preferences.get('subscribed_to_desktop_notifications')
+
+        # Paackage parsed data
+        user_preferences = [dietary_tags, allergies, desktop_notifications, user]
+        
+        # Connect to database
+        with psycopg2.connect(DATABASE_URL) as conn:
+            with conn.cursor() as cursor:
+                # Define update query
+                update_query = 'UPDATE users SET (dietary_tags, allergies,'
+                update_query += ' subscribed_to_desktop_notifications)'
+                update_query += ' = (%s, %s, %s) WHERE net_id = %s'
+                # Execute query to update row in the database
+                cursor.execute(update_query, user_preferences)
+                # Commit to database
+                conn.commit()
+                return jsonify({"success": True, "message": "Action successful!"}), 200
+    except Exception as ex:
+        print(str(ex))
+        return jsonify({"success": False, "message": str(ex)}), 500
+        
 #-----------------------------------------------------------------------
 
 # API route for sending feedback email to our service account

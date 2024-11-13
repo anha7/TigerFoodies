@@ -73,7 +73,32 @@ def get_user():
         return jsonify({'net_id': session['username']})
     else:
         return jsonify({"success": False, "message": "User not logged in"}), 500
-    
+   
+#-----------------------------------------------------------------------
+
+# Add user the the database once they're CAS authenticated
+@app.route('/notify')
+def notifyUsers(cursor, title, location, dietary_tags, allergies):
+    # should try be there?
+    try: 
+        # Execute query to retrieve all user information
+        cursor.execute('''
+            SELECT net_id, email, dietary_preferences, allergies, 
+            subscribed_to_text_notifications, phone_number, 
+            subscribed_to_desktop_notifications FROM users;
+        ''')
+        users = cursor.fetchall()
+        
+        for user in users:
+            if user[6]:
+                if any(tag in user[2] for tag in dietary_tags):
+                    if not any(allergy in user[3] for allergy in allergies):
+                        send_desktop_notification(user[0], title, location)
+
+
+    except Exception as ex:
+        print(ex)
+
 #-----------------------------------------------------------------------
 
 # Clean expired cards
@@ -227,6 +252,8 @@ def create_card():
                 # Commit to the database
                 conn.commit()
 
+                # Notify the relevant users
+                notifyUsers(cursor, title, location, dietary_tags, allergies)
                 return jsonify({"success": True, "message": "Action successful!"}), 200
     except Exception as ex:
         print(str(ex))
@@ -264,6 +291,9 @@ def edit_card(card_id):
                 cursor.execute(update_query, new_card)
                 # Commit to database
                 conn.commit()
+
+                # Notify the relevant users
+                notifyUsers(cursor, title, location, dietary_tags, allergies)
 
                 return jsonify({"success": True, "message": "Action successful!"}), 200
     except Exception as ex:
@@ -304,6 +334,38 @@ def retrieve_card(card_id):
         print(str(ex))
         return jsonify({"success": False, "message": str(ex)}), 500
     
+#-----------------------------------------------------------------------
+
+# API route for updating user preferences
+@app.route('/api/preferences', methods=['PUT'])
+def submit_preferences():
+    try:
+        # Retrieve preferences JSON object from frontend and unpackage it
+        preferences = request.get_json()
+        user = preferences.get('net_id')
+        dietary_tags = preferences.get('dietary_tags')
+        allergies = preferences.get('allergies')
+        desktop_notifications = preferences.get('subscribed_to_desktop_notifications')
+
+        # Paackage parsed data
+        user_preferences = [dietary_tags, allergies, desktop_notifications, user]
+        
+        # Connect to database
+        with psycopg2.connect(DATABASE_URL) as conn:
+            with conn.cursor() as cursor:
+                # Define update query
+                update_query = 'UPDATE users SET (dietary_tags, allergies,'
+                update_query += ' subscribed_to_desktop_notifications)'
+                update_query += ' = (%s, %s, %s) WHERE net_id = %s'
+                # Execute query to update row in the database
+                cursor.execute(update_query, user_preferences)
+                # Commit to database
+                conn.commit()
+                return jsonify({"success": True, "message": "Action successful!"}), 200
+    except Exception as ex:
+        print(str(ex))
+        return jsonify({"success": False, "message": str(ex)}), 500
+        
 #-----------------------------------------------------------------------
 
 # API route for sending feedback email to our service account

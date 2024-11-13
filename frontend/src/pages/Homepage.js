@@ -14,6 +14,7 @@ import hamburgerIcon from './media/hamburger-icon.png';
 import preferencesIcon from './media/preferences.png';
 import CardDisplay from './CardDisplay'; // to view extended card info
 import Feedback from './Feedback';
+import Notifications from './Notifications';
 
 //----------------------------------------------------------------------
 
@@ -76,11 +77,17 @@ const Homepage = ({ net_id }) => {
     const [isPreferencesOpen, setPreferencesOpen] = useState(false);
     // State for feedback modal
     const [isFeedbackModalActive, setFeedbackModalActive] = useState(false);
+    // State for notifications  modal
+    const [isNotificationsModalActive, setNotificationsModalActive] = useState(false);
 
 //----------------------------------------------------------------------
 
     // function that toggles feedback modal
     const toggleFeedbackModal = () => setFeedbackModalActive(!isFeedbackModalActive);
+    const toggleNotificationsModal = () => {
+        console.log("Toggling notifications modal"); // Debug log
+        setNotificationsModalActive(!isNotificationsModalActive);
+    };
 
 //----------------------------------------------------------------------
 
@@ -287,7 +294,7 @@ const Homepage = ({ net_id }) => {
                     </form>
 
                     {/* Notifications button */}
-                    <button className="nav-button">
+                    <button className="nav-button" onClick={toggleNotificationsModal}>
                         <img src={notificationsIcon} alt="Notifications" height="15px" />
                     </button>
                 </div>
@@ -442,6 +449,8 @@ const Homepage = ({ net_id }) => {
 
             {/* Feedback modal component */}
             <Feedback isModalActive={isFeedbackModalActive} setIsModalActive={setFeedbackModalActive} net_id={net_id} />
+
+            <Notifications isModalActive={isNotificationsModalActive} setIsModalActive={setNotificationsModalActive} net_id={net_id} />
 
             {/* Footer */}
             <footer>
