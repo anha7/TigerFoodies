@@ -136,6 +136,7 @@ function Modal({card, setIsModalActive}) {
 
         return (
             <div className='modal-comments-section'>
+                <h3>Comments</h3>
                 {/* Display all comments */}
                 {comments.map((comment_info) => (
                     <div className='modal-comment'>

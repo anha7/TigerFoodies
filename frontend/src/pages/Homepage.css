@@ -420,6 +420,12 @@ footer p {
     text-align: center;
 }
 
+.comment-form {
+    display: flex;
+    margin-top: auto; /* Pushes the form to the bottom */
+    padding: 10px 0;
+    background-color: #f9f9f9;
+}
 
 /* Force hide mobile menus on screens wider than 840px */
 @media screen and (min-width: 841px) {
