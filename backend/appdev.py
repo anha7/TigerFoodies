@@ -430,18 +430,27 @@ def create_card_comment(card_id):
     try:
         # Retrieve JSON object containing new card data
         new_comment_data = request.get_json()
+        # testing message if comment wasn't recognized / put in 
+        if not new_comment_data or 'comment' not in new_comment_data:
+            return jsonify({"success": False, "message": "Missing comment data"}), 400
 
         # Parse relevant fields
-        net_id = new_comment_data.get('net_id')
+        net_id = "ab123"
         comment = bleach.clean(new_comment_data.get('comment'))
+        #card_id = card_id
 
         # Package parsed data
-        new_comment = [net_id, card_id, comment]
+        # new_comment = [net_id, comment]
        
         # Connect to database and establish a cursor
         with psycopg2.connect(DATABASE_URL) as conn:
             with conn.cursor() as cursor:
                
+                 # test for me to verify the card exists
+                cursor.execute("SELECT 1 FROM cards WHERE card_id = %s", (card_id,))
+                if not cursor.fetchone():
+                    return jsonify({"success": False, "message": "Card not found"}), 404
+                
                 # Define insertion query
                 insertion_query = '''INSERT INTO comments (net_id,
                     comment, card_id, posted_at)
@@ -450,8 +459,8 @@ def create_card_comment(card_id):
                 '''
 
                 # Execute query to store new card into the database
-                cursor.execute(insertion_query, new_comment)
-
+                cursor.execute(insertion_query, (net_id, comment, card_id))
+                
                 # Commit to the database
                 conn.commit()
                 return jsonify({"success": True, "message": "Action successful!"}), 200

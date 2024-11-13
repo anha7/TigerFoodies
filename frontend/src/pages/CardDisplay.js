@@ -81,7 +81,7 @@ function Modal({card, setIsModalActive}) {
         setMapsIsActive(false)
     }
 
-    function CommentsSection({card_id, net_id}) {
+    function CommentsSection({card_id}) {
         const [comments, setComments] = useState([])
         const [newComment, setNewComment] = useState('')
 
@@ -111,7 +111,6 @@ function Modal({card, setIsModalActive}) {
             e.preventDefault(); // Prevent default form submission
            
             const newCommentData = {
-                net_id: net_id,
                 comment: newComment,
             };
            
@@ -185,7 +184,7 @@ function Modal({card, setIsModalActive}) {
                     <div><p className="posted-at">Posted {formatTimeAgo(card.posted_at)}</p></div>
                 </div>
                 {
-                    commentsIsActive && <CommentsSection card_id={card.card_id} net_id={card.net_id}/>
+                    commentsIsActive && <CommentsSection card_id={card.card_id}/>
                 }
 
 
