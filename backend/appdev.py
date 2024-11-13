@@ -424,7 +424,49 @@ def retrieve_card_comments(card_id):
         return jsonify({"success": False, "message": str(ex)}), 500
     
 #-----------------------------------------------------------------------
-    
+# API Route for creating comments
+@app.route('/api/comments/<int:card_id>', methods=['POST'])
+def create_card_comment(card_id):
+    try:
+        # Retrieve JSON object containing new card data
+        new_comment_data = request.get_json()
+
+
+        # Parse relevant fields
+        net_id = new_comment_data.get('net_id')
+        comment = bleach.clean(new_comment_data.get('comment'))
+
+
+        # Package parsed data
+        new_comment = [net_id, card_id, comment,]
+       
+        # Connect to database and establish a cursor
+        with psycopg2.connect(DATABASE_URL) as conn:
+            with conn.cursor() as cursor:
+               
+                # Define insertion query
+                insertion_query = '''INSERT INTO comments (net_id,
+                    comment, card_id, posted_at)
+                    VALUES (%s, %s, %s,
+                    CURRENT_TIMESTAMP)
+                '''
+
+
+                # Execute query to store new card into the database
+                cursor.execute(insertion_query, new_comment)
+
+
+                # Commit to the database
+                conn.commit()
+
+
+                return jsonify({"success": True, "message": "Action successful!"}), 200
+    except Exception as ex:
+        print(str(ex))
+        return jsonify({"success": False, "message": str(ex)}), 500
+
+
+#-----------------------------------------------------------------------
 
 # Start the Flask app
 if __name__ == '__main__':

@@ -3,11 +3,13 @@ import commentsIcon from './media/comments-icon.png';
 import mapIcon from './media/location-icon.png';
 //----------------------------------------------------------------------
 
+
 // Function to format the time into a relative "time ago" format
 const formatTimeAgo = (timestamp) => {
     const currentTime = new Date();
     const postedTime = new Date(timestamp);
     const differenceInSeconds = Math.floor((currentTime - postedTime) / 1000);
+
 
     if (differenceInSeconds < 60) {
         return `${differenceInSeconds} second${differenceInSeconds !== 1 ? 's' : ''} ago`;
@@ -20,32 +22,36 @@ const formatTimeAgo = (timestamp) => {
     }
 }
 
+
 // Manages card and modal states
 // Posting and modal creates card and modal and opens modal when card clicked
 function PostingAndModal({card}) {
     const [isModalActive, setIsModalActive] = useState(false);
+
 
     // sets isModalActive to true to signal modal opening
     const handleCardClick = () => {
         setIsModalActive(true);
     };
 
+
     console.log(card)
     return (
         <div>
             <Card onClick={handleCardClick} card = {card} />
-            {isModalActive && 
+            {isModalActive &&
             <Modal card = {card} setIsModalActive= {setIsModalActive}/>
             }
         </div>
     );
 }
 
+
 // Function that displays card for the dashboard
 function Card({ onClick, card }) {
     return (
         <div key={card.card_id} className="card" onClick = {onClick}>
-            <div 
+            <div
                 className="card-image"
                 style={{ backgroundImage: `url(${card.photo_url})`}}
             >
@@ -61,6 +67,7 @@ function Card({ onClick, card }) {
     );
 }
 
+
 // Function that display all card information for the modal
 function Modal({card, setIsModalActive}) {
     const [commentsIsActive, setCommentsIsActive] = useState(false)
@@ -68,15 +75,20 @@ function Modal({card, setIsModalActive}) {
     // maps will be implemented later, but state must be changed when
     // comments button is clicked
 
+
     const [mapsIsActive, setMapsIsActive] = useState(false)
+
 
     function handleCommentsButtonClick() {
         setCommentsIsActive(true)
         setMapsIsActive(false)
     }
 
-    function CommentsSection({card_id}) {
+
+    function CommentsSection({card_id, net_id}) {
         const [comments, setComments] = useState([])
+        const [newComment, setNewComment] = useState('')
+
 
         // Hook that fetches comments data from backend
         useEffect(() => {
@@ -85,6 +97,7 @@ function Modal({card, setIsModalActive}) {
                     // Fetch and wait for card data from backend
                     const response = await fetch(`/api/comments/${card_id}`);
                     const data = await response.json();
+                    console.log("Fetched comments:", data);
                     // Store fetched data in state
                     setComments(data);
                 } catch(error) {
@@ -93,6 +106,39 @@ function Modal({card, setIsModalActive}) {
             };
             fetchComments();
         }, []);
+
+
+        // handles comment submission
+        const handleCommentPosting = async (e) => {
+            e.preventDefault(); // Prevent default form submission
+           
+            // rest is copied from create/edit card
+            const newCommentData = {
+                net_id,
+                comment: newComment,
+                posted_at: new Date().toISOString,
+            };
+           
+            try {
+                const response = await fetch(`/api/comments/${card_id}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(newCommentData), // Send card data as JSON
+                });
+   
+                if (response.ok) {
+                    console.log('New comment successfully posted');
+                    // navigate('/'); // Redirect to homepage after successful card creation
+                } else {
+                    console.error('Error creating new comment');
+                }
+            } catch (error) {
+                console.error('Error submitting the new comment:', error);
+            }
+        }
+
 
         return (
         <div className='modal-comments-section'>
@@ -106,9 +152,20 @@ function Modal({card, setIsModalActive}) {
                 )
                 )
             }
+            {/*Form to submit new comments*/}
+            <form onSubmit={handleCommentPosting} className='comment-form'>
+                <input
+                    type="text"
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                    placeholder= "Add comment"
+                />
+                <button type='submit'>Post</button>
+            </form>
         </div>
         )
     }
+
 
     return (
         // Clicking outside modal allows it to close, hence having modal root
@@ -133,14 +190,16 @@ function Modal({card, setIsModalActive}) {
                         </button>
                     </div>
                     <div><p className="posted-at">Posted {formatTimeAgo(card.posted_at)}</p></div>
-                </div> 
+                </div>
                 {
-                    commentsIsActive && <CommentsSection card_id={card.card_id}/>
+                    commentsIsActive && <CommentsSection card_id={card.card_id} net_id={card.net_id}/>
                 }
+
 
             </div>
         </div>
     );
 }
+
 
 export default PostingAndModal;
