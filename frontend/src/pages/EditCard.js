@@ -176,8 +176,10 @@ function EditCard() {
                         onChange={handleImageChange}
                         className="upload-button"
                     />
-                    {photo && <img src={photo} alt="Uploaded preview" style={{ width: 200, height: 200 }} />}
                     </h4>
+                    <div className='uploadedImage'>
+                        {photo && <img src={photo} alt="Uploaded preview" style={{ width: '100%', height: 'auto', borderRadius: '8px'}} />}
+                    </div>
                     </div>
 
                     {/* Location field */}

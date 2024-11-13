@@ -95,6 +95,14 @@ button[type="submit"] {
     margin-bottom: 10px;
 }
 
+.uploadedImage {
+    width: 100%; /* or specify a fixed width, e.g., 300px */
+    max-width: 200px;
+    height: auto;
+    border-radius: 8px; /* for rounded corners */
+    object-fit: cover; /* scales image to fill without stretching */
+}
+
 /* Responsive design for mobile */
 @media screen and (max-width: 840px) {
     .dietary_tags {
