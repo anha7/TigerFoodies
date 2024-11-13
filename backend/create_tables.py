@@ -49,12 +49,12 @@ def main():
 
             # Create the comment table
             cursor.execute('''
-            CREATE TABLE IF NOT EXISTS comments(
+            CREATE TABLE IF NOT EXISTS comments (
                     comment_id SERIAL PRIMARY KEY NOT NULL,
                     card_id INT REFERENCES cards(card_id) ON DELETE CASCADE NOT NULL,
                     net_id VARCHAR(10) REFERENCES users(net_id) NOT NULL,
-                    comment VARCHAR(100) NOT NULL,
-                    posted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+                    comment VARCHAR(200) NOT NULL,
+                    posted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
                 );          
             ''')
             print("Successfully created comments table!")

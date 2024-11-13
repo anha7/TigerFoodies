@@ -69,17 +69,17 @@ def add_user(net_id):
 
 #-----------------------------------------------------------------------
 
-# Add user the the database once they're CAS authenticated
-def notifyUsers(allergies, dietary_tags):
+# Add user's allergies and dietary preferences
+def notifyUsers(net_id, allergies, dietary_tags):
     try:
         with psycopg2.connect(DATABASE_URL) as conn:
             with conn.cursor() as cursor:
                 # Execute query to add a user to the database
                 cursor.execute('''
-                    INSERT INTO users (net_id)
-                    VALUES(%s)
-                    ON CONFLICT (net_id) DO NOTHING;
-                ''', (net_id,))
+                    INSERT INTO users (dietary_preferences, allergies)
+                    VALUES(%s, %s)
+                    WHERE net_id = %s;
+                ''', (dietary_tags, allergies, net_id))
 
                 # Commit to the database
                 conn.commit()

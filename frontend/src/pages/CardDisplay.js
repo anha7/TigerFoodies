@@ -74,21 +74,16 @@ function Modal({card, setIsModalActive}) {
      
     // maps will be implemented later, but state must be changed when
     // comments button is clicked
-
-
     const [mapsIsActive, setMapsIsActive] = useState(false)
-
 
     function handleCommentsButtonClick() {
         setCommentsIsActive(true)
         setMapsIsActive(false)
     }
 
-
     function CommentsSection({card_id, net_id}) {
         const [comments, setComments] = useState([])
         const [newComment, setNewComment] = useState('')
-
 
         // Hook that fetches comments data from backend
         useEffect(() => {
@@ -97,9 +92,13 @@ function Modal({card, setIsModalActive}) {
                     // Fetch and wait for card data from backend
                     const response = await fetch(`/api/comments/${card_id}`);
                     const data = await response.json();
-                    console.log("Fetched comments:", data);
-                    // Store fetched data in state
-                    setComments(data);
+                    // Set card data
+                    if (Array.isArray(data)) {
+                        setComments(data);
+                    } else {
+                        console.error('Error fetching comments:', data.message || 'Unknown error');
+                        setComments([]); // Set comments to an empty array if there’s an error
+                    }
                 } catch(error) {
                     console.error('Error fetching cards:', error);
                 }
@@ -107,16 +106,13 @@ function Modal({card, setIsModalActive}) {
             fetchComments();
         }, []);
 
-
-        // handles comment submission
+        // Handles comment submission
         const handleCommentPosting = async (e) => {
             e.preventDefault(); // Prevent default form submission
            
-            // rest is copied from create/edit card
             const newCommentData = {
-                net_id,
+                net_id: net_id,
                 comment: newComment,
-                posted_at: new Date().toISOString,
             };
            
             try {
@@ -139,30 +135,27 @@ function Modal({card, setIsModalActive}) {
             }
         }
 
-
         return (
-        <div className='modal-comments-section'>
-            {
-                comments.map((comment_info) => (
+            <div className='modal-comments-section'>
+                {/* Display all comments */}
+                {comments.map((comment_info) => (
                     <div className='modal-comment'>
                         <p>{comment_info.net_id}</p>
                         <p>blah</p>
                         <p>"{comment_info.comment}"</p>
                     </div>
-                )
-                )
-            }
-            {/*Form to submit new comments*/}
-            <form onSubmit={handleCommentPosting} className='comment-form'>
-                <input
-                    type="text"
-                    value={newComment}
-                    onChange={(e) => setNewComment(e.target.value)}
-                    placeholder= "Add comment"
-                />
-                <button type='submit'>Post</button>
-            </form>
-        </div>
+                ))}
+                {/* Form to submit new comments */}
+                <form onSubmit={handleCommentPosting} className='comment-form'>
+                    <input
+                        type="text"
+                        value={newComment}
+                        onChange={(e) => setNewComment(e.target.value)}
+                        placeholder= "Add comment"
+                    />
+                    <button type='submit'>Post</button>
+                </form>
+            </div>
         )
     }
 
