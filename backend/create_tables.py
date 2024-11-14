@@ -23,7 +23,8 @@ def main():
                         allergies VARCHAR[] DEFAULT '{}',
                         subscribed_to_text_notifications BOOLEAN DEFAULT FALSE,
                         phone_number VARCHAR(20) DEFAULT '',
-                        subscribed_to_desktop_notifications BOOLEAN DEFAULT FALSE
+                        subscribed_to_desktop_notifications BOOLEAN DEFAULT FALSE,
+                        subscribe_info JSONB DEFAULT NULL
                 );
             ''')
             print("Successfully created users table!")

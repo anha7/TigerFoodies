@@ -5,6 +5,7 @@ import psycopg2
 import secrets
 from flask_mail import Mail, Message
 import bleach
+# from pywebpush import webpush, WebPushException
 
 #-----------------------------------------------------------------------
 
@@ -73,30 +74,64 @@ def get_user():
     else:
         return jsonify({"success": False, "message": "User not logged in"}), 500
    
-#-----------------------------------------------------------------------
+# #-----------------------------------------------------------------------
 
-# Add user the the database once they're CAS authenticated
-@app.route('/notify')
-def notifyUsers(cursor, title, location, dietary_tags, allergies):
-    # should try be there?
-    try: 
-        # Execute query to retrieve all user information
-        cursor.execute('''
-            SELECT net_id, email, dietary_preferences, allergies, 
-            subscribed_to_text_notifications, phone_number, 
-            subscribed_to_desktop_notifications FROM users;
-        ''')
-        users = cursor.fetchall()
-        
-        for user in users:
-            if user[6]:
-                if any(tag in user[2] for tag in dietary_tags):
-                    if not any(allergy in user[3] for allergy in allergies):
-                        send_desktop_notification(user[0], title, location)
+# # Notify relevant users when a new card is created
+# @app.route('/notify')
+# def notifyUsers(title, dietary_tags, allergies):
+#     # should try be there?
+#     try: 
+#         with psycopg2.connect(DATABASE_URL) as conn:
+#             with conn.cursor() as cursor:
+#         # Execute query to retrieve all user information
+#                 cursor.execute('''
+#                     SELECT net_id, email, dietary_preferences, allergies, 
+#                     subscribed_to_text_notifications, phone_number, 
+#                     subscribed_to_desktop_notifications, subscribe_info FROM users;
+#                 ''')
+#                 users = cursor.fetchall()
+                
+#                 for user in users:
+#                     if user[6]:
+#                         if any(tag in user[2] for tag in dietary_tags):
+#                             if not any(allergy in user[3] for allergy in allergies):
+#                                 # Fix this
+#                                 send_desktop_notification(user[7], title)
+#     except Exception as ex:
+#         print(ex)
 
+# # def send_desktop_notification(subscription_info, title):
+# #     try:
+# #         webpush(
+# #             subscription_info=subscription_info,
+# #             data=({"title": title, "body": "New card added!"}),
+# #             vapid_private_key=os.getenv("VAPID_PRIVATE_KEY"),
+# #             vapid_claims={"sub": "mailto:your-email@example.com"}
+# #         )
+# #     except WebPushException as ex:
+# #         print(f"Web push failed: {str(ex)}")
 
-    except Exception as ex:
-        print(ex)
+# # @app.route('/api/subscribe', methods=['POST'])
+# # def save_subscription():
+# #     data = request.get_json()
+# #     net_id = session.get('username')
+# #     # net_id = data.get('net_id')
+# #     subscription_info = data.get('subscription')
+# #     info = [subscription_info, net_id]
+# #     try:
+# #         with psycopg2.connect(DATABASE_URL) as conn:
+# #             with conn.cursor() as cursor:
+# #                 subscribe_query = ('''
+# #                     UPDATE users
+# #                     SET subscription_info = %s
+# #                     WHERE net_id = %s;
+# #                 ''')
+# #                 cursor.execute(subscribe_query, info)
+# #                 conn.commit()
+# #         return jsonify({"success": True, "message": "Subscription saved."}), 200
+# #     except Exception as ex:
+# #         print(ex)
+# #         return jsonify({"success": False, "message": "Failed to save subscription."}), 500
 
 #-----------------------------------------------------------------------
 
@@ -251,8 +286,9 @@ def create_card():
                 # Commit to the database
                 conn.commit()
 
-                # Notify the relevant users
-                notifyUsers(cursor, title, location, dietary_tags, allergies)
+                # Notify relevant users
+                # notifyUsers(title, dietary_tags, allergies)
+
                 return jsonify({"success": True, "message": "Action successful!"}), 200
     except Exception as ex:
         print(str(ex))
@@ -292,7 +328,7 @@ def edit_card(card_id):
                 conn.commit()
 
                 # Notify the relevant users
-                notifyUsers(cursor, title, location, dietary_tags, allergies)
+                # notifyUsers(cursor, title, location, dietary_tags, allergies)
 
                 return jsonify({"success": True, "message": "Action successful!"}), 200
     except Exception as ex:
@@ -342,18 +378,18 @@ def submit_preferences():
         # Retrieve preferences JSON object from frontend and unpackage it
         preferences = request.get_json()
         user = preferences.get('net_id')
-        dietary_tags = preferences.get('dietary_tags')
+        dietary_preferences = preferences.get('dietary_preferences')
         allergies = preferences.get('allergies')
         desktop_notifications = preferences.get('subscribed_to_desktop_notifications')
 
         # Paackage parsed data
-        user_preferences = [dietary_tags, allergies, desktop_notifications, user]
+        user_preferences = [dietary_preferences, allergies, desktop_notifications, user]
         
         # Connect to database
         with psycopg2.connect(DATABASE_URL) as conn:
             with conn.cursor() as cursor:
                 # Define update query
-                update_query = 'UPDATE users SET (dietary_tags, allergies,'
+                update_query = 'UPDATE users SET (dietary_preferences, allergies,'
                 update_query += ' subscribed_to_desktop_notifications)'
                 update_query += ' = (%s, %s, %s) WHERE net_id = %s'
                 # Execute query to update row in the database
@@ -435,12 +471,11 @@ def create_card_comment(card_id):
             return jsonify({"success": False, "message": "Missing comment data"}), 400
 
         # Parse relevant fields
-        net_id = "ab123"
+        net_id = new_comment_data.get('net_id')
         comment = bleach.clean(new_comment_data.get('comment'))
-        #card_id = card_id
 
         # Package parsed data
-        # new_comment = [net_id, comment]
+        new_comment = [net_id, comment, card_id]
        
         # Connect to database and establish a cursor
         with psycopg2.connect(DATABASE_URL) as conn:
@@ -459,7 +494,7 @@ def create_card_comment(card_id):
                 '''
 
                 # Execute query to store new card into the database
-                cursor.execute(insertion_query, (net_id, comment, card_id))
+                cursor.execute(insertion_query, new_comment)
                 
                 # Commit to the database
                 conn.commit()

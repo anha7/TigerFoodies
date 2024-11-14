@@ -413,6 +413,8 @@ footer p {
 .modal-comments-section {
     background-color: white;
     height: 50%;
+        
+    display: flex;
 
 }
   
@@ -420,11 +422,19 @@ footer p {
     text-align: center;
 }
 
+
+
 .comment-form {
     display: flex;
     margin-top: auto; /* Pushes the form to the bottom */
     padding: 10px 0;
-    background-color: #f9f9f9;
+    width: 90%;
+    background-color: #716F81;
+    font-family: "Quicksand", sans-serif;
+    border: none;
+    box-shadow: 1px 0 3px black;
+    font-size: 9px;
+    color: white;
 }
 
 /* Force hide mobile menus on screens wider than 840px */

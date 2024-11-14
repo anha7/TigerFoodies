@@ -380,7 +380,7 @@ const Homepage = ({ net_id }) => {
                     {/* Display list of active free food cards */}
                     <div className="card-list">
                         {filterCards().map((card) => (
-                            <CardDisplay card = {card}/>
+                            <CardDisplay card = {card} net_id = {net_id}/>
                         ))}
 
                         {/* Fake card for filter testing purposes

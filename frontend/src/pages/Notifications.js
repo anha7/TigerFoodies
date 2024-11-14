@@ -3,9 +3,9 @@ import React, { useEffect, useState } from 'react';
 
 //----------------------------------------------------------------------
 
-// notifications functional component
+// Notifications functional component
 const Notifications = ({ isModalActive, setIsModalActive, net_id }) => {
-    const [dietary_tags, setDietary] = useState([]);
+    const [dietary_preferences, setDietary] = useState([]);
     const [allergies, setAllergies] = useState([]);
     const [subscribed_to_desktop_notifications, setSubscribed] = useState(false);
     let notification; // Define a variable to store the notification instance
@@ -49,7 +49,7 @@ const Notifications = ({ isModalActive, setIsModalActive, net_id }) => {
         );
     };
 
-    //----------------------------------------------------------------------
+//----------------------------------------------------------------------
         
     // Sets allergens
     const handleAllergiesChange = (event) => {
@@ -59,6 +59,9 @@ const Notifications = ({ isModalActive, setIsModalActive, net_id }) => {
         );
     };
 
+//----------------------------------------------------------------------
+
+    // Handles whether users are subscribed to notifications
     const handleSubscribed = (event) => {
         setSubscribed(event.target.checked);
     };
@@ -74,12 +77,12 @@ const Notifications = ({ isModalActive, setIsModalActive, net_id }) => {
         e.preventDefault(); // Prevent default form submission
         const preferencesData  = {
             net_id: net_id,
-            dietary_tags: dietary_tags, 
+            dietary_preferences: dietary_preferences, 
             allergies: allergies,
             subscribed_to_desktop_notifications: subscribed_to_desktop_notifications
         };
         
-        // FIX THIS FOR DATABASE 
+        // API request to update notification preferences 
         try {
             const response = await fetch(`/api/preferences`, {
                 method: 'PUT',
@@ -93,14 +96,7 @@ const Notifications = ({ isModalActive, setIsModalActive, net_id }) => {
                 console.log('Preferences successfully updates');
                 
                 if (subscribed_to_desktop_notifications) {
-                    if (Notification.permission == "granted") {
-                        const permission = await Notification.requestPermission();
-                        if (permission === "granted") {
-                            showNotification();
-                        }
-                    } else {
-                        console.log('Not subscribed for Notifications');
-                    }
+                        showNotification();
                 }
 
                 handleCloseModal();
@@ -122,12 +118,12 @@ const Notifications = ({ isModalActive, setIsModalActive, net_id }) => {
                         </div>
                         <form className="notifications-form">
                             <div className="dietary_tags">
-                                <h4>Dietary Tags (Select all that apply): </h4>
-                                <label><input type="checkbox" name="dietary_tags" value="Halal" checked={dietary_tags.includes('Halal')} onChange={handleDietaryChange}/> Halal</label>
-                                <label><input type="checkbox" name="dietary_tags" value="Kosher" checked={dietary_tags.includes('Kosher')} onChange={handleDietaryChange}/> Kosher</label>
-                                <label><input type="checkbox" name="dietary_tags" value="Vegetarian" checked={dietary_tags.includes('Vegetarian')} onChange={handleDietaryChange}/> Vegetarian</label>
-                                <label><input type="checkbox" name="dietary_tags" value="Vegan" checked={dietary_tags.includes('Vegan')} onChange={handleDietaryChange}/> Vegan</label>
-                                <label><input type="checkbox" name="dietary_tags" value="Gluten-Free" checked={dietary_tags.includes('Gluten-Free')} onChange={handleDietaryChange}/> Gluten-Free</label>
+                                <h4>Dietary Preferences (Select all that apply): </h4>
+                                <label><input type="checkbox" name="dietary_preferences" value="Halal" checked={dietary_preferences.includes('Halal')} onChange={handleDietaryChange}/> Halal</label>
+                                <label><input type="checkbox" name="dietary_preferences" value="Kosher" checked={dietary_preferences.includes('Kosher')} onChange={handleDietaryChange}/> Kosher</label>
+                                <label><input type="checkbox" name="dietary_preferences" value="Vegetarian" checked={dietary_preferences.includes('Vegetarian')} onChange={handleDietaryChange}/> Vegetarian</label>
+                                <label><input type="checkbox" name="dietary_preferences" value="Vegan" checked={dietary_preferences.includes('Vegan')} onChange={handleDietaryChange}/> Vegan</label>
+                                <label><input type="checkbox" name="dietary_preferences" value="Gluten-Free" checked={dietary_preferences.includes('Gluten-Free')} onChange={handleDietaryChange}/> Gluten-Free</label>
                             </div>
                             
                             {/* Allergens field */}

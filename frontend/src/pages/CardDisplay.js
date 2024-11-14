@@ -25,7 +25,7 @@ const formatTimeAgo = (timestamp) => {
 
 // Manages card and modal states
 // Posting and modal creates card and modal and opens modal when card clicked
-function PostingAndModal({card}) {
+function CardDisplay({card, net_id}) {
     const [isModalActive, setIsModalActive] = useState(false);
 
 
@@ -40,7 +40,7 @@ function PostingAndModal({card}) {
         <div>
             <Card onClick={handleCardClick} card = {card} />
             {isModalActive &&
-            <Modal card = {card} setIsModalActive= {setIsModalActive}/>
+            <Modal card={card} setIsModalActive={setIsModalActive} net_id={net_id}/>
             }
         </div>
     );
@@ -69,7 +69,7 @@ function Card({ onClick, card }) {
 
 
 // Function that display all card information for the modal
-function Modal({card, setIsModalActive}) {
+function Modal({card, setIsModalActive, net_id}) {
     const [commentsIsActive, setCommentsIsActive] = useState(false)
      
     // maps will be implemented later, but state must be changed when
@@ -81,7 +81,7 @@ function Modal({card, setIsModalActive}) {
         setMapsIsActive(false)
     }
 
-    function CommentsSection({card_id}) {
+    function CommentsSection({card_id, net_id}) {
         const [comments, setComments] = useState([])
         const [newComment, setNewComment] = useState('')
 
@@ -112,6 +112,7 @@ function Modal({card, setIsModalActive}) {
            
             const newCommentData = {
                 comment: newComment,
+                net_id: net_id
             };
            
             try {
@@ -125,7 +126,25 @@ function Modal({card, setIsModalActive}) {
    
                 if (response.ok) {
                     console.log('New comment successfully posted');
-                    // navigate('/'); // Redirect to homepage after successful card creation
+                    setNewComment('');
+
+                    const fetchComments = async () => {
+                        try{
+                            // Fetch and wait for card data from backend
+                            const response = await fetch(`/api/comments/${card_id}`);
+                            const data = await response.json();
+                            // Set card data
+                            if (Array.isArray(data)) {
+                                setComments(data);
+                            } else {
+                                console.error('Error fetching comments:', data.message || 'Unknown error');
+                                setComments([]); // Set comments to an empty array if there’s an error
+                            }
+                        } catch(error) {
+                            console.error('Error fetching cards:', error);
+                        }
+                    };
+                    fetchComments();
                 } else {
                     console.error('Error creating new comment');
                 }
@@ -141,19 +160,19 @@ function Modal({card, setIsModalActive}) {
                 {comments.map((comment_info) => (
                     <div className='modal-comment'>
                         <p>{comment_info.net_id}</p>
-                        <p>blah</p>
-                        <p>"{comment_info.comment}"</p>
+                        <p>{comment_info.comment}</p>
+                        <p>{comment_info.posted_at}</p>
                     </div>
                 ))}
                 {/* Form to submit new comments */}
-                <form onSubmit={handleCommentPosting} className='comment-form'>
+                <form className='comment-form'>
                     <input
                         type="text"
                         value={newComment}
                         onChange={(e) => setNewComment(e.target.value)}
                         placeholder= "Add comment"
                     />
-                    <button type='submit'>Post</button>
+                    <button onSubmit={handleCommentPosting}>Post</button>
                 </form>
             </div>
         )
@@ -185,7 +204,7 @@ function Modal({card, setIsModalActive}) {
                     <div><p className="posted-at">Posted {formatTimeAgo(card.posted_at)}</p></div>
                 </div>
                 {
-                    commentsIsActive && <CommentsSection card_id={card.card_id}/>
+                    commentsIsActive && <CommentsSection card_id={card.card_id} net_id={net_id}/>
                 }
 
 
@@ -195,4 +214,4 @@ function Modal({card, setIsModalActive}) {
 }
 
 
-export default PostingAndModal;
+export default CardDisplay;
