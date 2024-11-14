@@ -425,6 +425,7 @@ footer p {
   
 .modal-comments-section h3 {
     text-align: center;
+    margin-top: 1vh;
 }
 
 .modal-comment h4 {
@@ -464,6 +465,7 @@ footer p {
     align-self: center;
     box-shadow: .5px 0 2px black;
     border: none;
+    height: 4vh;
 }
 
 .comment-form button {
