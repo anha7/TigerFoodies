@@ -28,6 +28,8 @@
       --- Love, Anha
 */
 
+/*--------------------------------------------------------------------*/
+
 /* Style page layout */
 body {
     font-family: "Quicksand", sans-serif;
@@ -38,6 +40,8 @@ body {
 p {
     margin: 0;
 }
+
+/*--------------------------------------------------------------------*/
 
 /* Style the navbar */
 .navbar {
@@ -89,6 +93,8 @@ p {
     font-family: "Quicksand", sans-serif;
 }
 
+/*--------------------------------------------------------------------*/
+
 /* Style the search bar */
 .search-form {
     display: flex;
@@ -98,6 +104,7 @@ p {
 /* Search input container helps with relative positioning */
 .search-container {
     position: relative;
+    padding: 0;
 }
 
 .search-form input {
@@ -129,6 +136,8 @@ p {
     padding-top: 4px;
 }
 
+/*--------------------------------------------------------------------*/
+
 /* Style hidden navbar buttons on mobile */
 .mobile-navbar-left {
     height: 0px; /* Hide hamburger menu options in normal display */
@@ -144,6 +153,8 @@ p {
     display: flex;
     box-shadow: 1px 0 3px black;
 }
+
+/*--------------------------------------------------------------------*/
 
 /* Style the feedback form modal */
 .feedback-title {
@@ -185,10 +196,13 @@ p {
     background-color: #716F81;
     font-family: "Quicksand", sans-serif;
     border: none;
+    border-radius: 15px;
     box-shadow: 1px 0 3px black;
     font-size: 18px;
     color: white;
 }
+
+/*--------------------------------------------------------------------*/
 
 /* Style the main content layout */
 main {
@@ -211,6 +225,8 @@ main {
     color: black;
     padding: 6vh 1vw 1vh;
 }
+
+/*--------------------------------------------------------------------*/
 
 /* Style list of cards */
 .card-list {
@@ -279,6 +295,8 @@ main {
     font-size: 0.75rem;
 }
 
+/*--------------------------------------------------------------------*/
+
 .modal-root {
     display: flex;
     justify-content: center;
@@ -342,6 +360,8 @@ main {
     justify-content: flex-start;
     align-items: flex-end;
 }
+
+/*--------------------------------------------------------------------*/
 
 .comments-button, .location-button {
     background: transparent;
@@ -416,12 +436,15 @@ main {
     width: 90%;
     font-family: "Quicksand", sans-serif;
     font-size: 15px;
-    font-style: italic;
     margin-bottom: 1vh;
     align-self: center;
     box-shadow: .5px 0 2px black;
     border: none;
     height: 4vh;
+}
+
+.comment-form input::placeholder {
+    font-style: italic;
 }
 
 .comment-form button {
@@ -434,7 +457,10 @@ main {
     border: none;
     box-shadow: 0.5px 0 2px #000;
     height: 4vh;
+    border-radius: 15px;
 }
+
+/*--------------------------------------------------------------------*/
 
 /* Style the sidebar */
 .sidebar {
@@ -458,6 +484,8 @@ main {
     height: 45%;
     overflow-y: scroll;
 }
+
+/*--------------------------------------------------------------------*/
 
 /* Hide smaller preferences menu button in normal display */
 .smaller-preferences {
@@ -487,6 +515,8 @@ main {
     flex-direction: column;
 }
 
+/*--------------------------------------------------------------------*/
+
 /* Style the footer */
 footer {
     background-color: #716F81;
@@ -509,6 +539,8 @@ footer p {
     font-style: italic;
 }
 
+/*--------------------------------------------------------------------*/
+
 /* Force hide mobile menus on screens wider than 840px */
 @media screen and (min-width: 841px) {
     .mobile-preferences-menu, .mobile-food-preference-selection {
@@ -520,6 +552,8 @@ footer p {
     }
 }
 
+/*--------------------------------------------------------------------*/
+
 /* Media query for screens between 840px and 1240px */
 @media screen and (max-width: 1280px) {
     /* On a smaller screen, less cards appear in one row */
@@ -527,6 +561,8 @@ footer p {
         grid-template-columns: repeat(3, 1fr);
     }
 }
+
+/*--------------------------------------------------------------------*/
 
 /* Media query for screens between 480px and 840px */
 @media screen and (max-width: 840px) {
@@ -536,7 +572,7 @@ footer p {
     }
 
     .navbar-right {
-        width: 99%;
+        width: 100%;
         justify-content: center;
         gap: 3%;
     }
@@ -548,7 +584,7 @@ footer p {
 
     /* Modify the width of search bar, search bar container, and input */
     .search-form {
-        width: 60%;
+        width: 80%;
     }
 
     .search-container {
@@ -556,7 +592,7 @@ footer p {
     }
 
     .search-form input {
-        width: 100%;
+        width: 90%;
     }
 
     /* Move last button over to accommodate for padding from input (30px) */
@@ -613,6 +649,8 @@ footer p {
     }
 }
 
+/*--------------------------------------------------------------------*/
+
 /* Media query for screens between 0px and 480px */
 @media screen and (max-width: 460px) {
     /* On a smaller screen, less cards appear in one row */
@@ -620,9 +658,14 @@ footer p {
         grid-template-columns: repeat(1, 1fr);
     }
 
-    /* Style the search icon */
+    /* Style the search icon for mobile screens */
     .search-icon {
         padding-top: 1.2vh;
+    }
+
+    /* Style search form input for mobile screens */
+    .search-form input {
+        width: 89%;
     }
 
     /* Center greeting on mobile screens */

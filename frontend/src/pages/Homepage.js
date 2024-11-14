@@ -347,7 +347,7 @@ const Homepage = ({ net_id }) => {
 
                         {/* Section for allergy filtering */}
                         <div className="mobile-food-preference-selection">
-                            <h3>Allergies</h3>
+                            <h3>Allergens</h3>
                             <label>
                                 <input type="checkbox" name="nuts" checked={foodFilters.allergies['nuts']} onChange={(filter) => handleFilter(filter, 'allergies')} />
                                 Nuts
@@ -416,7 +416,7 @@ const Homepage = ({ net_id }) => {
 
                     {/* Section for allergy filtering */}
                     <div className="food-preferences-selection">
-                        <h3>Allergies</h3>
+                        <h3>Allergens</h3>
                         <label>
                             <input type="checkbox" name="nuts" checked={foodFilters.allergies['nuts']} onChange={(filter) => handleFilter(filter, 'allergies')} />
                             Nuts

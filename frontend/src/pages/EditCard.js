@@ -151,86 +151,87 @@ function EditCard() {
 
             {/* Main content container for form data */}
             <div className='main' >
-                <div className="page-name"> <h2>Edit Card</h2> </div>
+                <div className="entire-form">
+                    <div className="page-name"> <h2>Edit Card</h2> </div>
 
-                <form onSubmit={handleSubmit}>
-                    {/* Title field */}
-                    <div className="title">
-                        <h4>Title: * <br/>
-                        <input 
-                            required
-                            type="text" 
-                            name = "title"
-                            value={title} 
-                            onChange={(e) => setTitle(e.target.value)}/> </h4>
-                    </div>
+                    <form onSubmit={handleSubmit}>
+                        {/* Title field */}
+                        <div className="title">
+                            <h4>Title: * <br/>
+                            <input 
+                                required
+                                type="text" 
+                                name = "title"
+                                value={title} 
+                                onChange={(e) => setTitle(e.target.value)}/> </h4>
+                        </div>
 
-                    {/* Field to upload food image */}
-                    <div className="photo">
-                    <h4>Image: * <br/>
-                    <input
-                        // required
-                        type="file"
-                        name="photo_url"
-                        // accept="image/*"
-                        onChange={handleImageChange}
-                        className="upload-button"
-                    />
-                    </h4>
-                    <div className='uploadedImage'>
-                        {photo && <img src={photo} alt="Uploaded preview" style={{ width: '100%', height: 'auto', borderRadius: '8px'}} />}
-                    </div>
-                    </div>
-
-
-                    {/* Location field */}
-                    <div className="location">
-                        <h4> Location: * <br/> 
-                        <input 
-                            required
-                            type="text" 
-                            name = "location"
-                            value={location} 
-                            onChange={(e) => setLocation(e.target.value)}/>
+                        {/* Field to upload food image */}
+                        <div className="photo">
+                        <h4>Image: * <br/>
+                        <input
+                            // required
+                            type="file"
+                            name="photo_url"
+                            // accept="image/*"
+                            onChange={handleImageChange}
+                            className="upload-button"
+                        />
                         </h4>
-                    </div>
+                        <div className='uploadedImage'>
+                            {photo && <img src={photo} alt="Uploaded preview" style={{ width: '100%', height: 'auto', borderRadius: '8px'}} />}
+                        </div>
+                        </div>
 
-                    {/* Dietary preferences field */}
-                    <div className="dietary_tags">
-                        <h4>Dietary Tags (Select all that apply): </h4>
 
-                        <label><input type="checkbox" name="dietary_tags" value="Halal" checked={dietary_tags.includes('Halal')} onChange={handleDietaryChange}/> Halal</label>
-                        <label><input type="checkbox" name="dietary_tags" value="Kosher" checked={dietary_tags.includes('Kosher')} onChange={handleDietaryChange}/> Kosher</label>
-                        <label><input type="checkbox" name="dietary_tags" value="Vegetarian" checked={dietary_tags.includes('Vegetarian')} onChange={handleDietaryChange}/> Vegetarian</label>
-                        <label><input type="checkbox" name="dietary_tags" value="Vegan" checked={dietary_tags.includes('Vegan')} onChange={handleDietaryChange}/> Vegan</label>
-                        <label><input type="checkbox" name="dietary_tags" value="Gluten-Free" checked={dietary_tags.includes('Gluten-Free')} onChange={handleDietaryChange}/> Gluten-Free</label>
-                    </div>
-                    
-                    {/* Allergens field */}
-                    <div className="allergies">
-                        <h4>Allergens (Select all that apply): </h4>
-                        <label><input type="checkbox" name="allergies" value="Nuts" checked={allergies.includes('Nuts')} onChange={handleAllergiesChange}/> Nuts</label>
-                        <label><input type="checkbox" name="allergies" value="Dairy" checked={allergies.includes('Dairy')} onChange={handleAllergiesChange}/> Dairy</label>
-                        <label><input type="checkbox" name="allergies" value="Shellfish" checked={allergies.includes('Shellfish')} onChange={handleAllergiesChange}/> Shellfish</label>
-                    </div>
+                        {/* Location field */}
+                        <div className="location">
+                            <h4> Location: * <br/> 
+                            <input 
+                                required
+                                type="text" 
+                                name = "location"
+                                value={location} 
+                                onChange={(e) => setLocation(e.target.value)}/>
+                            </h4>
+                        </div>
 
-                    {/* Description field */}    
-                    <div className="description"> 
-                        <h4>Description: <br/>
-                        <textarea
-                            type='text'
-                            name = "description" 
-                            value={description} 
-                            onChange={(e) => setDescription(e.target.value)}/> 
-                        </h4>     
-                    </div>   
-                    
-                    {/* Submit button */}
-                    <div className="button">
-                        <button type="submit">Submit Card</button>
-                    </div>
-                    
-                </form>
+                        {/* Dietary preferences field */}
+                        <div className="dietary_tags">
+                            <h4>Dietary Tags (Select all that apply): </h4>
+
+                            <label><input type="checkbox" name="dietary_tags" value="Halal" checked={dietary_tags.includes('Halal')} onChange={handleDietaryChange}/> Halal</label>
+                            <label><input type="checkbox" name="dietary_tags" value="Kosher" checked={dietary_tags.includes('Kosher')} onChange={handleDietaryChange}/> Kosher</label>
+                            <label><input type="checkbox" name="dietary_tags" value="Vegetarian" checked={dietary_tags.includes('Vegetarian')} onChange={handleDietaryChange}/> Vegetarian</label>
+                            <label><input type="checkbox" name="dietary_tags" value="Vegan" checked={dietary_tags.includes('Vegan')} onChange={handleDietaryChange}/> Vegan</label>
+                            <label><input type="checkbox" name="dietary_tags" value="Gluten-Free" checked={dietary_tags.includes('Gluten-Free')} onChange={handleDietaryChange}/> Gluten-Free</label>
+                        </div>
+                        
+                        {/* Allergens field */}
+                        <div className="allergies">
+                            <h4>Allergens (Select all that apply): </h4>
+                            <label><input type="checkbox" name="allergies" value="Nuts" checked={allergies.includes('Nuts')} onChange={handleAllergiesChange}/> Nuts</label>
+                            <label><input type="checkbox" name="allergies" value="Dairy" checked={allergies.includes('Dairy')} onChange={handleAllergiesChange}/> Dairy</label>
+                            <label><input type="checkbox" name="allergies" value="Shellfish" checked={allergies.includes('Shellfish')} onChange={handleAllergiesChange}/> Shellfish</label>
+                        </div>
+
+                        {/* Description field */}    
+                        <div className="description"> 
+                            <h4>Description: <br/>
+                            <textarea
+                                type='text'
+                                name = "description" 
+                                value={description} 
+                                onChange={(e) => setDescription(e.target.value)}/> 
+                            </h4>     
+                        </div>   
+                        
+                        {/* Submit button */}
+                        <div className="button">
+                            <button type="submit">Submit Card</button>
+                        </div>
+                    </form>
+                </div>
             </div>
     
             {/* Footer */}

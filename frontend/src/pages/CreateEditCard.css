@@ -22,6 +22,15 @@
     overflow-y: scroll;
 }
 
+.entire-form {
+    background-color: #F6AE99;
+    margin: 3vh 0;
+    width: 50%;
+    align-self: center;
+    border-radius: 15px;
+    box-shadow: 1px 0 3px black;
+}
+
 /* Button back to homepage */ 
 .nav h1 {
     margin: 0;
@@ -36,7 +45,6 @@ h2 {
     margin-bottom: 0;
     text-align: center;
     font-size: 2em;
-    color: #333333;
 }
 
 /* Form Container */
@@ -51,7 +59,7 @@ form {
 
 /* Style input form for title, locations, and photo fields */
 .title input, .location input, .photo input {
-    width: 40%;
+    width: 95%;
     height: 3vh;
     font-family: "Quicksand", sans-serif;
 }
@@ -59,7 +67,7 @@ form {
 /* Style input for description field */
 .description textarea {
     height: 10vh;
-    width: 40%;
+    width: 95%;
     font-family: "Quicksand", sans-serif;
     resize: none;
 }
@@ -78,8 +86,7 @@ form {
 /* Style submit button  */
 .button {
     display: flex;
-    margin-right: 10pc;
-    float: left;
+    justify-content: center;
 }
 
 /* Button styling */
@@ -87,12 +94,14 @@ button[type="submit"] {
     font-weight: bold;
     font-size: 1.1rem;
     color: #fff;
-    background-color: #ff9271;
+    background-color: #716F81;
     font-family: "Quicksand", sans-serif;
     border: none;
-    border-radius: 5px;
+    border-radius: 15px;
     cursor: pointer;
-    margin-bottom: 10px;
+    margin-bottom: 2vh;
+    padding: 1vh 1vw;
+    box-shadow: 1px 0 3px black;
 }
 
 .uploadedImage {
@@ -114,19 +123,12 @@ button[type="submit"] {
         display: flex;
         flex-direction: column;
     }
-    
-    /* Style input form for title, locations, and photo fields */
-    .title input, .location input, .photo input {
-        width: 95%;
-        height: 3vh;
+
+    .entire-form {
+        width: 90%;
     }
 
-    /* Style input for description field */
-    .description textarea {
-        width: 95%;
-        height: 10vh;
-    }
-    button[type="submit"] {
-        float: center;
+    form {
+        padding: 0 2vw;
     }
 }
