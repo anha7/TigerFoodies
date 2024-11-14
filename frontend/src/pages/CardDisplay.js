@@ -37,7 +37,7 @@ function CardDisplay({card, net_id}) {
 
     console.log(card)
     return (
-        <div>
+        <div className="card-and-modal-container">
             <Card onClick={handleCardClick} card = {card} />
             {isModalActive &&
             <Modal card={card} setIsModalActive={setIsModalActive} net_id={net_id}/>
@@ -77,7 +77,7 @@ function Modal({card, setIsModalActive, net_id}) {
     const [mapsIsActive, setMapsIsActive] = useState(false)
 
     function handleCommentsButtonClick() {
-        setCommentsIsActive(true)
+        setCommentsIsActive(!commentsIsActive)
         setMapsIsActive(false)
     }
 
@@ -158,10 +158,9 @@ function Modal({card, setIsModalActive, net_id}) {
                 <h3>Comments</h3>
                 {/* Display all comments */}
                 {comments.map((comment_info) => (
-                    <div className='modal-comment'>
-                        <p>{comment_info.net_id}</p>
+                    <div className='modal-comment'> 
+                        <h4>{comment_info.net_id} · {formatTimeAgo(comment_info.posted_at)}</h4>
                         <p>{comment_info.comment}</p>
-                        <p>{comment_info.posted_at}</p>
                     </div>
                 ))}
                 {/* Form to submit new comments */}
@@ -172,7 +171,7 @@ function Modal({card, setIsModalActive, net_id}) {
                         onChange={(e) => setNewComment(e.target.value)}
                         placeholder= "Add comment"
                     />
-                    <button onSubmit={handleCommentPosting}>Post</button>
+                    <button onClick={handleCommentPosting}>Post</button>
                 </form>
             </div>
         )

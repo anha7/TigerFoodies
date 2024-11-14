@@ -7,14 +7,12 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './Homepage.css'; // Import custom CSS file
 import searchIcon from './media/search-icon.png';
-import notificationsIcon from './media/notifications.png';
 import plusIcon from './media/plus.png';
 import matheyImage from './media/mathey.png';
 import hamburgerIcon from './media/hamburger-icon.png';
 import preferencesIcon from './media/preferences.png';
 import CardDisplay from './CardDisplay'; // to view extended card info
 import Feedback from './Feedback';
-import Notifications from './Notifications';
 
 //----------------------------------------------------------------------
 
@@ -77,18 +75,11 @@ const Homepage = ({ net_id }) => {
     const [isPreferencesOpen, setPreferencesOpen] = useState(false);
     // State for feedback modal
     const [isFeedbackModalActive, setFeedbackModalActive] = useState(false);
-    // State for notifications  modal
-    const [isNotificationsModalActive, setNotificationsModalActive] = useState(false);
 
 //----------------------------------------------------------------------
 
     // function that toggles feedback modal
     const toggleFeedbackModal = () => setFeedbackModalActive(!isFeedbackModalActive);
-    const toggleNotificationsModal = () => {
-        console.log("Toggling notifications modal"); // Debug log
-        setNotificationsModalActive(!isNotificationsModalActive);
-    };
-
 //----------------------------------------------------------------------
 
     // Hook that fetches card data from the backend and sets greeting
@@ -292,11 +283,6 @@ const Homepage = ({ net_id }) => {
                             />
                         </div>
                     </form>
-
-                    {/* Notifications button */}
-                    <button className="nav-button" onClick={toggleNotificationsModal}>
-                        <img src={notificationsIcon} alt="Notifications" height="15px" />
-                    </button>
                 </div>
             </nav>
 
@@ -449,8 +435,6 @@ const Homepage = ({ net_id }) => {
 
             {/* Feedback modal component */}
             <Feedback isModalActive={isFeedbackModalActive} setIsModalActive={setFeedbackModalActive} net_id={net_id} />
-
-            <Notifications isModalActive={isNotificationsModalActive} setIsModalActive={setNotificationsModalActive} net_id={net_id} />
 
             {/* Footer */}
             <footer>

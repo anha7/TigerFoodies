@@ -17,14 +17,7 @@ def main():
             # Create the users table
             cursor.execute('''
                 CREATE TABLE IF NOT EXISTS users (
-                        net_id VARCHAR(10) PRIMARY KEY NOT NULL,
-                        email VARCHAR(100) UNIQUE,
-                        dietary_preferences VARCHAR[] DEFAULT '{}',
-                        allergies VARCHAR[] DEFAULT '{}',
-                        subscribed_to_text_notifications BOOLEAN DEFAULT FALSE,
-                        phone_number VARCHAR(20) DEFAULT '',
-                        subscribed_to_desktop_notifications BOOLEAN DEFAULT FALSE,
-                        subscribe_info JSONB DEFAULT NULL
+                        net_id VARCHAR(20) PRIMARY KEY NOT NULL,
                 );
             ''')
             print("Successfully created users table!")
@@ -33,7 +26,7 @@ def main():
             cursor.execute('''
             CREATE TABLE IF NOT EXISTS cards (
                         card_id SERIAL PRIMARY KEY NOT NULL,
-                        net_id VARCHAR(10),
+                        net_id VARCHAR(20),
                         title VARCHAR(100) NOT NULL,
                         description VARCHAR(250),
                         photo_url TEXT,
@@ -53,7 +46,7 @@ def main():
             CREATE TABLE IF NOT EXISTS comments (
                     comment_id SERIAL PRIMARY KEY NOT NULL,
                     card_id INT REFERENCES cards(card_id) ON DELETE CASCADE NOT NULL,
-                    net_id VARCHAR(10) REFERENCES users(net_id) NOT NULL,
+                    net_id VARCHAR(20) REFERENCES users(net_id) NOT NULL,
                     comment VARCHAR(200) NOT NULL,
                     posted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
                 );          

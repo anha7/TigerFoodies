@@ -169,7 +169,7 @@ function EditCard() {
                     <div className="photo">
                     <h4>Image: * <br/>
                     <input
-                        required
+                        // required
                         type="file"
                         name="photo_url"
                         // accept="image/*"
@@ -181,6 +181,7 @@ function EditCard() {
                         {photo && <img src={photo} alt="Uploaded preview" style={{ width: '100%', height: 'auto', borderRadius: '8px'}} />}
                     </div>
                     </div>
+
 
                     {/* Location field */}
                     <div className="location">

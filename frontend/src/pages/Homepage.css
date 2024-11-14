@@ -221,6 +221,10 @@ main {
     width: 98%;
 }
 
+.card-and-modal-container {
+    height: 100%;
+}
+
 /* Style each card */
 .card {
     background-color: #F6AE99;
@@ -388,18 +392,19 @@ footer p {
     height: 100%;
     width: 57%;
     gap: 5%;
-    justify-content: flex-end
+    justify-content: flex-start;
+    padding-left: 2vh;
 }
-.comments-button .location-button {
+.comments-button, .location-button {
     background: transparent;
     border: none;
     cursor: pointer;
     padding: 0;
-    background-color: #F6AE99;
+    background-color: #716F81;
     border-radius: 15px;
-    font-size: 0.75rem;
-    font-family: "Quicksand", sans-serif;
     box-shadow: 0.1px 0.1px 2px black;
+    width: 3.5vw;
+    height: 3.5vh;
 }
 
 .modal-footer .posted-at {
@@ -411,30 +416,65 @@ footer p {
 }
 
 .modal-comments-section {
-    background-color: white;
-    height: 50%;
-        
+    background-color: #fad1c5;
     display: flex;
-
+    flex-direction: column;
+    width: 100%;
+    box-shadow: 1px 0 3px black;
 }
   
 .modal-comments-section h3 {
     text-align: center;
 }
 
+.modal-comment h4 {
+    color: rgb(52, 52, 52);
+    font-style: italic;
+    background-color: transparent;
+    margin: 0;
+    font-size: 16px;
+}
 
+.modal-comment p {
+    color:black;
+}
+
+.modal-comment {
+    margin-top:0;
+    padding: 0.3vh;
+    margin-top: 0.5vh;
+    margin-left: 1.5vw;
+}
 
 .comment-form {
     display: flex;
-    margin-top: auto; /* Pushes the form to the bottom */
+    margin-top: 1vh;
     padding: 10px 0;
-    width: 90%;
+    width: 100%;
     background-color: #716F81;
+    margin-left: 0;
+    position: sticky;
+}
+
+.comment-form input {
+    width: 90%;
     font-family: "Quicksand", sans-serif;
+    font-size: 15px;
+    margin-bottom: 1vh;
+    align-self: center;
+    box-shadow: .5px 0 2px black;
     border: none;
-    box-shadow: 1px 0 3px black;
-    font-size: 9px;
+}
+
+.comment-form button {
+    font-family: "Quicksand", sans-serif;
+    font-size: 15px;
+    width: 20%;
     color: white;
+    background-color: #F6AE99;
+    align-self: center;
+    border: none;
+    box-shadow: 0.5px 0 2px #000;
 }
 
 /* Force hide mobile menus on screens wider than 840px */
