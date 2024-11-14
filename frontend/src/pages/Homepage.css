@@ -216,7 +216,7 @@ main {
     display: flex;
     flex-direction: column;
     width: 85%;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 /* Welcome section styling */
@@ -246,7 +246,7 @@ main {
     background-color: #F6AE99;
     border-radius: 15px;
     height: 100%;
-    overflow-y: scroll;
+    overflow-y: auto;
     box-shadow: 0.25px 0.25px 2px black;
     cursor: pointer;
     display: flex;
@@ -334,7 +334,7 @@ main {
 /* Adjust height of modal content */
 .modal-card-content {
     height: 35vh;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 .main-modal-content {
@@ -467,7 +467,7 @@ main {
     background-color: #F6AE99;
     padding: 0.5rem;
     width: 15%;
-    overflow-y: scroll;
+    overflow-y: auto;
     box-shadow: 0 1px 2px black;
 }
 
@@ -482,7 +482,7 @@ main {
 
 .food-preferences-selection {
     height: 45%;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 /*--------------------------------------------------------------------*/
@@ -510,7 +510,7 @@ main {
 
 /* Style mobile dietary preferences selection */
 .mobile-food-preference-selection {
-    overflow-y: scroll;
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
 }

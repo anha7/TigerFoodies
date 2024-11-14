@@ -25,7 +25,7 @@ def main():
             # Create the food cards table
             cursor.execute('''
             CREATE TABLE IF NOT EXISTS cards (
-                        card_id SERIAL PRIMARY KEY NOT NULL,
+                        card_id SERIAL PRIMARY KEY,
                         net_id VARCHAR(20),
                         title VARCHAR(100) NOT NULL,
                         description VARCHAR(250),
