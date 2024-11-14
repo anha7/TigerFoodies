@@ -66,7 +66,7 @@ def add_user(net_id):
                 conn.commit()
     except Exception as ex:
         print(ex)
-        
+
 #-----------------------------------------------------------------------
 
 # Retrieve current user's NetID
@@ -76,7 +76,7 @@ def get_user():
         return jsonify({'net_id': session['username']})
     else:
         return jsonify({"success": False, "message": "User not logged in"}), 500
-    
+
 #-----------------------------------------------------------------------
 
 # Clean expired cards
@@ -207,7 +207,7 @@ def create_card():
         dietary_tags = card_data.get('dietary_tags')
         allergies = card_data.get('allergies')
 
-        # Package parse data
+        # Package parsed data
         new_card = [net_id, title, description, photo_url, location, 
                     dietary_tags, allergies]
         
@@ -229,7 +229,6 @@ def create_card():
 
                 # Commit to the database
                 conn.commit()
-
                 return jsonify({"success": True, "message": "Action successful!"}), 200
     except Exception as ex:
         print(str(ex))
@@ -251,7 +250,7 @@ def edit_card(card_id):
         dietary_tags = card_data.get('dietary_tags')
         allergies = card_data.get('allergies')
 
-        # Paackage parsed data
+        # Packaged parsed data
         new_card = [title, description, photo_url, location, 
                     dietary_tags, allergies, card_id]
         
@@ -267,7 +266,6 @@ def edit_card(card_id):
                 cursor.execute(update_query, new_card)
                 # Commit to database
                 conn.commit()
-
                 return jsonify({"success": True, "message": "Action successful!"}), 200
     except Exception as ex:
         print(str(ex))
@@ -306,7 +304,7 @@ def retrieve_card(card_id):
     except Exception as ex:
         print(str(ex))
         return jsonify({"success": False, "message": str(ex)}), 500
-
+            
 #-----------------------------------------------------------------------
 
 # API route for sending feedback email to our service account
@@ -330,6 +328,85 @@ def submit_feedback():
     except Exception as ex:
         print(ex)
         return jsonify({"success": False, "message": "Action unsuccessful"}), 500
+
+#-----------------------------------------------------------------------
+
+# API Route for retrieving a specific card's comments
+@app.route('/api/comments/<int:card_id>', methods=['GET'])
+def retrieve_card_comments(card_id):
+    try:
+        # Connect to database
+        with psycopg2.connect(DATABASE_URL) as conn:
+            with conn.cursor() as cursor:
+                # Define insertion query
+                retrieval_query = ''' SELECT net_id, comment, posted_at 
+                FROM comments WHERE card_id = %s;'''
+                # Execute query to retrieve card with given card_id
+                cursor.execute(retrieval_query, [card_id])
+                rows = cursor.fetchall()
+
+                # Package queried data and send it over
+                if rows:
+                    comments = []
+                    for row in rows:
+                        comments.append({
+                            'net_id': row[0],
+                            'comment': row[1],
+                            'posted_at': row[2],
+                        })
+                    return jsonify(comments)
+                else:
+                    return jsonify({"error": "Card not found"}), 404
+
+    except Exception as ex:
+        print(str(ex))
+        return jsonify({"success": False, "message": str(ex)}), 500
+    
+#-----------------------------------------------------------------------
+
+# API Route for creating comments
+@app.route('/api/comments/<int:card_id>', methods=['POST'])
+def create_card_comment(card_id):
+    try:
+        # Retrieve JSON object containing new card data
+        new_comment_data = request.get_json()
+        # testing message if comment wasn't recognized / put in 
+        if not new_comment_data or 'comment' not in new_comment_data:
+            return jsonify({"success": False, "message": "Missing comment data"}), 400
+
+        # Parse relevant fields
+        net_id = new_comment_data.get('net_id')
+        comment = bleach.clean(new_comment_data.get('comment'))
+
+        # Package parsed data
+        new_comment = [net_id, comment, card_id]
+       
+        # Connect to database and establish a cursor
+        with psycopg2.connect(DATABASE_URL) as conn:
+            with conn.cursor() as cursor:
+               
+                 # test for me to verify the card exists
+                cursor.execute("SELECT 1 FROM cards WHERE card_id = %s", (card_id,))
+                if not cursor.fetchone():
+                    return jsonify({"success": False, "message": "Card not found"}), 404
+                
+                # Define insertion query
+                insertion_query = '''INSERT INTO comments (net_id,
+                    comment, card_id, posted_at)
+                    VALUES (%s, %s, %s,
+                    CURRENT_TIMESTAMP)
+                '''
+
+                # Execute query to store new card into the database
+                cursor.execute(insertion_query, new_comment)
+                
+                # Commit to the database
+                conn.commit()
+                return jsonify({"success": True, "message": "Action successful!"}), 200
+    except Exception as ex:
+        print(str(ex))
+        return jsonify({"success": False, "message": str(ex)}), 500
+
 
 #-----------------------------------------------------------------------
 

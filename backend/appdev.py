@@ -5,7 +5,6 @@ import psycopg2
 import secrets
 from flask_mail import Mail, Message
 import bleach
-# from pywebpush import webpush, WebPushException
 
 #-----------------------------------------------------------------------
 
