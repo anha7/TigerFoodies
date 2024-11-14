@@ -57,11 +57,15 @@ function Card({ onClick, card }) {
             >
             </div>
             <div className="card-content">
-                <h3>{card.title}</h3>
-                <p><b>Location:</b> {card.location}</p>
-                <p><b>Dietary Preferences:</b> {card.dietary_tags.join(', ')}</p>
-                <p><b>Allergens:</b> {card.allergies.join(', ')}</p>
-                <p className="posted-at">Posted {formatTimeAgo(card.posted_at)}</p>
+                <div className="card-content-main">
+                    <h3>{card.title}</h3>
+                    <p><b>Location:</b> {card.location}</p>
+                    <p><b>Dietary Preferences:</b> {card.dietary_tags.join(', ')}</p>
+                    <p><b>Allergens:</b> {card.allergies.join(', ')}</p>
+                </div>
+                <div className="card-content-footer">
+                    <p className="posted-at">Posted {formatTimeAgo(card.posted_at)}</p>
+                </div>
             </div>
         </div>
     );
@@ -185,28 +189,28 @@ function Modal({card, setIsModalActive, net_id}) {
             <div className = 'modal-card' onClick = {e => e.stopPropagation()}>
                 <div className="modal-card-image" style={{ backgroundImage: `url(${card.photo_url})`}} />
                 <div className="modal-card-content">
-                    <h3>{card.title}</h3>
-                    <p><b>Location:</b> {card.location}</p>
-                    <p><b>Dietary Preferences:</b> {card.dietary_tags.join(', ')}</p>
-                    <p><b>Allergens:</b> {card.allergies.join(', ')}</p>
-                    <p><b>Description:</b> {card.description}</p>
-                </div>
-                <div className = 'modal-footer'>
-                    <div className = 'modal-icons'>
-                        <button className = "comments-button" onClick = {handleCommentsButtonClick}>
-                                <img src={commentsIcon} alt="Comments" height="15px" />
-                        </button>
-                        <button className= "location-button">
-                            <img src={mapIcon} alt="Map" height="15px" />
-                        </button>
+                    <div className = 'main-modal-content'>
+                        <h3>{card.title}</h3>
+                        <p><b>Location:</b> {card.location}</p>
+                        <p><b>Dietary Preferences:</b> {card.dietary_tags.join(', ')}</p>
+                        <p><b>Allergens:</b> {card.allergies.join(', ')}</p>
+                        <p><b>Description:</b> {card.description}</p>
                     </div>
-                    <div><p className="posted-at">Posted {formatTimeAgo(card.posted_at)}</p></div>
+                    <div className = 'modal-footer'>
+                        <div className = 'modal-icons'>
+                            <button className = "comments-button" onClick = {handleCommentsButtonClick}>
+                                    <img src={commentsIcon} alt="Comments" height="15px" />
+                            </button>
+                            <button className= "location-button">
+                                <img src={mapIcon} alt="Map" height="15px" />
+                            </button>
+                        </div>
+                        <div><p className="posted-at">Posted {formatTimeAgo(card.posted_at)}</p></div>
+                    </div>
+                    <div className='comments-portion'>
+                        {commentsIsActive && <CommentsSection card_id={card.card_id} net_id={net_id}/>}
+                    </div>
                 </div>
-                {
-                    commentsIsActive && <CommentsSection card_id={card.card_id} net_id={net_id}/>
-                }
-
-
             </div>
         </div>
     );

@@ -229,12 +229,12 @@ main {
 .card {
     background-color: #F6AE99;
     border-radius: 15px;
-    align-items: center;
-    justify-content: center;
     height: 100%;
     overflow-y: scroll;
     box-shadow: 0.25px 0.25px 2px black;
     cursor: pointer;
+    display: flex;
+    flex-direction: column;
 }
 
 /* Style the card's image */
@@ -250,6 +250,7 @@ main {
     display: flex;
     flex-direction: column;
     padding: 1rem;
+    height: 63%;
 }
 
 .card h3, .modal-card h3 {
@@ -265,7 +266,13 @@ main {
     margin-top: 0.2rem;
 }
 
-.posted-at {
+.card-content-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: auto;
+}
+
+.card-content-footer .posted-at {
     color: #716F81;
     font-style: italic;
     align-self: end;
@@ -291,9 +298,8 @@ main {
     border-radius: 15px;
     align-items: center;
     justify-content: center;
-    height: 75%;
+    height: 75vh;
     width: 33%;
-    overflow-y: scroll;
     box-shadow: 0.25px 0.25px 2px black;
 }
 
@@ -302,7 +308,132 @@ main {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    height: 275px;
+    height: 35vh;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+}
+
+/* Adjust height of modal content */
+.modal-card-content {
+    height: 35vh;
+    overflow-y: scroll;
+}
+
+.main-modal-content {
+    margin-bottom: 1vh;
+}
+
+/* Style modal footer */
+.modal-footer {
+    background-color: #F6AE99;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: auto;
+    padding-bottom: 1vh;
+}
+
+/* Style modal icons */
+.modal-icons {
+    display: flex;
+    width: 57%;
+    gap: 5%;
+    justify-content: flex-start;
+    align-items: flex-end;
+}
+
+.comments-button, .location-button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    background-color: #716F81;
+    border-radius: 15px;
+    box-shadow: 0.1px 0.1px 2px black;
+    width: 40px;
+    height: 25px;
+}
+
+/* Style modal posted time */
+.modal-footer .posted-at {
+    direction: rtl;
+    height: 100%;
+    text-align: right;
+    white-space: nowrap;
+    padding-right: 5%;
+    color: #716F81;
+    font-style: italic;
+    align-self: end;
+    font-size: 0.75rem;
+}
+
+/* Style modal comments section */
+.modal-comments-section {
+    background-color: #fad1c5;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    box-shadow: 1px 0 3px black;
+}
+  
+.modal-comments-section h3 {
+    text-align: center;
+    margin-top: 1vh;
+}
+
+.modal-comment h4 {
+    color: rgb(52, 52, 52);
+    font-style: italic;
+    background-color: transparent;
+    margin: 0;
+    font-size: 16px;
+}
+
+.modal-comment p {
+    color:black;
+}
+
+.modal-comment {
+    margin-top:0;
+    padding: 0.3vh;
+    margin-top: 0.5vh;
+    margin-left: 1.5vw;
+}
+
+/* Style modal comments submission form */
+.comment-form {
+    display: flex;
+    margin-top: 1vh;
+    padding: 10px 0;
+    width: 100%;
+    background-color: #716F81;
+    margin-left: 0;
+    position: sticky;
+}
+
+.comment-form input {
+    width: 90%;
+    font-family: "Quicksand", sans-serif;
+    font-size: 15px;
+    font-style: italic;
+    margin-bottom: 1vh;
+    align-self: center;
+    box-shadow: .5px 0 2px black;
+    border: none;
+    height: 4vh;
+}
+
+.comment-form button {
+    font-family: "Quicksand", sans-serif;
+    font-size: 15px;
+    width: 20%;
+    color: white;
+    background-color: #F6AE99;
+    align-self: center;
+    border: none;
+    box-shadow: 0.5px 0 2px #000;
+    height: 4vh;
 }
 
 /* Style the sidebar */
@@ -310,9 +441,9 @@ main {
     background-color: #F6AE99;
     padding: 0.5rem;
     width: 15%;
-    height: 100%;
     overflow-y: scroll;
     box-shadow: 0 1px 2px black;
+    z-index: -1;
 }
 
 .sidebar h3 {
@@ -371,113 +502,12 @@ footer {
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: -1;
 }
 
 footer p {
     font-size: 12px;
     font-style: italic;
-}
-
-
-.modal-footer {
-    background-color: #F6AE99;
-    padding: 8px 0;
-    display: flex;
-    width: 100%;
-    justify-content: space-between;
-}
-
-.modal-icons {
-    display: flex;
-    height: 100%;
-    width: 57%;
-    gap: 5%;
-    justify-content: flex-start;
-    padding-left: 2vh;
-}
-.comments-button, .location-button {
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    background-color: #716F81;
-    border-radius: 15px;
-    box-shadow: 0.1px 0.1px 2px black;
-    width: 40px;
-    height: 25px;
-}
-
-.modal-footer .posted-at {
-    direction: rtl;
-    height: 100%;
-    text-align: right;
-    white-space: nowrap;
-    padding-right: 5%;
-}
-
-.modal-comments-section {
-    background-color: #fad1c5;
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    box-shadow: 1px 0 3px black;
-}
-  
-.modal-comments-section h3 {
-    text-align: center;
-    margin-top: 1vh;
-}
-
-.modal-comment h4 {
-    color: rgb(52, 52, 52);
-    font-style: italic;
-    background-color: transparent;
-    margin: 0;
-    font-size: 16px;
-}
-
-.modal-comment p {
-    color:black;
-}
-
-.modal-comment {
-    margin-top:0;
-    padding: 0.3vh;
-    margin-top: 0.5vh;
-    margin-left: 1.5vw;
-}
-
-.comment-form {
-    display: flex;
-    margin-top: 1vh;
-    padding: 10px 0;
-    width: 100%;
-    background-color: #716F81;
-    margin-left: 0;
-    position: sticky;
-}
-
-.comment-form input {
-    width: 90%;
-    font-family: "Quicksand", sans-serif;
-    font-size: 15px;
-    margin-bottom: 1vh;
-    align-self: center;
-    box-shadow: .5px 0 2px black;
-    border: none;
-    height: 4vh;
-}
-
-.comment-form button {
-    font-family: "Quicksand", sans-serif;
-    font-size: 15px;
-    width: 20%;
-    color: white;
-    background-color: #F6AE99;
-    align-self: center;
-    border: none;
-    box-shadow: 0.5px 0 2px #000;
-    height: 4vh;
 }
 
 /* Force hide mobile menus on screens wider than 840px */
@@ -497,7 +527,6 @@ footer p {
     .card-list {
         grid-template-columns: repeat(3, 1fr);
     }
-
 }
 
 /* Media query for screens between 480px and 840px */
