@@ -174,6 +174,7 @@ function Modal({card, setIsModalActive, net_id}) {
                         value={newComment}
                         onChange={(e) => setNewComment(e.target.value)}
                         placeholder= "Add comment..."
+                        required
                     />
                     <button onClick={handleCommentPosting}>Post</button>
                 </form>
