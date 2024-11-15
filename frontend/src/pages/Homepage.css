@@ -127,6 +127,7 @@ p {
 /* Style the search icon */
 .search-icon {
     top: 1.2vh;
+    left: 23px;
     position: relative;
     pointer-events: none;
 }
