@@ -13,7 +13,9 @@ const Feedback = ({ isModalActive, setIsModalActive, net_id }) => {
     }
 
     // Functional component to submit feedback to the backend
-    const handleSubmit = async () => {
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
         // Send request to backend
         try {
             const response = await fetch(`/api/feedback`, {
@@ -24,13 +26,12 @@ const Feedback = ({ isModalActive, setIsModalActive, net_id }) => {
                 body: JSON.stringify({ net_id: net_id, feedback: feedbackInput }),
             });
 
-            // Parse JSON response
-            const data = await response.json();
-
-            if (data.success) {
+            if (response.ok) {
                 alert('Feedback sent successfully!');
                 setFeedbackInput("");
                 handleCloseModal();
+            } else {
+                alert('Feedback did not send. Try again.');
             }
         } catch (error) {
             console.error('Error:', error);

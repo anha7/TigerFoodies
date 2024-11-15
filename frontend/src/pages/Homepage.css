@@ -105,6 +105,8 @@ p {
 .search-container {
     position: relative;
     padding: 0;
+    display: flex;
+    justify-content: flex-end;
 }
 
 .search-form input {
@@ -124,9 +126,8 @@ p {
 
 /* Style the search icon */
 .search-icon {
-    left: 0;
-    position: absolute;
-    padding: 1.2vh 0 0 1.25vh;
+    top: 1.2vh;
+    position: relative;
     pointer-events: none;
 }
 
@@ -574,7 +575,7 @@ footer p {
     .navbar-right {
         width: 100%;
         justify-content: center;
-        gap: 3%;
+        gap: 0%;
     }
 
     /* Show hamburger menu in smaller displays */
@@ -584,7 +585,8 @@ footer p {
 
     /* Modify the width of search bar, search bar container, and input */
     .search-form {
-        width: 80%;
+        width: 85%;
+        padding-right: 0;
     }
 
     .search-container {
@@ -658,14 +660,13 @@ footer p {
         grid-template-columns: repeat(1, 1fr);
     }
 
-    /* Style the search icon for mobile screens */
-    .search-icon {
-        padding-top: 1.2vh;
-    }
-
     /* Style search form input for mobile screens */
     .search-form input {
         width: 89%;
+    }
+
+    .navbar-right {
+        padding: 0 1.5vw;
     }
 
     /* Center greeting on mobile screens */
