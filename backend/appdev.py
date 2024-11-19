@@ -5,6 +5,9 @@ import psycopg2
 import secrets
 from flask_mail import Mail, Message
 import bleach
+from datetime import datetime, timedelta
+from dotenv import load_dotenv
+import feedparser
 
 #-----------------------------------------------------------------------
 
@@ -403,6 +406,14 @@ def create_card_comment(card_id):
         print(str(ex))
         return jsonify({"success": False, "message": str(ex)}), 500
 
+#-----------------------------------------------------------------------
+
+def fetch_recent_rss_entries():
+    # Define RSS feed URL
+    rss_url = os.envron['RSS_URL']
+
+    # Define time threshold to retrieve most recent entries
+    time_threshold = datetime.now() - timedelta(hours=3)
 
 #-----------------------------------------------------------------------
 
