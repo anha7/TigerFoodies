@@ -17,7 +17,7 @@ def main():
             # Create the users table
             cursor.execute('''
                 CREATE TABLE IF NOT EXISTS users (
-                        net_id VARCHAR(20) PRIMARY KEY NOT NULL,
+                        net_id VARCHAR(20) PRIMARY KEY NOT NULL
                 );
             ''')
             print("Successfully created users table!")
@@ -30,7 +30,7 @@ def main():
                         title VARCHAR(100) NOT NULL,
                         description VARCHAR(250),
                         photo_url TEXT,
-                        location VARCHAR(255) NOT NULL,
+                        location VARCHAR(255),
                         dietary_tags VARCHAR[] DEFAULT '{}',
                         allergies VARCHAR[] DEFAULT '{}',
                         expiration TIMESTAMP NOT NULL,

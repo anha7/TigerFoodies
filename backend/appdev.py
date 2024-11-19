@@ -6,8 +6,12 @@ import secrets
 from flask_mail import Mail, Message
 import bleach
 from datetime import datetime, timedelta
-from dotenv import load_dotenv
-import feedparser
+import schedule
+import time
+import threading
+import requests
+from bs4 import BeautifulSoup
+import pytz
 
 #-----------------------------------------------------------------------
 
@@ -29,8 +33,14 @@ app.config['MAIL_USERNAME'] = os.getenv('EMAIL_USER')
 app.config['MAIL_PASSWORD'] = os.getenv('EMAIL_PASS')
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
-
 mail = Mail(app)
+
+# Define relevant URLs
+rss_url = os.environ['RSS_URL']
+login_url = os.environ['LOGIN_URL']
+
+# Set timezone
+eastern = pytz.timezone('US/Eastern')
 
 #-----------------------------------------------------------------------
 
@@ -38,8 +48,8 @@ mail = Mail(app)
 @app.route('/')
 def serve():
     # Authenticate user when they access the site and store username
-    session['username'] = 'ab123'
-    add_user('ab123')
+    session['username'] = 'cs-tigerfoodies'
+    add_user('cs-tigerfoodies')
     return send_from_directory(app.static_folder, 'index.html')
 
 # Route to serve static files (like CSS, JS, images, etc.)
@@ -95,9 +105,6 @@ def clean_expired_cards():
 @app.route('/api/cards', methods=['GET'])
 def get_data():
     try:
-        # Clean expired cards before fetching data
-        clean_expired_cards()
-
         with psycopg2.connect(DATABASE_URL) as conn:
             with conn.cursor() as cursor:
                 # Execute query to retrieve all active cards information
@@ -408,12 +415,77 @@ def create_card_comment(card_id):
 
 #-----------------------------------------------------------------------
 
+# Scrape listserv RSS script and add new cards to our database
 def fetch_recent_rss_entries():
-    # Define RSS feed URL
-    rss_url = os.envron['RSS_URL']
+    try:
+        # Connect to database and establish a cursor
+        with psycopg2.connect(DATABASE_URL) as conn:
+            with conn.cursor() as cursor:
+                # Start a session to carry over credential cookies
+                session = requests.Session()
+                
+                # Log into the listserv site
+                login_page = session.get(rss_url)
+                soup = BeautifulSoup(login_page.text, "lxml")
+                hidden_inputs = soup.find_all("input", type="hidden")
+                payload = {input_tag["name"]: input_tag.get("value", "") 
+                           for input_tag in hidden_inputs}
+                payload["Y"] = os.environ["LISTSERV_USERNAME"]
+                payload["p"] = os.environ["PASS"]
+                session.post(login_url, data=payload)
 
-    # Define time threshold to retrieve most recent entries
-    time_threshold = datetime.now() - timedelta(hours=3)
+                # Define time threshold to retrieve most recent entries
+                time_threshold = datetime.now(eastern) - timedelta(minutes=5)
+
+                # Retrieve entries from freefood listserv RSS script
+                rss_response = session.get(rss_url)
+                soup2 = BeautifulSoup(rss_response.content, "xml")
+                items = soup2.find_all("item")
+
+                # Loop to add new entries from scraper to database
+                for item in items:
+                    # If scraper finds old entry, break from loop, no
+                    # more new entries to add
+                    pubDate = datetime.strptime(
+                        item.pubDate.text, "%a, %d %b %Y %H:%M:%S %z")
+                    if pubDate < time_threshold:
+                        break
+                    
+                    # Scrape relevant information from entry
+                    title = item.title.text
+
+                    # Package data to be inserted into database
+                    data = ["cs-tigerfoodies", title]
+
+                    # Create insertion query
+                    insertion_query = """INSERT INTO cards (net_id,
+                        title, expiration, posted_at)
+                        VALUES (%s, %s, 
+                        CURRENT_TIMESTAMP + interval \'3 hours\', 
+                        CURRENT_TIMESTAMP)
+                    """
+
+                    #Execute insertion query
+                    cursor.execute(insertion_query, data)
+                    conn.commit()
+    except Exception as ex:
+        print(str(ex))
+
+#-----------------------------------------------------------------------
+
+# Run scheduled tasks
+schedule.every(5).minutes.do(clean_expired_cards)
+schedule.every(5).minutes.do(fetch_recent_rss_entries)
+
+# Make sure the scheduler is always active
+def run_scheduler():
+    while(True):
+        schedule.run_pending()
+        time.sleep(1)
+
+# Run the scheduler thread
+scheduler_thread = threading.Thread(target=run_scheduler, daemon=True)
+scheduler_thread.start()
 
 #-----------------------------------------------------------------------
 
