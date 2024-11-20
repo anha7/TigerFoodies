@@ -6,6 +6,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import './CreateEditCard.css'; // Import custom CSS file
+import { GoogleMap, useLoadScript, Marker } from "@react-google-maps/api";
 
 //----------------------------------------------------------------------
 
@@ -16,9 +17,25 @@ function EditCard() {
     const [description, setDescription] = useState('');
     const [photo, setPhoto] = useState('');
     const [location, setLocation] = useState('');
+    const [locationLink, setLocationLink] = useState('');
     const [dietary_tags, setDietary] = useState([]);
     const [allergies, setAllergies] = useState([]);
     const navigate = useNavigate();
+    const [marker, setMarker] = useState(null);
+
+    const mapContainerStyle = {
+        width: "100%",
+        height: "400px",
+    };
+    
+    const center = {
+        lat: 40.343094, // Example: New York City
+        lng: -74.655086,
+    };
+
+    const { isLoaded, loadError } = useLoadScript({
+        googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
+    });
 
     // Retrieve and populate form with card data for associated id
     useEffect(() => {
@@ -46,6 +63,26 @@ function EditCard() {
         };
         fetchCard();
     }, [card_id]);
+
+    if (loadError) {
+        console.error("Error loading Google Maps API:", loadError);
+        return <div>Error loading map</div>;
+    }
+    if (!isLoaded) {
+        console.log("Google Maps API is loading...");
+        return <div>Loading map...</div>;
+    }
+
+//----------------------------------------------------------------------
+
+    // Handles Map Click
+    const handleMapClick = (event) => {
+        const lat = event.latLng.lat();
+        const lng = event.latLng.lng();
+        setMarker({ lat, lng });
+        // Generate Google Maps link
+        setLocationLink(`https://www.google.com/maps?q=${lat},${lng}`);
+    };
 
 
 //----------------------------------------------------------------------
@@ -114,6 +151,7 @@ function EditCard() {
             description: description,
             photo_url: photo, 
             location: location,
+            locationLink: locationLink,
             dietary_tags: dietary_tags, 
             allergies: allergies
         };
@@ -194,6 +232,27 @@ function EditCard() {
                                 value={location} 
                                 onChange={(e) => setLocation(e.target.value)}/>
                             </h4>
+                        </div>
+
+                        {/* Location Link info */}
+                        <div className='locationlink'>
+                            <h4>Location Link:</h4>
+                            <GoogleMap
+                                mapContainerStyle={mapContainerStyle}
+                                zoom={12}
+                                center={center}
+                                onClick={handleMapClick}
+                            >
+                                {marker && <Marker position={marker} />}
+                            </GoogleMap>
+                            {locationLink && (
+                                <p>
+                                    Selected Location:{" "}
+                                    <a href={locationLink} target="_blank" rel="noopener noreferrer">
+                                        {locationLink}
+                                    </a>
+                                </p>
+                            )}
                         </div>
 
                         {/* Dietary preferences field */}

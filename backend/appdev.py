@@ -109,7 +109,7 @@ def get_data():
             with conn.cursor() as cursor:
                 # Execute query to retrieve all active cards information
                 cursor.execute('''
-                    SELECT card_id, title, photo_url, location, 
+                    SELECT card_id, title, photo_url, location, locationlink, 
                     dietary_tags, allergies, description, posted_at
                     FROM cards;
                 ''')
@@ -123,10 +123,11 @@ def get_data():
                         'title': row[1],
                         'photo_url': row[2],
                         'location': row[3],
-                        'dietary_tags': row[4],
-                        'allergies': row[5],
-                        'description': row[6],
-                        'posted_at': row[7]
+                        'locationlink': row[4],
+                        'dietary_tags': row[5],
+                        'allergies': row[6],
+                        'description': row[7],
+                        'posted_at': row[8]
                     })
 
                 return jsonify(cards)
@@ -144,8 +145,8 @@ def retrieve_user_cards(net_id):
         with psycopg2.connect(DATABASE_URL) as conn:
             with conn.cursor() as cursor:
                 # Define insertion query
-                insertion_query = '''SELECT card_id, title, photo_url, 
-                    location, dietary_tags, allergies, description, 
+                insertion_query = '''SELECT card_id, title, photo_url,
+                    location, locationlink, dietary_tags, allergies, description, 
                     posted_at FROM cards
                     WHERE net_id = %s;
                 '''
@@ -162,10 +163,11 @@ def retrieve_user_cards(net_id):
                         'title': row[1],
                         'photo_url': row[2],
                         'location': row[3],
-                        'dietary_tags': row[4],
-                        'allergies': row[5],
-                        'description': row[6],
-                        'posted_at': row[7]
+                        'locationlink': row[4],
+                        'dietary_tags': row[5],
+                        'allergies': row[6],
+                        'description': row[7],
+                        'posted_at': row[8]
                     })
 
                 return jsonify(cards)
@@ -210,11 +212,12 @@ def create_card():
         description = bleach.clean(card_data.get('description'))
         photo_url = bleach.clean(card_data.get('photo_url'))
         location = bleach.clean(card_data.get('location'))
+        locationlink = bleach.clean(card_data.get('locationlink'))
         dietary_tags = card_data.get('dietary_tags')
         allergies = card_data.get('allergies')
 
         # Package parsed data
-        new_card = [net_id, title, description, photo_url, location, 
+        new_card = [net_id, title, description, photo_url, location, locationlink,
                     dietary_tags, allergies]
         
         # Connect to database and establish a cursor
@@ -222,10 +225,10 @@ def create_card():
             with conn.cursor() as cursor:
                 
                 # Define insertion query
-                insertion_query = '''INSERT INTO cards (net_id, 
-                    title, description, photo_url, location, 
+                insertion_query = '''INSERT INTO cards (net_id,
+                    title, description, photo_url, location, locationlink
                     dietary_tags, allergies, expiration, posted_at)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, 
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s,
                     CURRENT_TIMESTAMP + interval \'3 hours\', 
                     CURRENT_TIMESTAMP)
                 '''
@@ -253,11 +256,12 @@ def edit_card(card_id):
         description = bleach.clean(card_data.get('description'))
         photo_url = bleach.clean(card_data.get('photo_url'))
         location = bleach.clean(card_data.get('location'))
+        locationlink = bleach.clean(card_data.get('locationlink'))
         dietary_tags = card_data.get('dietary_tags')
         allergies = card_data.get('allergies')
 
         # Packaged parsed data
-        new_card = [title, description, photo_url, location, 
+        new_card = [title, description, photo_url, location, locationlink,
                     dietary_tags, allergies, card_id]
         
         # Connect to database
@@ -265,8 +269,8 @@ def edit_card(card_id):
             with conn.cursor() as cursor:
                 # Define update query
                 update_query = 'UPDATE cards SET (title, description, photo_url,'
-                update_query += ' location, dietary_tags, allergies, updated_at)'
-                update_query += ' = (%s, %s, %s, %s, %s, %s, CURRENT_TIMESTAMP)'
+                update_query += ' location, locationlink, dietary_tags, allergies, updated_at)'
+                update_query += ' = (%s, %s, %s, %s, %s, %s, %s, CURRENT_TIMESTAMP)'
                 update_query += ' WHERE card_id = %s'
                 # Execute query to update row in the database
                 cursor.execute(update_query, new_card)
@@ -288,7 +292,7 @@ def retrieve_card(card_id):
             with conn.cursor() as cursor:
                 # Define insertion query
                 retrieval_query = ''' SELECT card_id, title, description,
-                    photo_url, location, dietary_tags, allergies 
+                    photo_url, location, locationlink, dietary_tags, allergies 
                     FROM cards WHERE card_id = %s;'''
                 # Execute query to retrieve card with given card_id
                 cursor.execute(retrieval_query, [card_id])
@@ -300,8 +304,9 @@ def retrieve_card(card_id):
                         "description": row[2],
                         "photo_url": row[3],
                         "location": row[4],
-                        "dietary_tags": row[5],
-                        "allergies": row[6]
+                        "locationlink": row[5],
+                        "dietary_tags": row[6],
+                        "allergies": row[7]
                     }
                     return jsonify(card)
                 else:
