@@ -72,6 +72,11 @@ form {
     resize: none;
 }
 
+.title input::placeholder, .location input::placeholder, .description textarea::placeholder {
+    font-family: "Quicksand", sans-serif;
+    font-style: italic;
+}
+
 /* Style dietary preferences and allergies */
 .dietary_tags label, .allergies label {
     display: flex;

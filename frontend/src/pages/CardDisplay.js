@@ -202,7 +202,7 @@ function Modal({card, setIsModalActive, net_id}) {
                     <div className = 'modal-footer'>
                         <div className = 'modal-icons'>
                             <button className = "comments-button" onClick = {handleCommentsButtonClick}>
-                                    <img src={commentsIcon} alt="Comments" height="15px" />
+                                <img src={commentsIcon} alt="Comments" height="15px" />
                             </button>
                             <button className= "location-button" onClick={handleLocationClick}>
                                 <img src={mapIcon} alt="Map" height="15px" />

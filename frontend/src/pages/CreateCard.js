@@ -140,7 +140,7 @@ function CreateCard( { net_id } ) {
             alert("Please select a valid location from the suggestions.");
             return; // Stop form submission
         }
-        
+
         const cardData = {
             net_id: net_id,
             title: title, 
@@ -197,24 +197,25 @@ function CreateCard( { net_id } ) {
                                 type="text" 
                                 name = "title"
                                 value={title} 
-                                onChange={(e) => setTitle(e.target.value)}/> </h4>
+                                onChange={(e) => setTitle(e.target.value)}
+                                placeholder="Enter a title..."/> </h4>
                         </div>
 
                         {/* Field to upload food image */}
                         <div className="photo">
-                        <h4>Image: * <br/>
-                        <input
-                            required
-                            type="file"
-                            name="photo_url"
-                            // accept="image/*"
-                            onChange={handleImageChange}
-                            className="upload-button"
-                        />
-                        </h4>
-                        <div className='uploadedImage'>
-                            {photo && <img src={photo} alt="Uploaded preview" style={{ width: '100%', height: 'auto', borderRadius: '8px'}} />}
-                        </div>
+                            <h4>Image: * <br/>
+                            <input
+                                required
+                                type="file"
+                                name="photo_url"
+                                // accept="image/*"
+                                onChange={handleImageChange}
+                                className="upload-button"
+                            />
+                            </h4>
+                            <div className='uploadedImage'>
+                                {photo && <img src={photo} alt="Uploaded preview" style={{ width: '100%', height: 'auto', borderRadius: '8px'}} />}
+                            </div>
                         </div>
 
                         {/* Location field */}
@@ -228,7 +229,7 @@ function CreateCard( { net_id } ) {
                                         type="text"
                                         value={location}
                                         onChange={(e) => setLocation(e.target.value)}
-                                        placeholder="Enter a location"
+                                        placeholder="Enter a location..."
                                     />
                                 </Autocomplete>
                             </h4>
@@ -280,7 +281,8 @@ function CreateCard( { net_id } ) {
                                 type='text'
                                 name = "description" 
                                 value={description} 
-                                onChange={(e) => setDescription(e.target.value)}/> 
+                                onChange={(e) => setDescription(e.target.value)}
+                                placeholder="Enter any extra information, such as specific room numbers..."/> 
                             </h4>     
                         </div>   
                         
