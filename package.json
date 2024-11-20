@@ -1,6 +1,5 @@
 {
   "dependencies": {
-    "@react-google-maps/api": "^2.20.3",
-    "bootstrap": "^5.3.3"
+    "@react-google-maps/api": "^2.20.3"
   }
 }
