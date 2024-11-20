@@ -3,39 +3,42 @@
 //----------------------------------------------------------------------
 
 // Imports
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './CreateEditCard.css'; // Import custom CSS file
-import { GoogleMap, useLoadScript, Marker } from "@react-google-maps/api";
+// import { GoogleMap, useLoadScript, Marker } from "@react-google-maps/api";
+import { useLoadScript, Autocomplete } from "@react-google-maps/api";
 
 //----------------------------------------------------------------------
+const LIBRARIES = ["places"];
 
 function CreateCard( { net_id } ) {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [photo, setPhoto] = useState('');
     const [location, setLocation] = useState('');
-    const [locationLink, setLocationLink] = useState('');
+    const [location_url, setLocationUrl] = useState('');
     const [dietary_tags, setDietary] = useState([]);
     const [allergies, setAllergies] = useState([]);
     const navigate = useNavigate(); // Initialize useNavigate
-    const [marker, setMarker] = useState(null);
+    const autocompleteRef = useRef(null);
+    // const [marker, setMarker] = useState(null);
 
-    const mapContainerStyle = {
-        width: "100%",
-        height: "400px",
-    };
+    // const mapContainerStyle = {
+    //     width: "100%",
+    //     height: "400px",
+    // };
     
-    const center = {
-        lat: 40.343094, // Example: New York City
-        lng: -74.655086,
-    };
+    // const center = {
+    //     lat: 40.343094, // Example: New York City
+    //     lng: -74.655086,
+    // };
 
     const { isLoaded, loadError } = useLoadScript({
         googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
+        libraries: LIBRARIES, // Include places library for autocomplete
     });
     
-
     if (loadError) {
         console.error("Error loading Google Maps API:", loadError);
         return <div>Error loading map</div>;
@@ -44,17 +47,33 @@ function CreateCard( { net_id } ) {
         console.log("Google Maps API is loading...");
         return <div>Loading map...</div>;
     }
-    
 
 //----------------------------------------------------------------------
-    // Handles Map Click
-    const handleMapClick = (event) => {
-        const lat = event.latLng.lat();
-        const lng = event.latLng.lng();
-        setMarker({ lat, lng });
-        // Generate Google Maps link
-        setLocationLink(`https://www.google.com/maps?q=${lat},${lng}`);
+
+    const handlePlaceChanged = () => {
+        if (autocompleteRef.current) {
+            const place = autocompleteRef.current.getPlace();
+            const address = place?.formatted_address || '';
+            setLocation(address);
+    
+            if (place.geometry) {
+                const lat = place.geometry.location.lat();
+                const lng = place.geometry.location.lng();
+                setLocationUrl(`https://www.google.com/maps?q=${lat},${lng}`);
+                console.log(location_url);
+            }
+        }
     };
+    
+//----------------------------------------------------------------------
+    // // Handles Map Click
+    // const handleMapClick = (event) => {
+    //     const lat = event.latLng.lat();
+    //     const lng = event.latLng.lng();
+    //     setMarker({ lat, lng });
+    //     // Generate Google Maps link
+    //     setLocationLink(`https://www.google.com/maps?q=${lat},${lng}`);
+    // };
 
 //----------------------------------------------------------------------
 
@@ -115,13 +134,20 @@ function CreateCard( { net_id } ) {
     // Handles submitting the card to the database
     const handleSubmit = async (e) => {
         e.preventDefault(); // Prevent default form submission
+
+        // Validation: Ensure location and location_url are set
+        if (!location || !location_url) {
+            alert("Please select a valid location from the suggestions.");
+            return; // Stop form submission
+        }
+        
         const cardData = {
             net_id: net_id,
             title: title, 
             description: description,
             photo_url: photo, 
             location: location,
-            locationLink: locationLink,
+            location_url: location_url,
             dietary_tags: dietary_tags, 
             allergies: allergies
         };
@@ -194,17 +220,22 @@ function CreateCard( { net_id } ) {
                         {/* Location field */}
                         <div className="location">
                             <h4> Location: * <br/> 
-                            <input 
-                                required
-                                type="text" 
-                                name = "location"
-                                value={location} 
-                                onChange={(e) => setLocation(e.target.value)}/>
+                                <Autocomplete
+                                    onLoad={(autocomplete) => (autocompleteRef.current = autocomplete)}
+                                    onPlaceChanged={handlePlaceChanged}
+                                    >
+                                    <input
+                                        type="text"
+                                        value={location}
+                                        onChange={(e) => setLocation(e.target.value)}
+                                        placeholder="Enter a location"
+                                    />
+                                </Autocomplete>
                             </h4>
                         </div>
 
                         {/* Location Link info */}
-                        <div className='locationlink'>
+                        {/* <div className='locationlink'>
                             <h4>Location Link:</h4>
                             <GoogleMap
                                 mapContainerStyle={mapContainerStyle}
@@ -222,7 +253,7 @@ function CreateCard( { net_id } ) {
                                     </a>
                                 </p>
                             )}
-                        </div>
+                        </div> */}
 
                         {/* Dietary preferences field */}
                         <div className="dietary_tags">

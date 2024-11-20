@@ -34,8 +34,6 @@ function CardDisplay({card, net_id}) {
         setIsModalActive(true);
     };
 
-
-    console.log(card)
     return (
         <div className="card-and-modal-container">
             <Card onClick={handleCardClick} card = {card} />
@@ -76,9 +74,14 @@ function Card({ onClick, card }) {
 function Modal({card, setIsModalActive, net_id}) {
     const [commentsIsActive, setCommentsIsActive] = useState(false)
      
-    // maps will be implemented later, but state must be changed when
-    // comments button is clicked
-    const [mapsIsActive, setMapsIsActive] = useState(false)
+    // Function to handle location button click
+    function handleLocationClick() {
+        if (card.location_url) {
+            window.open(card.location_url, "_blank"); // Opens in a new tab
+        } else {
+            alert("No location link available.");
+        }
+    }
 
     function handleCommentsButtonClick() {
         setCommentsIsActive(!commentsIsActive)
@@ -129,7 +132,6 @@ function Modal({card, setIsModalActive, net_id}) {
                 });
    
                 if (response.ok) {
-                    console.log('New comment successfully posted');
                     setNewComment('');
 
                     const fetchComments = async () => {
@@ -202,7 +204,7 @@ function Modal({card, setIsModalActive, net_id}) {
                             <button className = "comments-button" onClick = {handleCommentsButtonClick}>
                                     <img src={commentsIcon} alt="Comments" height="15px" />
                             </button>
-                            <button className= "location-button">
+                            <button className= "location-button" onClick={handleLocationClick}>
                                 <img src={mapIcon} alt="Map" height="15px" />
                             </button>
                         </div>

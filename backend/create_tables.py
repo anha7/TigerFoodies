@@ -31,7 +31,7 @@ def main():
                         description VARCHAR(250),
                         photo_url TEXT,
                         location VARCHAR(255),
-                        locationlink VARCHAR(255),
+                        location_url VARCHAR(255),
                         dietary_tags VARCHAR[] DEFAULT '{}',
                         allergies VARCHAR[] DEFAULT '{}',
                         expiration TIMESTAMP NOT NULL,

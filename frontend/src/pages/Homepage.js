@@ -112,9 +112,6 @@ const Homepage = ({ net_id }) => {
 
         // Call filter cards function to filter cards based on search query
         setFilteredCards(filterCards());
-
-        console.log("Search query:", query);
-        console.log("Filtered cards:", filteredCards);
     }
 
 //----------------------------------------------------------------------
