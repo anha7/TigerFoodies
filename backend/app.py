@@ -38,7 +38,6 @@ mail = Mail(app)
 
 # Define relevant URLs
 rss_url = os.environ['RSS_URL']
-login_url = os.environ['LOGIN_URL']
 
 # Set timezone
 eastern = pytz.timezone('US/Eastern')
@@ -108,14 +107,11 @@ def clean_expired_cards():
 @app.route('/api/cards', methods=['GET'])
 def get_data():
     try:
-        # Clean expired cards before fetching data
-        clean_expired_cards()
-
         with psycopg2.connect(DATABASE_URL) as conn:
             with conn.cursor() as cursor:
                 # Execute query to retrieve all active cards information
                 cursor.execute('''
-                    SELECT card_id, title, photo_url, location, 
+                    SELECT card_id, title, photo_url, location, location_url, 
                     dietary_tags, allergies, description, posted_at
                     FROM cards;
                 ''')
@@ -129,10 +125,11 @@ def get_data():
                         'title': row[1],
                         'photo_url': row[2],
                         'location': row[3],
-                        'dietary_tags': row[4],
-                        'allergies': row[5],
-                        'description': row[6],
-                        'posted_at': row[7]
+                        'location_url': row[4],
+                        'dietary_tags': row[5],
+                        'allergies': row[6],
+                        'description': row[7],
+                        'posted_at': row[8]
                     })
 
                 return jsonify(cards)
@@ -150,8 +147,8 @@ def retrieve_user_cards(net_id):
         with psycopg2.connect(DATABASE_URL) as conn:
             with conn.cursor() as cursor:
                 # Define insertion query
-                insertion_query = '''SELECT card_id, title, photo_url, 
-                    location, dietary_tags, allergies, description, 
+                insertion_query = '''SELECT card_id, title, photo_url,
+                    location, location_url, dietary_tags, allergies, description, 
                     posted_at FROM cards
                     WHERE net_id = %s;
                 '''
@@ -168,10 +165,11 @@ def retrieve_user_cards(net_id):
                         'title': row[1],
                         'photo_url': row[2],
                         'location': row[3],
-                        'dietary_tags': row[4],
-                        'allergies': row[5],
-                        'description': row[6],
-                        'posted_at': row[7]
+                        'location_url': row[4],
+                        'dietary_tags': row[5],
+                        'allergies': row[6],
+                        'description': row[7],
+                        'posted_at': row[8]
                     })
 
                 return jsonify(cards)
@@ -216,11 +214,12 @@ def create_card():
         description = bleach.clean(card_data.get('description'))
         photo_url = bleach.clean(card_data.get('photo_url'))
         location = bleach.clean(card_data.get('location'))
+        location_url = card_data.get('location_url')
         dietary_tags = card_data.get('dietary_tags')
         allergies = card_data.get('allergies')
 
         # Package parsed data
-        new_card = [net_id, title, description, photo_url, location, 
+        new_card = [net_id, title, description, photo_url, location, location_url,
                     dietary_tags, allergies]
         
         # Connect to database and establish a cursor
@@ -228,10 +227,10 @@ def create_card():
             with conn.cursor() as cursor:
                 
                 # Define insertion query
-                insertion_query = '''INSERT INTO cards (net_id, 
-                    title, description, photo_url, location, 
+                insertion_query = '''INSERT INTO cards (net_id,
+                    title, description, photo_url, location, location_url,
                     dietary_tags, allergies, expiration, posted_at)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, 
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s,
                     CURRENT_TIMESTAMP + interval \'3 hours\', 
                     CURRENT_TIMESTAMP)
                 '''
@@ -259,11 +258,12 @@ def edit_card(card_id):
         description = bleach.clean(card_data.get('description'))
         photo_url = bleach.clean(card_data.get('photo_url'))
         location = bleach.clean(card_data.get('location'))
+        location_url = bleach.clean(card_data.get('location_url'))
         dietary_tags = card_data.get('dietary_tags')
         allergies = card_data.get('allergies')
 
         # Packaged parsed data
-        new_card = [title, description, photo_url, location, 
+        new_card = [title, description, photo_url, location, location_url,
                     dietary_tags, allergies, card_id]
         
         # Connect to database
@@ -271,8 +271,8 @@ def edit_card(card_id):
             with conn.cursor() as cursor:
                 # Define update query
                 update_query = 'UPDATE cards SET (title, description, photo_url,'
-                update_query += ' location, dietary_tags, allergies, updated_at)'
-                update_query += ' = (%s, %s, %s, %s, %s, %s, CURRENT_TIMESTAMP)'
+                update_query += ' location, location_url, dietary_tags, allergies, updated_at)'
+                update_query += ' = (%s, %s, %s, %s, %s, %s, %s, CURRENT_TIMESTAMP)'
                 update_query += ' WHERE card_id = %s'
                 # Execute query to update row in the database
                 cursor.execute(update_query, new_card)
@@ -294,7 +294,7 @@ def retrieve_card(card_id):
             with conn.cursor() as cursor:
                 # Define insertion query
                 retrieval_query = ''' SELECT card_id, title, description,
-                    photo_url, location, dietary_tags, allergies 
+                    photo_url, location, location_url, dietary_tags, allergies 
                     FROM cards WHERE card_id = %s;'''
                 # Execute query to retrieve card with given card_id
                 cursor.execute(retrieval_query, [card_id])
@@ -306,8 +306,9 @@ def retrieve_card(card_id):
                         "description": row[2],
                         "photo_url": row[3],
                         "location": row[4],
-                        "dietary_tags": row[5],
-                        "allergies": row[6]
+                        "location_url": row[5],
+                        "dietary_tags": row[6],
+                        "allergies": row[7]
                     }
                     return jsonify(card)
                 else:
@@ -419,10 +420,9 @@ def create_card_comment(card_id):
         print(str(ex))
         return jsonify({"success": False, "message": str(ex)}), 500
 
-
 #-----------------------------------------------------------------------
 
-# Scrape listserv RSS script
+# Scrape listserv RSS script and add new cards to our database
 def fetch_recent_rss_entries():
     try:
         # Connect to database and establish a cursor
@@ -433,21 +433,21 @@ def fetch_recent_rss_entries():
                 
                 # Log into the listserv site
                 login_page = session.get(rss_url)
-                soup = BeautifulSoup(login_page.text, "lxml")
-                hidden_inputs = soup.find_all("input", type="hidden")
+                soup_login = BeautifulSoup(login_page.text, "lxml")
+                hidden_inputs = soup_login.find_all("input", type="hidden")
                 payload = {input_tag["name"]: input_tag.get("value", "") 
                            for input_tag in hidden_inputs}
                 payload["Y"] = os.environ["LISTSERV_USERNAME"]
                 payload["p"] = os.environ["PASS"]
-                session.post(login_url, data=payload)
+                session.post(rss_url, data=payload)
 
                 # Define time threshold to retrieve most recent entries
-                time_threshold = datetime.now(eastern) - timedelta(minutes=5)
+                time_threshold = datetime.now(eastern) - timedelta(minutes=1)
 
                 # Retrieve entries from freefood listserv RSS script
                 rss_response = session.get(rss_url)
-                soup2 = BeautifulSoup(rss_response.content, "xml")
-                items = soup2.find_all("item")
+                soup_scrape = BeautifulSoup(rss_response.content, "xml")
+                items = soup_scrape.find_all("item")
 
                 # Loop to add new entries from scraper to database
                 for item in items:

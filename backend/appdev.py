@@ -37,7 +37,6 @@ mail = Mail(app)
 
 # Define relevant URLs
 rss_url = os.environ['RSS_URL']
-login_url = os.environ['LOGIN_URL']
 
 # Set timezone
 eastern = pytz.timezone('US/Eastern')
@@ -431,21 +430,21 @@ def fetch_recent_rss_entries():
                 
                 # Log into the listserv site
                 login_page = session.get(rss_url)
-                soup = BeautifulSoup(login_page.text, "lxml")
-                hidden_inputs = soup.find_all("input", type="hidden")
+                soup_login = BeautifulSoup(login_page.text, "lxml")
+                hidden_inputs = soup_login.find_all("input", type="hidden")
                 payload = {input_tag["name"]: input_tag.get("value", "") 
                            for input_tag in hidden_inputs}
                 payload["Y"] = os.environ["LISTSERV_USERNAME"]
                 payload["p"] = os.environ["PASS"]
-                session.post(login_url, data=payload)
+                session.post(rss_url, data=payload)
 
                 # Define time threshold to retrieve most recent entries
-                time_threshold = datetime.now(eastern) - timedelta(minutes=5)
+                time_threshold = datetime.now(eastern) - timedelta(minutes=1)
 
                 # Retrieve entries from freefood listserv RSS script
                 rss_response = session.get(rss_url)
-                soup2 = BeautifulSoup(rss_response.content, "xml")
-                items = soup2.find_all("item")
+                soup_scrape = BeautifulSoup(rss_response.content, "xml")
+                items = soup_scrape.find_all("item")
 
                 # Loop to add new entries from scraper to database
                 for item in items:
@@ -479,8 +478,8 @@ def fetch_recent_rss_entries():
 #-----------------------------------------------------------------------
 
 # Run scheduled tasks
-schedule.every(5).minutes.do(clean_expired_cards)
-schedule.every(5).minutes.do(fetch_recent_rss_entries)
+schedule.every(1).minutes.do(clean_expired_cards)
+schedule.every(1).minutes.do(fetch_recent_rss_entries)
 
 # Make sure the scheduler is always active
 def run_scheduler():
