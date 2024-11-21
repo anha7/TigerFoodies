@@ -150,8 +150,8 @@ def retrieve_user_cards(net_id):
                 # Define insertion query
                 insertion_query = '''SELECT card_id, title, photo_url,
                     location, location_url, dietary_tags, allergies, description, 
-                    posted_at, net_id FROM cards ORDER BY posted_at DESC
-                    WHERE net_id = %s;
+                    posted_at, net_id FROM cards WHERE net_id = %s
+                    ORDER BY posted_at DESC;
                 '''
                             
                 # Execute query to retrieve user's cards
