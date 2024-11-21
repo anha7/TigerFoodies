@@ -16,9 +16,16 @@
     color: white;
 }
 
+/* TigerFoodies homepage link turns bold on hover */
+.viewcards-header a:hover {
+    font-weight: bold;
+}
+
 .nav a {
     text-decoration: none;
 }
+
+/*--------------------------------------------------------------------*/
 
 /* Style page name */
 .page-name {
@@ -64,20 +71,22 @@
     border: none;
     border-radius: 20px; /* Rounded buttons */
     cursor: pointer;
-    background-color: white;
+    background-color: #F6AE99;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
     padding: 1vh 1vw;
 }
 
 .edit-button:hover {
-    background-color: #4CAF50;
+    background-color: #E79781;
     color: white /* Green text for Edit */
 }
 
 .delete-button:hover {
-    background-color: #f44336;
+    background-color: #E79781;
     color: white;
 }
+
+/*--------------------------------------------------------------------*/
 
 /* Media query for screens between 840px and 1240px */
 @media screen and (max-width: 1280px) {
@@ -86,6 +95,8 @@
         grid-template-columns: repeat(4, 1fr);
     }
 }
+
+/*--------------------------------------------------------------------*/
 
 /* Media query for screens between 480px and 840px */
 @media screen and (max-width: 840px) {
@@ -100,6 +111,8 @@
     }
 }
 
+/*--------------------------------------------------------------------*/
+
 /* Media query for screens between 0px and 480px */
 @media screen and (max-width: 460px) {
     /* On a smaller screen, less cards appear in one row */
@@ -112,3 +125,5 @@
     gap: 40vw;
     }
 }
+
+/*--------------------------------------------------------------------*/

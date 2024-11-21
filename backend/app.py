@@ -1,6 +1,6 @@
 from flask import Flask, send_from_directory, jsonify, request, session
 from dotenv import load_dotenv
-from authenticate import authenticate
+from .authenticate import authenticate
 import os
 import psycopg2
 import secrets
@@ -112,7 +112,7 @@ def get_data():
                 # Execute query to retrieve all active cards information
                 cursor.execute('''
                     SELECT card_id, title, photo_url, location, location_url, 
-                    dietary_tags, allergies, description, posted_at
+                    dietary_tags, allergies, description, posted_at, net_id
                     FROM cards ORDER BY posted_at DESC;
                 ''')
                 rows = cursor.fetchall()
@@ -129,7 +129,8 @@ def get_data():
                         'dietary_tags': row[5],
                         'allergies': row[6],
                         'description': row[7],
-                        'posted_at': row[8]
+                        'posted_at': row[8],
+                        'net_id': row[9]
                     })
 
                 return jsonify(cards)
@@ -149,8 +150,8 @@ def retrieve_user_cards(net_id):
                 # Define insertion query
                 insertion_query = '''SELECT card_id, title, photo_url,
                     location, location_url, dietary_tags, allergies, description, 
-                    posted_at FROM cards
-                    WHERE net_id = %s ORDER BY posted_at DESC;
+                    posted_at, net_id FROM cards ORDER BY posted_at DESC
+                    WHERE net_id = %s;
                 '''
                             
                 # Execute query to retrieve user's cards
@@ -169,7 +170,8 @@ def retrieve_user_cards(net_id):
                         'dietary_tags': row[5],
                         'allergies': row[6],
                         'description': row[7],
-                        'posted_at': row[8]
+                        'posted_at': row[8],
+                        'net_id': row[9]
                     })
 
                 return jsonify(cards)

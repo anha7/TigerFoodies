@@ -1,32 +1,7 @@
 /* Import custom font */
 @import url('https://fonts.googleapis.com/css2?family=Goudy+Bookletter+1911&family=Quicksand:wght@300..700&display=swap');
 
-/* Page colors: #716F81, #B97A95, #F6AE99, #F2E1C1 */
-
-
-/* TIGER FOODIES TEAM: */
-/*
-    Pro tips:
-    - The Padding, Width, Margin of objects left to right should
-      add to 100 view height (100vh) or 100 view width (100vw)
-    
-    - You can use !important at the end of styles to have them
-      supercede. But use it sparingly! Remember, styles have
-      higher priority the farther down the page they are.
-
-    - Be as specific as you can when targeting elements.
-      
-      For example:
-      - ".element-parent .element" to target a group of items
-        with the class "element," is better than 
-        ".element-parent button," even if all are buttons- use
-        the class name! 
-
-    - Finally... please comment and explain your code! 
-      Be detailed for everyone's benefit!!
-
-      --- Love, Anha
-*/
+/* Page colors: #716F81, #B97A95, #F6AE99, #F2E1C1, #E79781, #565466 */
 
 /*--------------------------------------------------------------------*/
 
@@ -93,15 +68,9 @@ p {
     font-family: "Quicksand", sans-serif;
 }
 
-/* tigerfoodies homepage link turns bold on hover*/
-.nav-button a:hover {
-    font-weight: bold;
-}
-
 /* Change styling of button when hovered over */
 .nav-button:hover {
-    background-color: #f78260; /* color when it's hovered over */
-    color: #F6AE99; /* resting color */
+    background-color: #E79781; /* color when it's hovered over */
 }
 
 /*--------------------------------------------------------------------*/
@@ -212,12 +181,12 @@ p {
     border-radius: 15px;
     box-shadow: 1px 0 3px black;
     font-size: 18px;
-    color: black;
+    color: white;
+    cursor: pointer;
 }
 
 .feedback-form button:hover {
-    background-color: #453d7c; /* color when it's hovered over */
-    color: #716F81; /* resting color */
+    background-color: #565466;
 }
 
 /*--------------------------------------------------------------------*/
@@ -269,6 +238,10 @@ main {
     cursor: pointer;
     display: flex;
     flex-direction: column;
+}
+
+.card:hover {
+    background-color: #E79781;
 }
 
 /* Style the card's image */
@@ -394,8 +367,7 @@ main {
 }
 
 .comments-button:hover, .location-button:hover {
-    background-color: #453d7c; /* color when it's hovered over */
-    color: #716F81; /* resting color */
+    background-color: #565466; /* color when it's hovered over */
 }
 
 /* Style modal posted time */
@@ -413,7 +385,7 @@ main {
 
 /* Style modal comments section */
 .modal-comments-section {
-    background-color: #fad1c5;
+    background-color: #E79781;
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -426,7 +398,7 @@ main {
 }
 
 .modal-comment h4 {
-    color: rgb(52, 52, 52);
+    color: #343434;
     font-style: italic;
     background-color: transparent;
     margin: 0;
@@ -485,10 +457,8 @@ main {
 
 /* Change styling of button when hovered over */
 .comment-form button:hover {
-    background-color: #f78260; /* color when it's hovered over */
-    color: #F6AE99; /* resting color */
+    background-color: #E79781; /* color when it's hovered over */
 }
-
 
 /*--------------------------------------------------------------------*/
 
@@ -662,6 +632,10 @@ footer p {
         width: 2.5rem;
         height: 2.5rem;
         padding-top: 5px;
+    }
+
+    .preferences-button:hover {
+        background-color: #E79781;
     }
 
     /* Will display filters in a menu instead of on the side to account for smaller screens*/

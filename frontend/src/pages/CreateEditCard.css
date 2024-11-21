@@ -13,6 +13,13 @@
     text-decoration: none;
 }
 
+/* TigerFoodies homepage link turns bold on hover */
+.nav a:hover {
+    font-weight: bold;
+}
+
+/*--------------------------------------------------------------------*/
+
 /* Style main content */
 .main {
     display: flex;
@@ -110,8 +117,7 @@ button[type="submit"] {
 }
 
 button[type="submit"]:hover {
-    background-color: #453d7c; /* color when it's hovered over */
-    color: #716F81; /* resting color */
+    background-color: #565466; /* color when it's hovered over */
 }
 
 .uploadedImage {
@@ -121,6 +127,8 @@ button[type="submit"]:hover {
     border-radius: 8px; /* for rounded corners */
     object-fit: cover; /* scales image to fill without stretching */
 }
+
+/*--------------------------------------------------------------------*/
 
 /* Responsive design for mobile */
 @media screen and (max-width: 840px) {
