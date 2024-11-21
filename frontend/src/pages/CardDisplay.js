@@ -204,9 +204,12 @@ function Modal({card, setIsModalActive, net_id}) {
                             <button className = "comments-button" onClick = {handleCommentsButtonClick}>
                                 <img src={commentsIcon} alt="Comments" height="15px" />
                             </button>
-                            <button className= "location-button" onClick={handleLocationClick}>
-                                <img src={mapIcon} alt="Map" height="15px" />
-                            </button>
+                            { card.net_id != 'cs-tigerfoodies' && (
+                                <button className= "location-button" onClick={handleLocationClick}>
+                                    <img src={mapIcon} alt="Map" height="15px" />
+                                </button>
+                            )
+                            }
                         </div>
                         <div><p className="posted-at">Posted {formatTimeAgo(card.posted_at)}</p></div>
                     </div>

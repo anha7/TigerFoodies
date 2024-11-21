@@ -109,8 +109,8 @@ def get_data():
                 # Execute query to retrieve all active cards information
                 cursor.execute('''
                     SELECT card_id, title, photo_url, location, location_url, 
-                    dietary_tags, allergies, description, posted_at
-                    FROM cards;
+                    dietary_tags, allergies, description, posted_at, net_id
+                    FROM cards ORDER BY posted_at DESC;
                 ''')
                 rows = cursor.fetchall()
 
@@ -126,7 +126,8 @@ def get_data():
                         'dietary_tags': row[5],
                         'allergies': row[6],
                         'description': row[7],
-                        'posted_at': row[8]
+                        'posted_at': row[8],
+                        'net_id': row[9]
                     })
 
                 return jsonify(cards)
@@ -146,7 +147,7 @@ def retrieve_user_cards(net_id):
                 # Define insertion query
                 insertion_query = '''SELECT card_id, title, photo_url,
                     location, location_url, dietary_tags, allergies, description, 
-                    posted_at FROM cards
+                    posted_at, net_id FROM cards ORDER BY posted_at DESC
                     WHERE net_id = %s;
                 '''
                             
@@ -166,7 +167,8 @@ def retrieve_user_cards(net_id):
                         'dietary_tags': row[5],
                         'allergies': row[6],
                         'description': row[7],
-                        'posted_at': row[8]
+                        'posted_at': row[8],
+                        'net_id': row[9]
                     })
 
                 return jsonify(cards)
@@ -350,7 +352,7 @@ def retrieve_card_comments(card_id):
             with conn.cursor() as cursor:
                 # Define insertion query
                 retrieval_query = ''' SELECT net_id, comment, posted_at 
-                FROM comments WHERE card_id = %s;'''
+                FROM comments WHERE card_id = %s ORDER BY posted_at DESC;'''
                 # Execute query to retrieve card with given card_id
                 cursor.execute(retrieval_query, [card_id])
                 rows = cursor.fetchall()

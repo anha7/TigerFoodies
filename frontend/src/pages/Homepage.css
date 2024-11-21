@@ -93,6 +93,17 @@ p {
     font-family: "Quicksand", sans-serif;
 }
 
+/* tigerfoodies homepage link turns bold on hover*/
+.nav-button a:hover {
+    font-weight: bold;
+}
+
+/* Change styling of button when hovered over */
+.nav-button:hover {
+    background-color: #f78260; /* color when it's hovered over */
+    color: #F6AE99; /* resting color */
+}
+
 /*--------------------------------------------------------------------*/
 
 /* Style the search bar */
@@ -201,7 +212,12 @@ p {
     border-radius: 15px;
     box-shadow: 1px 0 3px black;
     font-size: 18px;
-    color: white;
+    color: black;
+}
+
+.feedback-form button:hover {
+    background-color: #453d7c; /* color when it's hovered over */
+    color: #716F81; /* resting color */
 }
 
 /*--------------------------------------------------------------------*/
@@ -377,6 +393,11 @@ main {
     height: 25px;
 }
 
+.comments-button:hover, .location-button:hover {
+    background-color: #453d7c; /* color when it's hovered over */
+    color: #716F81; /* resting color */
+}
+
 /* Style modal posted time */
 .modal-footer .posted-at {
     direction: rtl;
@@ -461,6 +482,13 @@ main {
     height: 4vh;
     border-radius: 15px;
 }
+
+/* Change styling of button when hovered over */
+.comment-form button:hover {
+    background-color: #f78260; /* color when it's hovered over */
+    color: #F6AE99; /* resting color */
+}
+
 
 /*--------------------------------------------------------------------*/
 

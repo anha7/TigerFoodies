@@ -69,12 +69,14 @@
     padding: 1vh 1vw;
 }
 
-.edit-button {
-    color: #4CAF50; /* Green text for Edit */
+.edit-button:hover {
+    background-color: #4CAF50;
+    color: white /* Green text for Edit */
 }
 
-.delete-button {
-    color: #f44336; /* Red text for Delete */
+.delete-button:hover {
+    background-color: #f44336;
+    color: white;
 }
 
 /* Media query for screens between 840px and 1240px */

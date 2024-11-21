@@ -109,6 +109,11 @@ button[type="submit"] {
     box-shadow: 1px 0 3px black;
 }
 
+button[type="submit"]:hover {
+    background-color: #453d7c; /* color when it's hovered over */
+    color: #716F81; /* resting color */
+}
+
 .uploadedImage {
     width: 100%; /* or specify a fixed width, e.g., 300px */
     max-width: 200px;

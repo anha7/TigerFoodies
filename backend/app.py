@@ -113,7 +113,7 @@ def get_data():
                 cursor.execute('''
                     SELECT card_id, title, photo_url, location, location_url, 
                     dietary_tags, allergies, description, posted_at
-                    FROM cards;
+                    FROM cards ORDER BY posted_at DESC;
                 ''')
                 rows = cursor.fetchall()
 
@@ -150,7 +150,7 @@ def retrieve_user_cards(net_id):
                 insertion_query = '''SELECT card_id, title, photo_url,
                     location, location_url, dietary_tags, allergies, description, 
                     posted_at FROM cards
-                    WHERE net_id = %s;
+                    WHERE net_id = %s ORDER BY posted_at DESC;
                 '''
                             
                 # Execute query to retrieve user's cards
@@ -353,7 +353,7 @@ def retrieve_card_comments(card_id):
             with conn.cursor() as cursor:
                 # Define insertion query
                 retrieval_query = ''' SELECT net_id, comment, posted_at 
-                FROM comments WHERE card_id = %s;'''
+                FROM comments WHERE card_id = %s ORDER BY posted_at DESC;'''
                 # Execute query to retrieve card with given card_id
                 cursor.execute(retrieval_query, [card_id])
                 rows = cursor.fetchall()

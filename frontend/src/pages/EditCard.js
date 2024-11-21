@@ -172,7 +172,7 @@ function EditCard() {
 
         // Validation: Ensure location and location_url are set
         if (!location || !location_url) {
-            alert("Please select a valid location from the suggestions.");
+            // alert("Please select a valid location from the suggestions.");
             return; // Stop form submission
         }
 
