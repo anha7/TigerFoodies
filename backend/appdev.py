@@ -24,7 +24,7 @@ conn = psycopg2.connect(DATABASE_URL)
 # Initialize Flask app
 app = Flask(__name__, static_folder='build', static_url_path='')
 
-socketio = SocketIO(app, cors_allowed_origins="*")
+socketio = SocketIO(app, cors_allowed_origins="*", async_mode="threading")
 
 # Set up secret key
 app.secret_key = secrets.token_hex(32)
@@ -60,12 +60,17 @@ def handle_connect():
     clients.remove(request.sid)
 
 # Route to serve the React app's index.html
-@app.route('/')
-def serve():
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def serve_react_app(path):
+    # Serve React app for non-API routes
+    if path.startswith('api/'):  # Handle invalid API routes
+        return "API route not found", 404
     # Authenticate user when they access the site and store username
     session['username'] = 'ab123'
     add_user('ab123')
     return send_from_directory(app.static_folder, 'index.html')
+
 
 # Route to serve static files (like CSS, JS, images, etc.)
 @app.route('/static/<path:path>')
@@ -89,7 +94,7 @@ def add_user(net_id):
                 # Commit to the database
                 conn.commit()
     except Exception as ex:
-        print(ex)
+        print(str(ex))
 
 #-----------------------------------------------------------------------
 
@@ -215,9 +220,8 @@ def delete_card(card_id):
                     for client in clients:
                         socketio.emit("card deleted", "",
                                       room = client)
-                except Exception as e:
-                    print("FAILED TO NOTIFY CLIENTS OF DELETED CARD;",
-                          e)
+                except Exception as ex:
+                    print(str(ex))
                 return jsonify({"success": True, "message": "Action successful!"}), 200
     except Exception as ex:
         print(str(ex))
@@ -269,10 +273,8 @@ def create_card():
                 try:
                     for client in clients:
                         socketio.emit("card created", "", room = client)
-                except Exception as e:
-                    print("FAILED TO NOTIFY CLIENTS OF CREATED CARD",
-                          e)
-
+                except Exception as ex:
+                    print(str(ex))
                 return jsonify({"success": True, "message": "Action successful!"}), 200
     except Exception as ex:
         print(str(ex))
@@ -286,6 +288,7 @@ def edit_card(card_id):
     try:
         # Retrieve JSON object
         card_data = request.get_json()
+
         # Get relevant fields
         title = bleach.clean(card_data.get('title'))
         description = bleach.clean(card_data.get('description'))
@@ -318,8 +321,7 @@ def edit_card(card_id):
                         socketio.emit("card edited", "net_id",
                                       room = client)
                 except Exception as e:
-                    print("FAILED TO NOTIFY CLIENTS OF EDITED CARD;",
-                          e)
+                    print(str(ex))
 
                 return jsonify({"success": True, "message": "Action successful!"}), 200
     except Exception as ex:
@@ -332,6 +334,9 @@ def edit_card(card_id):
 @app.route('/api/cards/<int:card_id>', methods=['GET'])
 def retrieve_card(card_id):
     try:
+        if not card_id:
+            return jsonify({"error": "Invalid card_id"}), 400
+        
         # Connect to database
         with psycopg2.connect(DATABASE_URL) as conn:
             with conn.cursor() as cursor:
@@ -465,8 +470,7 @@ def create_card_comment(card_id):
                         socketio.emit("comment created", card_id,
                                       room = client)
                 except Exception as e:
-                    print("FAILED TO NOTIFY CLIENTS OF CREATED COMMENT;",
-                          e)
+                    print(str(ex))
                 return jsonify({"success": True, "message": "Action successful!"}), 200
     except Exception as ex:
         print(str(ex))
@@ -494,7 +498,7 @@ def fetch_recent_rss_entries():
                 session.post(rss_url, data=payload)
 
                 # Define time threshold to retrieve most recent entries
-                time_threshold = datetime.now(eastern) - timedelta(minutes=1)
+                time_threshold = datetime.now(eastern) - timedelta(seconds=60)
 
                 # Retrieve entries from freefood listserv RSS script
                 rss_response = session.get(rss_url)
@@ -533,8 +537,8 @@ def fetch_recent_rss_entries():
 #-----------------------------------------------------------------------
 
 # Run scheduled tasks
-schedule.every(1).minutes.do(clean_expired_cards)
-schedule.every(1).minutes.do(fetch_recent_rss_entries)
+schedule.every(60).seconds.do(clean_expired_cards)
+schedule.every(60).seconds.do(fetch_recent_rss_entries)
 
 # Make sure the scheduler is always active
 def run_scheduler():

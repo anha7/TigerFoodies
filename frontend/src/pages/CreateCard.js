@@ -10,6 +10,8 @@ import './CreateEditCard.css'; // Import custom CSS file
 import { useLoadScript, Autocomplete } from "@react-google-maps/api";
 
 //----------------------------------------------------------------------
+
+// Define which Google Maps libraries we're going to use (places for autocomplete)
 const LIBRARIES = ["places"];
 
 function CreateCard( { net_id } ) {
@@ -22,18 +24,10 @@ function CreateCard( { net_id } ) {
     const [allergies, setAllergies] = useState([]);
     const navigate = useNavigate(); // Initialize useNavigate
     const autocompleteRef = useRef(null);
-    // const [marker, setMarker] = useState(null);
 
-    // const mapContainerStyle = {
-    //     width: "100%",
-    //     height: "400px",
-    // };
-    
-    // const center = {
-    //     lat: 40.343094, // Example: New York City
-    //     lng: -74.655086,
-    // };
+//----------------------------------------------------------------------
 
+    // Connect to Google Maps API for autocomplete
     const { isLoaded, loadError } = useLoadScript({
         googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
         libraries: LIBRARIES, // Include places library for autocomplete
@@ -44,12 +38,12 @@ function CreateCard( { net_id } ) {
         return <div>Error loading map</div>;
     }
     if (!isLoaded) {
-        console.log("Google Maps API is loading...");
         return <div>Loading map...</div>;
     }
 
 //----------------------------------------------------------------------
 
+    // Update location
     const handlePlaceChanged = () => {
         if (autocompleteRef.current) {
             const place = autocompleteRef.current.getPlace();
@@ -60,20 +54,9 @@ function CreateCard( { net_id } ) {
                 const lat = place.geometry.location.lat();
                 const lng = place.geometry.location.lng();
                 setLocationUrl(`https://www.google.com/maps?q=${lat},${lng}`);
-                console.log(location_url);
             }
         }
     };
-    
-//----------------------------------------------------------------------
-    // // Handles Map Click
-    // const handleMapClick = (event) => {
-    //     const lat = event.latLng.lat();
-    //     const lng = event.latLng.lng();
-    //     setMarker({ lat, lng });
-    //     // Generate Google Maps link
-    //     setLocationLink(`https://www.google.com/maps?q=${lat},${lng}`);
-    // };
 
 //----------------------------------------------------------------------
 
@@ -119,7 +102,6 @@ function CreateCard( { net_id } ) {
    
             if (data.secure_url) {
                 setPhoto(data.secure_url); // Successfully uploaded
-                console.log('Uploaded Image URL:', data.secure_url); // Confirm URL in console
             } else {
                 throw new Error('Failed to retrieve image URL from Cloudinary response');
             }
@@ -162,7 +144,6 @@ function CreateCard( { net_id } ) {
             });
 
             if (response.ok) {
-                console.log('Card successfully created');
                 navigate('/'); // Redirect to homepage after successful card creation
             } else {
                 console.error('Error creating card');
@@ -234,27 +215,6 @@ function CreateCard( { net_id } ) {
                                 </Autocomplete>
                             </h4>
                         </div>
-
-                        {/* Location Link info */}
-                        {/* <div className='locationlink'>
-                            <h4>Location Link:</h4>
-                            <GoogleMap
-                                mapContainerStyle={mapContainerStyle}
-                                zoom={12}
-                                center={center}
-                                onClick={handleMapClick}
-                            >
-                                {marker && <Marker position={marker} />}
-                            </GoogleMap>
-                            {locationLink && (
-                                <p>
-                                    Selected Location:{" "}
-                                    <a href={locationLink} target="_blank" rel="noopener noreferrer">
-                                        {locationLink}
-                                    </a>
-                                </p>
-                            )}
-                        </div> */}
 
                         {/* Dietary preferences field */}
                         <div className="dietary_tags">
