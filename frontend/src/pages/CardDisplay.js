@@ -1,6 +1,7 @@
 import React, {useEffect, useState } from 'react';
 import commentsIcon from './media/comments-icon.png';
 import mapIcon from './media/location-icon.png';
+import io from 'socket.io-client';
 //----------------------------------------------------------------------
 
 
@@ -73,7 +74,9 @@ function Card({ onClick, card }) {
 // Function that display all card information for the modal
 function Modal({card, setIsModalActive, net_id}) {
     const [commentsIsActive, setCommentsIsActive] = useState(false)
-     
+
+    // connection to flask-socketio server
+    const socket = io("http://127.0.0.1:5000") 
     // Function to handle location button click
     function handleLocationClick() {
         if (card.location_url) {
@@ -85,7 +88,6 @@ function Modal({card, setIsModalActive, net_id}) {
 
     function handleCommentsButtonClick() {
         setCommentsIsActive(!commentsIsActive)
-        setMapsIsActive(false)
     }
 
     function CommentsSection({card_id, net_id}) {
@@ -111,6 +113,15 @@ function Modal({card, setIsModalActive, net_id}) {
                 }
             };
             fetchComments();
+
+            socket.on("comment created", card_of_new_comment => {
+                if (card_of_new_comment === card_id) {
+                    fetchComments()
+                }
+            })
+
+            // Close socket whenever component is dismounted
+            return () => socket.close()
         }, []);
 
         // Handles comment submission

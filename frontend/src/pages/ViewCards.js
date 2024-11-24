@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import './ViewCards.css'; // Import custom CSS file
 import matheyImage from './media/mathey.png';
 import CardDisplay from './CardDisplay'; // To view extended card info
+import io from 'socket.io-client';
 
 //----------------------------------------------------------------------
 
@@ -16,6 +17,8 @@ const ViewCards = ({ net_id }) => {
     const [cards, setCards] = useState([]);
     const navigate = useNavigate();
 
+    // connection to flask-socketio server
+    const socket = io("http://127.0.0.1:5000")
 //----------------------------------------------------------------------
 
     // Send request to fetch user's cards from the back-end
@@ -38,6 +41,14 @@ const ViewCards = ({ net_id }) => {
         };
 
         fetchUserCards();
+
+        // Fetch cards again if there are updates from the server
+        socket.on("card created", () => fetchUserCards())
+        socket.on("card edited", () => fetchUserCards())
+        socket.on("card deleted", () => fetchUserCards())
+
+        // Close socket whenever component is dismounted
+        return () => socket.close()
     }, [net_id]);
 
 //----------------------------------------------------------------------

@@ -13,6 +13,7 @@ import hamburgerIcon from './media/hamburger-icon.png';
 import preferencesIcon from './media/preferences.png';
 import CardDisplay from './CardDisplay'; // to view extended card info
 import Feedback from './Feedback';
+import io from 'socket.io-client';
 
 //----------------------------------------------------------------------
 
@@ -76,6 +77,8 @@ const Homepage = ({ net_id }) => {
     // State for feedback modal
     const [isFeedbackModalActive, setFeedbackModalActive] = useState(false);
 
+    // connection to flask-socketio server
+    const socket = io("http://127.0.0.1:5000")
 //----------------------------------------------------------------------
 
     // function that toggles feedback modal
@@ -100,6 +103,14 @@ const Homepage = ({ net_id }) => {
         };
 
         fetchCards();
+
+         // Fetch cards again if there are updates from the server
+         socket.on("card created", () => fetchCards())
+         socket.on("card edited", () => fetchCards())
+         socket.on("card deleted", () => fetchCards())
+ 
+         // Close socket whenever component is dismounted
+         return () => socket.close()
     }, []);
 
 //----------------------------------------------------------------------
