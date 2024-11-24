@@ -77,14 +77,17 @@ function Card({ onClick, card }) {
 // Modal Component for displaying card details and comments
 function Modal({ card, setIsModalActive, net_id }) {
     const [commentsIsActive, setCommentsIsActive] = useState(false);
+    const [mapModalActive, setMapModalActive] = useState(false);
     const socket = useRef(io("http://127.0.0.1:5000"));
 
     const handleLocationClick = () => {
-        if (card.location_url) {
-            window.open(card.location_url, "_blank");
-        } else {
-            alert("No location link available.");
-        }
+        // if (card.location_url) {
+        //     window.open(card.location_url, "_blank");
+        // } else {
+        //     alert("No location link available.");
+        // }
+
+        setMapModalActive(true);
     };
 
     const handleCommentsButtonClick = () => {
@@ -139,6 +142,13 @@ function Modal({ card, setIsModalActive, net_id }) {
                     </div>
                 </div>
             </div>
+            {mapModalActive && (
+                <MapModal
+                    latitude={card.latitude}
+                    longitude={card.longitude}
+                    setMapModalActive={setMapModalActive}
+                />
+            )}
         </div>
     );
 };
@@ -224,6 +234,32 @@ function CommentsSection({ card_id, net_id, socket }) {
                 />
                 <button type="submit">Post</button>
             </form>
+        </div>
+    );
+};
+
+//----------------------------------------------------------------------
+
+function MapModal({ latitude, longitude, setMapModalActive }) {
+    const mapEmbedUrl = `https://www.google.com/maps/embed/v1/view?key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}&center=${latitude},${longitude}&zoom=15`;
+
+    return (
+        <div
+            className="modal-root"
+            onClick={(e) => {
+                if (e.target === e.currentTarget) {
+                    setMapModalActive(false);
+                }
+            }}
+        >
+            <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+                <iframe
+                    src={mapEmbedUrl}
+                    title="Google Maps Location"
+                    style={{ border: "none" }}
+                    allowFullScreen
+                />
+            </div>
         </div>
     );
 }

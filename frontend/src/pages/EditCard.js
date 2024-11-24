@@ -15,14 +15,15 @@ import { useLoadScript, Autocomplete } from "@react-google-maps/api";
 // Define which Google Maps libraries we're going to use (places for autocomplete)
 const LIBRARIES = ["places"];
 
-function EditCard() {
+function EditCard({ net_id }) {
     // Get card_id from URL
     const {card_id} = useParams();
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [photo, setPhoto] = useState('');
     const [location, setLocation] = useState('');
-    const [location_url, setLocationUrl] = useState('');
+    const [latitude, setLatitude] = useState('');
+    const [longitude, setLongitude] = useState('');
     const [dietary_tags, setDietary] = useState([]);
     const [allergies, setAllergies] = useState([]);
     const navigate = useNavigate();
@@ -80,9 +81,8 @@ function EditCard() {
             setLocation(address);
     
             if (place.geometry) {
-                const lat = place.geometry.location.lat();
-                const lng = place.geometry.location.lng();
-                setLocationUrl(`https://www.google.com/maps?q=${lat},${lng}`);
+                setLatitude(place.geometry.location.lat())
+                setLongitude(place.geometry.location.lng())
             }
         }
     };
@@ -147,18 +147,19 @@ function EditCard() {
         e.preventDefault(); // Prevent default form submission
 
         // Validation: Ensure location and location_url are set
-        if (!location || !location_url) {
+        if (!location || !latitude || !longitude) {
             alert("Please select a valid location from the suggestions.");
             return; // Stop form submission
         }
 
         const cardData = {
-            // net_id: net_id,
+            net_id: net_id,
             title: title, 
             description: description,
             photo_url: photo, 
             location: location,
-            location_url: location_url,
+            latitude: latitude,
+            longitude: longitude,
             dietary_tags: dietary_tags, 
             allergies: allergies
         };
