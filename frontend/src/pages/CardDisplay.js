@@ -257,12 +257,17 @@ function MapModal({ latitude, longitude, setMapModalActive }) {
             }}
         >
             <div className="modal-card" onClick={(e) => e.stopPropagation()}>
-                <iframe
-                    src={mapEmbedUrl}
-                    title="Google Maps Location"
-                    style={{ border: "none" }}
-                    allowFullScreen
-                />
+                <div className="map-title">
+                    <h2>Location of Food</h2>
+                </div>
+                <div className="map-embed">
+                    <iframe
+                        src={mapEmbedUrl}
+                        title="Google Maps Location"
+                        style={{ border: "none" }}
+                        allowFullScreen
+                    />
+                </div>
             </div>
         </div>
     );

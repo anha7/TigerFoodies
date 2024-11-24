@@ -467,6 +467,32 @@ main {
 
 /*--------------------------------------------------------------------*/
 
+/* Style map modal */
+.map-title {
+    height: 10vh;
+    padding-top: 0px;
+}
+
+.map-title h2 {
+    margin-top: 5vh;
+}
+
+.map-embed {
+    display: flex;
+    justify-content: center;
+}
+
+.map-embed iframe {
+    display: flex;
+    height: 54vh;
+    width: 80%;
+    margin: 0 3vw 3vh;
+    border-radius: 15px;
+    box-shadow: 1px 0 3px black;
+}
+
+/*--------------------------------------------------------------------*/
+
 /* Style the sidebar */
 .sidebar {
     background-color: #F6AE99;
