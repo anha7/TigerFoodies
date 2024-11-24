@@ -1,5 +1,6 @@
-// src/pages/EditCard.js
-
+//----------------------------------------------------------------------
+// EditCard.js
+// Authors: Anha Khan, Arika Hassan, Laiba Ali, Mark Gazzerro, Sami Dalu
 //----------------------------------------------------------------------
 
 // Imports

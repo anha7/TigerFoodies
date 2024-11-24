@@ -1,3 +1,8 @@
+#-----------------------------------------------------------------------
+# appdev.py
+# Authors: Anha Khan, Arika Hassan, Laiba Ali, Mark Gazzerro, Sami Dalu
+#-----------------------------------------------------------------------
+
 from flask import Flask, send_from_directory, jsonify, request, session
 from flask_socketio import SocketIO, emit
 from dotenv import load_dotenv

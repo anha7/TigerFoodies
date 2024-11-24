@@ -1,3 +1,8 @@
+#-----------------------------------------------------------------------
+# create_tables.py
+# Authors: Anha Khan, Arika Hassan, Laiba Ali, Mark Gazzerro, Sami Dalu
+#-----------------------------------------------------------------------
+
 import os
 import psycopg2
 from dotenv import load_dotenv

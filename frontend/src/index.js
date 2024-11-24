@@ -1,3 +1,8 @@
+//----------------------------------------------------------------------
+// index.js
+// Authors: Anha Khan, Arika Hassan, Laiba Ali, Mark Gazzerro, Sami Dalu
+//----------------------------------------------------------------------
+
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';

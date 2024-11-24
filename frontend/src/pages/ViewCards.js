@@ -1,5 +1,6 @@
-// src/pages/ViewCards.js
-
+//----------------------------------------------------------------------
+// ViewCards.js
+// Authors: Anha Khan, Arika Hassan, Laiba Ali, Mark Gazzerro, Sami Dalu
 //----------------------------------------------------------------------
 
 // Imports

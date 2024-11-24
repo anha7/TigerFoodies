@@ -1,3 +1,8 @@
+#-----------------------------------------------------------------------
+# app.py
+# Authors: Anha Khan, Arika Hassan, Laiba Ali, Mark Gazzerro, Sami Dalu
+#-----------------------------------------------------------------------
+
 from flask import Flask, send_from_directory, jsonify, request, session
 from dotenv import load_dotenv
 from .authenticate import authenticate

@@ -1,3 +1,8 @@
+//----------------------------------------------------------------------
+// Feedback.js
+// Authors: Anha Khan, Arika Hassan, Laiba Ali, Mark Gazzerro, Sami Dalu
+//----------------------------------------------------------------------
+
 // Import stateemnts
 import React, { useState } from 'react';
 

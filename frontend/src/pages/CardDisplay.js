@@ -1,3 +1,8 @@
+//----------------------------------------------------------------------
+// CardDisplay.js
+// Authors: Anha Khan, Arika Hassan, Laiba Ali, Mark Gazzerro, Sami Dalu
+//----------------------------------------------------------------------
+
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import commentsIcon from './media/comments-icon.png';
 import mapIcon from './media/location-icon.png';

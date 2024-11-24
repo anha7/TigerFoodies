@@ -1,3 +1,8 @@
+//----------------------------------------------------------------------
+// App.js
+// Authors: Anha Khan, Arika Hassan, Laiba Ali, Mark Gazzerro, Sami Dalu
+//----------------------------------------------------------------------
+
 // Imports
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
