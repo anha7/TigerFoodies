@@ -241,7 +241,11 @@ function CommentsSection({ card_id, net_id, socket }) {
 //----------------------------------------------------------------------
 
 function MapModal({ latitude, longitude, setMapModalActive }) {
-    const mapEmbedUrl = `https://www.google.com/maps/embed/v1/view?key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}&center=${latitude},${longitude}&zoom=15`;
+    const mapEmbedUrl = `https://www.google.com/maps/embed/v1/place?key=
+        ${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
+        &q=${latitude},${longitude}
+        &center=${latitude},${longitude}
+        &zoom=15`;
 
     return (
         <div

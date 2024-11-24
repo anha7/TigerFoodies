@@ -146,7 +146,7 @@ function EditCard({ net_id }) {
     const handleSubmit = async (e) => {
         e.preventDefault(); // Prevent default form submission
 
-        // Validation: Ensure location and location_url are set
+        // Validation: Ensure location and coordinates are set
         if (!location || !latitude || !longitude) {
             alert("Please select a valid location from the suggestions.");
             return; // Stop form submission
