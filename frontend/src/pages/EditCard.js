@@ -5,9 +5,8 @@
 
 // Imports
 import React, { useEffect, useState, useRef } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, Navigate } from 'react-router-dom';
 import './CreateEditCard.css'; // Import custom CSS file
-// import { GoogleMap, useLoadScript, Marker } from "@react-google-maps/api";
 import { useLoadScript, Autocomplete } from "@react-google-maps/api";
 
 //----------------------------------------------------------------------
@@ -16,7 +15,7 @@ import { useLoadScript, Autocomplete } from "@react-google-maps/api";
 const LIBRARIES = ["places"];
 
 function EditCard({ net_id }) {
-    // Get card_id from URL
+    // Set state and other utility variables
     const {card_id} = useParams();
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
@@ -26,6 +25,7 @@ function EditCard({ net_id }) {
     const [longitude, setLongitude] = useState('');
     const [dietary_tags, setDietary] = useState([]);
     const [allergies, setAllergies] = useState([]);
+    const [isAuthorized, setIsAuthorized] = useState(true);
     const navigate = useNavigate();
     const autocompleteRef = useRef(null);
 
@@ -38,10 +38,15 @@ function EditCard({ net_id }) {
                 });
                 if (response.ok) {
                     const data = await response.json();
+                    if (data.net_id !== net_id && net_id !== 'cs-tigerfoodies') {
+                        setIsAuthorized(false);
+                    }
                     setTitle(data.title || '');
                     setDescription(data.description || '');
                     setPhoto(data.photo_url || '');
                     setLocation(data.location || '');
+                    setLatitude(data.latitude || '');
+                    setLongitude(data.longitude || '');
                     setDietary(data.dietary_tags || []);
                     setAllergies(data.allergies || []);
                 } else {
@@ -53,8 +58,12 @@ function EditCard({ net_id }) {
 
         };
         fetchCard();
-    }, [card_id]);
+    }, [card_id, net_id]);
 
+    // If user is not card creator or admin, redirect to homepage
+    if (!isAuthorized) {
+        return <Navigate to="/" replace />;
+    }
 //----------------------------------------------------------------------
 
     // Connect to Google Maps API for autocomplete
@@ -77,12 +86,15 @@ function EditCard({ net_id }) {
     const handlePlaceChanged = () => {
         if (autocompleteRef.current) {
             const place = autocompleteRef.current.getPlace();
+            const name = place?.name || ''; // Get the short name of the place
             const address = place?.formatted_address || '';
-            setLocation(address);
+    
+            // Use the name if it exists; fallback to formatted_address
+            setLocation(name || address);
     
             if (place.geometry) {
-                setLatitude(place.geometry.location.lat())
-                setLongitude(place.geometry.location.lng())
+                setLatitude(place.geometry.location.lat());
+                setLongitude(place.geometry.location.lng());
             }
         }
     };
@@ -109,11 +121,10 @@ function EditCard({ net_id }) {
 
 //----------------------------------------------------------------------
 
-    const CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1/devcgtjkx/image/upload';
+    const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/${process.env.REACT_APP_CLOUDINARY_KEY}/image/upload`;
     const CLOUDINARY_UPLOAD_PRESET = 'TigerFoodies';
 
     // Sets image
-    // Update to handle async function
     const handleImageChange = async (event) => {
         const file = event.target.files[0];
         if (!file) return;
@@ -130,13 +141,13 @@ function EditCard({ net_id }) {
             const data = await response.json();
 
             if (data.secure_url) {
-                setPhoto(data.secure_url); // Successfully uploaded
+                setPhoto(data.secure_url);
             } else {
                 throw new Error('Failed to retrieve image URL from Cloudinary response');
             }
         } catch (error) {
             console.error('Error uploading the image:', error);
-            alert('Image upload failed. Please try again.'); // Inform the user
+            alert('Image upload failed. Please try again.');
         }
     };
 
@@ -186,6 +197,10 @@ function EditCard({ net_id }) {
 
 //----------------------------------------------------------------------
 
+    // Character limit for title and description
+    const maxTitleLength = 100;
+    const maxDescriptionLength = 250;
+
     return (
         <div className="EditCard">
 
@@ -209,24 +224,29 @@ function EditCard({ net_id }) {
                                 type="text" 
                                 name = "title"
                                 value={title} 
-                                onChange={(e) => setTitle(e.target.value)}
-                                placeholder="Enter a title..."/> </h4>
+                                onChange={(e) => {
+                                    if (e.target.value.length <= maxTitleLength) {
+                                        setTitle(e.target.value);
+                                    }
+                                }}
+                                placeholder="Enter a title..."/> 
+                            </h4>
                         </div>
 
                         {/* Field to upload food image */}
                         <div className="photo">
                             <h4>Image: * <br/>
                             <input
-                                // required
                                 type="file"
                                 name="photo_url"
-                                // accept="image/*"
                                 onChange={handleImageChange}
                                 className="upload-button"
                             />
                             </h4>
                             <div className='uploadedImage'>
-                                {photo && <img src={photo} alt="Uploaded preview" style={{ width: '100%', height: 'auto', borderRadius: '8px'}} />}
+                                {photo && <img src={photo}
+                                    alt="Uploaded preview" 
+                                    style={{ width: '100%', height: 'auto', borderRadius: '8px'}} />}
                             </div>
                         </div>
 
@@ -235,9 +255,17 @@ function EditCard({ net_id }) {
                         <div className="location">
                             <h4> Location: * <br/> 
                                 <Autocomplete
-                                    onLoad={(autocomplete) => (autocompleteRef.current = autocomplete)}
+                                    onLoad={(autocomplete) => {
+                                        autocompleteRef.current = autocomplete;
+                                
+                                        // Set the autocomplete input value to preloaded location
+                                        if (autocomplete && location) {
+                                            const input = autocomplete.gm_accessors_.input.input; // Access the native input element
+                                            input.value = location;
+                                        }
+                                    }}
                                     onPlaceChanged={handlePlaceChanged}
-                                    >
+                                >
                                     <input
                                         type="text"
                                         value={location}
@@ -250,8 +278,7 @@ function EditCard({ net_id }) {
 
                         {/* Dietary preferences field */}
                         <div className="dietary_tags">
-                            <h4>Dietary Tags (Select all that apply): </h4>
-
+                            <h4>Preferences:</h4>
                             <label><input type="checkbox" name="dietary_tags" value="Halal" checked={dietary_tags.includes('Halal')} onChange={handleDietaryChange}/> Halal</label>
                             <label><input type="checkbox" name="dietary_tags" value="Kosher" checked={dietary_tags.includes('Kosher')} onChange={handleDietaryChange}/> Kosher</label>
                             <label><input type="checkbox" name="dietary_tags" value="Vegetarian" checked={dietary_tags.includes('Vegetarian')} onChange={handleDietaryChange}/> Vegetarian</label>
@@ -261,7 +288,7 @@ function EditCard({ net_id }) {
                         
                         {/* Allergens field */}
                         <div className="allergies">
-                            <h4>Allergens (Select all that apply): </h4>
+                            <h4>Allergens:</h4>
                             <label><input type="checkbox" name="allergies" value="Nuts" checked={allergies.includes('Nuts')} onChange={handleAllergiesChange}/> Nuts</label>
                             <label><input type="checkbox" name="allergies" value="Dairy" checked={allergies.includes('Dairy')} onChange={handleAllergiesChange}/> Dairy</label>
                             <label><input type="checkbox" name="allergies" value="Shellfish" checked={allergies.includes('Shellfish')} onChange={handleAllergiesChange}/> Shellfish</label>
@@ -274,9 +301,13 @@ function EditCard({ net_id }) {
                                 type='text'
                                 name = "description" 
                                 value={description} 
-                                onChange={(e) => setDescription(e.target.value)}
+                                onChange={(e) => {
+                                    if (e.target.value.length <= maxDescriptionLength) {
+                                        setDescription(e.target.value);
+                                    }
+                                }}
                                 placeholder="Enter any extra information, such as specific room numbers..."/> 
-                            </h4>     
+                            </h4>
                         </div>   
                         
                         {/* Submit button */}

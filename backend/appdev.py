@@ -4,7 +4,7 @@
 #-----------------------------------------------------------------------
 
 from flask import Flask, send_from_directory, jsonify, request, session
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO
 from dotenv import load_dotenv
 import os
 import psycopg2
@@ -54,28 +54,25 @@ eastern = pytz.timezone('US/Eastern')
 
 #-----------------------------------------------------------------------
 
-# route to handle a new client connecting
+# Route to handle a new client connecting
 @socketio.on('connect')
 def handle_connect():
     clients.add(request.sid)
 
-# route to handle a new client disconnecting
+# Route to handle a new client disconnecting
 @socketio.on('disconnect')
 def handle_connect():
     clients.remove(request.sid)
 
 # Route to serve the React app's index.html
-@app.route('/', defaults={'path': ''})
-@app.route('/<path:path>')
-def serve_react_app(path):
-    # Serve React app for non-API routes
-    if path.startswith('api/'):  # Handle invalid API routes
-        return "API route not found", 404
+@app.route('/')
+def serve():
     # Authenticate user when they access the site and store username
-    session['username'] = 'ab123'
-    add_user('ab123')
+    username = 'ab123'
+    if username:
+        session['username'] = username
+        add_user(username)
     return send_from_directory(app.static_folder, 'index.html')
-
 
 # Route to serve static files (like CSS, JS, images, etc.)
 @app.route('/static/<path:path>')

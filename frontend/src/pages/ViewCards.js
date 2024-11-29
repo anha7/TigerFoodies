@@ -4,11 +4,12 @@
 //----------------------------------------------------------------------
 
 // Imports
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './ViewCards.css'; // Import custom CSS file
-import matheyImage from './media/mathey.png';
 import CardDisplay from './CardDisplay'; // To view extended card info
+import editIcon from './media/edit.svg';
+import deleteIcon from './media/delete.svg';
 import io from 'socket.io-client';
 
 //----------------------------------------------------------------------
@@ -18,12 +19,15 @@ const ViewCards = ({ net_id }) => {
     const [cards, setCards] = useState([]);
     const navigate = useNavigate();
 
-    // connection to flask-socketio server
-    const socket = io("http://127.0.0.1:5000")
+    // Connection to Flask-socketio server
+    const socket = useRef(null);
 //----------------------------------------------------------------------
 
     // Send request to fetch user's cards from the back-end
     useEffect(() => {
+        // Initialize socket connection
+        socket.current = io(`${window.location.protocol}//${window.location.hostname}:${window.location.port || 443}`);
+
         const fetchUserCards = async () => {
             try {
                 let response;
@@ -44,12 +48,16 @@ const ViewCards = ({ net_id }) => {
         fetchUserCards();
 
         // Fetch cards again if there are updates from the server
-        socket.on("card created", () => fetchUserCards())
-        socket.on("card edited", () => fetchUserCards())
-        socket.on("card deleted", () => fetchUserCards())
+        socket.current.on("card created", () => fetchUserCards())
+        socket.current.on("card edited", () => fetchUserCards())
+        socket.current.on("card deleted", () => fetchUserCards())
 
-        // Close socket whenever component is dismounted
-        return () => socket.close()
+        // Clean up the socket connection on unmount
+        return () => {
+            if (socket.current) {
+                socket.current.disconnect();
+            }
+        };
     }, [net_id]);
 
 //----------------------------------------------------------------------
@@ -98,23 +106,17 @@ const ViewCards = ({ net_id }) => {
                 <div className="viewcards-card-list">
                     {cards.map((card) => (
                         <div className='viewcards-container'>
-                            {/* Get card info */}
-                            <CardDisplay card = {card}/>
                             {/* Makes the edit and delete buttons */}
                             <div className="card-actions">
-                                <button 
-                                    className="edit-button"
-                                    onClick={() => handleEditCard(card.card_id)}
-                                >
-                                    EDIT
+                                <button className="edit-button" onClick={() => handleEditCard(card.card_id)}>
+                                    <img src={editIcon} alt="editIcon" height="14px" />
                                 </button>
-                                <button 
-                                    className="delete-button"
-                                    onClick={() => handleDeleteCard(card.card_id)}
-                                >
-                                    DELETE
+                                <button className="delete-button" onClick={() => handleDeleteCard(card.card_id)}>
+                                    <img src={deleteIcon} alt="deleteIcon" height="17px" />
                                 </button>
                             </div>
+                            {/* Get card info */}
+                            <CardDisplay card = {card}/>
                         </div>
                     ))}
                 </div>

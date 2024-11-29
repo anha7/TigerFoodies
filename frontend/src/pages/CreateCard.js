@@ -7,7 +7,6 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './CreateEditCard.css'; // Import custom CSS file
-// import { GoogleMap, useLoadScript, Marker } from "@react-google-maps/api";
 import { useLoadScript, Autocomplete } from "@react-google-maps/api";
 
 //----------------------------------------------------------------------
@@ -16,6 +15,7 @@ import { useLoadScript, Autocomplete } from "@react-google-maps/api";
 const LIBRARIES = ["places"];
 
 function CreateCard( { net_id } ) {
+    // Initialize state and other utility variables
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [photo, setPhoto] = useState('');
@@ -24,7 +24,7 @@ function CreateCard( { net_id } ) {
     const [longitude, setLongitude] = useState('');
     const [dietary_tags, setDietary] = useState([]);
     const [allergies, setAllergies] = useState([]);
-    const navigate = useNavigate(); // Initialize useNavigate
+    const navigate = useNavigate();
     const autocompleteRef = useRef(null);
 
 //----------------------------------------------------------------------
@@ -49,12 +49,15 @@ function CreateCard( { net_id } ) {
     const handlePlaceChanged = () => {
         if (autocompleteRef.current) {
             const place = autocompleteRef.current.getPlace();
+            const name = place?.name || ''; // Get the short name of the place
             const address = place?.formatted_address || '';
-            setLocation(address);
+    
+            // Use the name if it exists; fallback to formatted_address
+            setLocation(name || address);
     
             if (place.geometry) {
-                setLatitude(place.geometry.location.lat())
-                setLongitude(place.geometry.location.lng())
+                setLatitude(place.geometry.location.lat());
+                setLongitude(place.geometry.location.lng());
             }
         }
     };
@@ -81,11 +84,10 @@ function CreateCard( { net_id } ) {
 
 //----------------------------------------------------------------------
 
-    const CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1/devcgtjkx/image/upload';
+    const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/${process.env.REACT_APP_CLOUDINARY_KEY}/image/upload`;
     const CLOUDINARY_UPLOAD_PRESET = 'TigerFoodies';
 
-    // Sets image
-    // Update to handle async function
+    // Sets image using Cloudinary
     const handleImageChange = async (event) => {
         const file = event.target.files[0];
         if (!file) return;
@@ -102,13 +104,13 @@ function CreateCard( { net_id } ) {
             const data = await response.json();
    
             if (data.secure_url) {
-                setPhoto(data.secure_url); // Successfully uploaded
+                setPhoto(data.secure_url);
             } else {
                 throw new Error('Failed to retrieve image URL from Cloudinary response');
             }
         } catch (error) {
             console.error('Error uploading the image:', error);
-            alert('Image upload failed. Please try again.'); // Inform the user
+            alert('Image upload failed. Please try again.');
         }
     };
 
@@ -157,6 +159,10 @@ function CreateCard( { net_id } ) {
 
 //----------------------------------------------------------------------
 
+    // Character limit for title and description
+    const maxTitleLength = 100;
+    const maxDescriptionLength = 250;
+
     return (
         <div className="CreateCard">
 
@@ -175,13 +181,20 @@ function CreateCard( { net_id } ) {
                         {/* Title field */}
                         <div className="title">
                             <h4>Title: * <br/>
-                            <input 
-                                required
-                                type="text" 
-                                name = "title"
-                                value={title} 
-                                onChange={(e) => setTitle(e.target.value)}
-                                placeholder="Enter a title..."/> </h4>
+                                <input 
+                                    required
+                                    type="text" 
+                                    name = "title"
+                                    value={title} 
+                                    onChange={(e) => {
+                                        if (e.target.value.length <= maxTitleLength) {
+                                            setTitle(e.target.value);
+                                        }
+                                    }}
+                                    placeholder="Enter a title..."
+                                    maxLength={maxTitleLength}
+                                />
+                            </h4>
                         </div>
 
                         {/* Field to upload food image */}
@@ -197,7 +210,9 @@ function CreateCard( { net_id } ) {
                             />
                             </h4>
                             <div className='uploadedImage'>
-                                {photo && <img src={photo} alt="Uploaded preview" style={{ width: '100%', height: 'auto', borderRadius: '8px'}} />}
+                                {photo && <img src={photo} 
+                                    alt="Uploaded preview" 
+                                    style={{ width: '100%', height: 'auto', borderRadius: '8px'}} />}
                             </div>
                         </div>
 
@@ -220,7 +235,7 @@ function CreateCard( { net_id } ) {
 
                         {/* Dietary preferences field */}
                         <div className="dietary_tags">
-                            <h4>Dietary Tags (Select all that apply): </h4>
+                            <h4>Preferences:</h4>
                             <label><input type="checkbox" name="dietary_tags" value="Halal" checked={dietary_tags.includes('Halal')} onChange={handleDietaryChange}/> Halal</label>
                             <label><input type="checkbox" name="dietary_tags" value="Kosher" checked={dietary_tags.includes('Kosher')} onChange={handleDietaryChange}/> Kosher</label>
                             <label><input type="checkbox" name="dietary_tags" value="Vegetarian" checked={dietary_tags.includes('Vegetarian')} onChange={handleDietaryChange}/> Vegetarian</label>
@@ -230,7 +245,7 @@ function CreateCard( { net_id } ) {
                         
                         {/* Allergens field */}
                         <div className="allergies">
-                            <h4>Allergens (Select all that apply): </h4>
+                            <h4>Allergens:</h4>
                             <label><input type="checkbox" name="allergies" value="Nuts" checked={allergies.includes('Nuts')} onChange={handleAllergiesChange}/> Nuts</label>
                             <label><input type="checkbox" name="allergies" value="Dairy" checked={allergies.includes('Dairy')} onChange={handleAllergiesChange}/> Dairy</label>
                             <label><input type="checkbox" name="allergies" value="Shellfish" checked={allergies.includes('Shellfish')} onChange={handleAllergiesChange}/> Shellfish</label>
@@ -239,13 +254,19 @@ function CreateCard( { net_id } ) {
                         {/* Description field */}    
                         <div className="description"> 
                             <h4>Description: <br/>
-                            <textarea
-                                type='text'
-                                name = "description" 
-                                value={description} 
-                                onChange={(e) => setDescription(e.target.value)}
-                                placeholder="Enter any extra information, such as specific room numbers..."/> 
-                            </h4>     
+                                <textarea
+                                    type='text'
+                                    name = "description" 
+                                    value={description} 
+                                    onChange={(e) => {
+                                        if (e.target.value.length <= maxDescriptionLength) {
+                                            setDescription(e.target.value);
+                                        }
+                                    }}
+                                    placeholder="Enter any extra information, such as specific room numbers..."
+                                    maxLength={maxDescriptionLength}
+                                />
+                            </h4>  
                         </div>   
                         
                         {/* Submit button */}

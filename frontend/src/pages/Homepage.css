@@ -63,7 +63,7 @@ p {
 }
 
 .nav-button:first-child, .navbar-right .nav-button:last-child {
-    width: 45px;
+    min-width: 45px;
 }
 
 /* Style the buttons that have links in the navbar */
@@ -86,12 +86,10 @@ p {
     flex-direction: row;
 }
 
-/* Search input container helps with relative positioning */
 .search-container {
     position: relative;
     padding: 0;
     display: flex;
-    justify-content: flex-end;
 }
 
 .search-form input {
@@ -110,9 +108,9 @@ p {
 }
 
 /* Style the search icon */
-.search-icon {
-    top: 1.2vh;
-    left: 23px;
+.search-container .search-icon {
+    align-self: center;
+    left: 25px;
     position: relative;
     pointer-events: none;
 }
@@ -185,7 +183,6 @@ p {
     border: none;
     border-radius: 15px;
     box-shadow: 1px 0 3px black;
-    font-size: 18px;
     color: white;
     cursor: pointer;
 }
@@ -302,10 +299,15 @@ main {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5)
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1;
 }
 
-/* Style active MODAL */
+.modal-root.no-overlay {
+    background-color: transparent;
+}
+
+/* Style active modal */
 .modal-card {
     position: absolute;
     background-color: #F6AE99;
@@ -372,7 +374,7 @@ main {
 }
 
 .comments-button:hover, .location-button:hover {
-    background-color: #565466; /* color when it's hovered over */
+    background-color: #565466;
 }
 
 /* Style modal posted time */
@@ -387,6 +389,8 @@ main {
     align-self: end;
     font-size: 0.75rem;
 }
+
+/*--------------------------------------------------------------------*/
 
 /* Style modal comments section */
 .modal-comments-section {
@@ -407,7 +411,6 @@ main {
     font-style: italic;
     background-color: transparent;
     margin: 0;
-    font-size: 16px;
 }
 
 .modal-comment p {
@@ -435,11 +438,13 @@ main {
 .comment-form input {
     width: 90%;
     font-family: "Quicksand", sans-serif;
-    font-size: 15px;
+    font-size: 0.9rem;
     margin-bottom: 1vh;
     align-self: center;
     box-shadow: .5px 0 2px black;
     border: none;
+    border-radius: 15px;
+    padding-left: 0.5vw;
     height: 4vh;
 }
 
@@ -449,7 +454,7 @@ main {
 
 .comment-form button {
     font-family: "Quicksand", sans-serif;
-    font-size: 15px;
+    font-size: 0.9rem;
     width: 20%;
     color: white;
     background-color: #F6AE99;
@@ -462,19 +467,19 @@ main {
 
 /* Change styling of button when hovered over */
 .comment-form button:hover {
-    background-color: #E79781; /* color when it's hovered over */
+    background-color: #E79781;
 }
 
 /*--------------------------------------------------------------------*/
 
 /* Style map modal */
 .map-title {
-    height: 10vh;
+    height: 8vh;
     padding-top: 0px;
 }
 
 .map-title h2 {
-    margin-top: 5vh;
+    margin-top: 3.5vh;
 }
 
 .map-embed {
@@ -486,9 +491,29 @@ main {
     display: flex;
     height: 54vh;
     width: 80%;
-    margin: 0 3vw 3vh;
-    border-radius: 15px;
+    margin: 0 3vw 2vh;
     box-shadow: 1px 0 3px black;
+}
+
+.map-close {
+    display: flex;
+    justify-content: center;
+}
+
+.map-close button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    background-color: #716F81;
+    border-radius: 15px;
+    box-shadow: 0.1px 0.1px 2px black;
+    width: 45px;
+    height: 30px;
+}
+
+.map-close button:hover {
+    background-color: #565466;
 }
 
 /*--------------------------------------------------------------------*/
@@ -497,23 +522,71 @@ main {
 .sidebar {
     background-color: #F6AE99;
     padding: 0.5rem;
-    width: 15%;
+    min-width: 15%;
     overflow-y: auto;
     box-shadow: 0 1px 2px black;
 }
 
 .sidebar h3 {
-    text-align: left;
+    background-color: #E79781;
+    text-align: center;
+    border-radius: 10px;
+    padding: 0.5vh;
     font-size: 1.3rem;
+    margin-bottom: 0.2em;
 }
 
 .sidebar label {
-    display: block;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.25em;
 }
 
 .food-preferences-selection {
     height: 45%;
     overflow-y: auto;
+}
+
+/*--------------------------------------------------------------------*/
+
+/* Styles all checkboxes */
+input[type="checkbox"] {
+    appearance: none;
+    width: 3em;
+    height: 1.5em;
+    background: #e1e1e1;
+    border-radius: 3em;
+    position: relative;
+    cursor: pointer;
+    outline: none;
+    -webkit-transition: all 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;
+    z-index: 0;
+}
+
+input[type="checkbox"]:checked {
+    background: #716F81;
+}
+
+input[type="checkbox"]:after {
+    position: absolute;
+    content: "";
+    width: 1.5em;
+    height: 1.5em;
+    border-radius: 50%;
+    background: #fff;
+    -webkit-box-shadow: 0 0 0.25em rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 0.25em rgba(0, 0, 0, 0.3);
+    -webkit-transform: scale(0.7);
+    transform: scale(0.7);
+    left: 0;
+    -webkit-transition: all 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;
+}
+
+input[type="checkbox"]:checked:after {
+    left: calc(100% - 1.5em);
 }
 
 /*--------------------------------------------------------------------*/
@@ -526,24 +599,42 @@ main {
 /* Style mobile food preferences menu */
 .mobile-preferences-menu {
     display: none; /* Hide mobile preferences selection in normal display */
+    visibility: hidden;
+    opacity: 0;
     align-self: center;
-    align-items: center;
     margin: 1vh 1vw;
     justify-content: center;
     padding: 0vh 0 2vh 0;
-    gap: 5vw;
+    gap: 15vw;
     position: relative;
     width: 98vw;
     background-color: #F6AE99;
     border-radius: 15px;
     box-shadow: 0.1px 0.1px 2px black;
+    transition: 0.3s;
 }
 
 /* Style mobile dietary preferences selection */
-.mobile-food-preference-selection {
+.mobile-preferences-selection {
     overflow-y: auto;
     display: flex;
     flex-direction: column;
+}
+
+.mobile-preferences-selection h3 {
+    background-color: #E79781;
+    text-align: center;
+    border-radius: 10px;
+    padding: 0.5vh 0;
+    margin-bottom: 0.2em;
+    width: 100%;
+}
+
+.mobile-preferences-selection label {
+    display: flex;
+    flex-direction: row;
+    gap: 0.25em;
+    align-items: center;
 }
 
 /*--------------------------------------------------------------------*/
@@ -562,11 +653,10 @@ footer {
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: -1;
 }
 
 footer p {
-    font-size: 12px;
+    font-size: 0.8rem;
     font-style: italic;
 }
 

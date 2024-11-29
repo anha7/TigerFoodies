@@ -5,7 +5,7 @@
 
 // Imports
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Homepage from './pages/Homepage';
 import CreateCard from './pages/CreateCard';
 import ViewCards from './pages/ViewCards';
@@ -47,6 +47,9 @@ function App() {
                 <Route path="/post" element={<CreateCard net_id={net_id}/>} />
                 <Route path="/view" element={<ViewCards net_id={net_id}/>} />
                 <Route path="/edit/:card_id" element={<EditCard/>} />
+
+                {/* Fallback Route */}
+                <Route path="*"element={<Navigate to="/" replace state={{ net_id }}/>}/>
             </Routes>
             </div>
         </Router>

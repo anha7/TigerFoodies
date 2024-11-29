@@ -4,6 +4,7 @@
 #-----------------------------------------------------------------------
 
 from flask import Flask, send_from_directory, jsonify, request, session
+from flask_socketio import SocketIO
 from dotenv import load_dotenv
 from .authenticate import authenticate
 import os
@@ -29,8 +30,13 @@ conn = psycopg2.connect(DATABASE_URL)
 # Initialize Flask app
 app = Flask(__name__, static_folder='build', static_url_path='')
 
+socketio = SocketIO(app, cors_allowed_origins="*", async_mode="threading")
+
 # Set up secret key
 app.secret_key = secrets.token_hex(32)
+
+# set of connected clients
+clients = set()
 
 # Email configuration
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
@@ -48,6 +54,16 @@ rss_url = os.environ['RSS_URL']
 eastern = pytz.timezone('US/Eastern')
 
 #-----------------------------------------------------------------------
+
+# Route to handle a new client connecting
+@socketio.on('connect')
+def handle_connect():
+    clients.add(request.sid)
+
+# Route to handle a new client disconnecting
+@socketio.on('disconnect')
+def handle_connect():
+    clients.remove(request.sid)
 
 # Route to serve the React app's index.html
 @app.route('/')
@@ -81,7 +97,7 @@ def add_user(net_id):
                 # Commit to the database
                 conn.commit()
     except Exception as ex:
-        print(ex)
+        print(str(ex))
 
 #-----------------------------------------------------------------------
 
@@ -116,7 +132,7 @@ def get_data():
             with conn.cursor() as cursor:
                 # Execute query to retrieve all active cards information
                 cursor.execute('''
-                    SELECT card_id, title, photo_url, location, location_url, 
+                    SELECT card_id, title, photo_url, location, latitude, longitude, 
                     dietary_tags, allergies, description, posted_at, net_id
                     FROM cards ORDER BY posted_at DESC;
                 ''')
@@ -130,12 +146,13 @@ def get_data():
                         'title': row[1],
                         'photo_url': row[2],
                         'location': row[3],
-                        'location_url': row[4],
-                        'dietary_tags': row[5],
-                        'allergies': row[6],
-                        'description': row[7],
-                        'posted_at': row[8],
-                        'net_id': row[9]
+                        'latitude': row[4],
+                        'longitude': row[5],
+                        'dietary_tags': row[6],
+                        'allergies': row[7],
+                        'description': row[8],
+                        'posted_at': row[9],
+                        'net_id': row[10]
                     })
 
                 return jsonify(cards)
@@ -154,7 +171,7 @@ def retrieve_user_cards(net_id):
             with conn.cursor() as cursor:
                 # Define insertion query
                 insertion_query = '''SELECT card_id, title, photo_url,
-                    location, location_url, dietary_tags, allergies, description, 
+                    location, latitude, longitude, dietary_tags, allergies, description, 
                     posted_at, net_id FROM cards WHERE net_id = %s
                     ORDER BY posted_at DESC;
                 '''
@@ -171,12 +188,13 @@ def retrieve_user_cards(net_id):
                         'title': row[1],
                         'photo_url': row[2],
                         'location': row[3],
-                        'location_url': row[4],
-                        'dietary_tags': row[5],
-                        'allergies': row[6],
-                        'description': row[7],
-                        'posted_at': row[8],
-                        'net_id': row[9]
+                        'latitude': row[4],
+                        'longitude': row[5],
+                        'dietary_tags': row[6],
+                        'allergies': row[7],
+                        'description': row[8],
+                        'posted_at': row[9],
+                        'net_id': row[10]
                     })
 
                 return jsonify(cards)
@@ -201,6 +219,14 @@ def delete_card(card_id):
 
                 # Commit to the database
                 conn.commit()
+
+                # Notify connected users that a card has been deleted
+                try:
+                    for client in clients:
+                        socketio.emit("card deleted", "",
+                                      room = client)
+                except Exception as ex:
+                    print(str(ex))
                 return jsonify({"success": True, "message": "Action successful!"}), 200
     except Exception as ex:
         print(str(ex))
@@ -215,19 +241,23 @@ def create_card():
         # Retrieve JSON object containing new card data
         card_data = request.get_json()
 
+        print(card_data.get('latitude'))
+        print(card_data.get('longitude'))
+
         # Parse relevant fields
         net_id = card_data.get('net_id')
         title = bleach.clean(card_data.get('title'))
         description = bleach.clean(card_data.get('description'))
         photo_url = bleach.clean(card_data.get('photo_url'))
         location = bleach.clean(card_data.get('location'))
-        location_url = card_data.get('location_url')
+        latitude = float(card_data.get('latitude'))
+        longitude = float(card_data.get('longitude'))
         dietary_tags = card_data.get('dietary_tags')
         allergies = card_data.get('allergies')
 
         # Package parsed data
-        new_card = [net_id, title, description, photo_url, location, location_url,
-                    dietary_tags, allergies]
+        new_card = [net_id, title, description, photo_url, location,
+                    latitude, longitude, dietary_tags, allergies]
         
         # Connect to database and establish a cursor
         with psycopg2.connect(DATABASE_URL) as conn:
@@ -235,9 +265,9 @@ def create_card():
                 
                 # Define insertion query
                 insertion_query = '''INSERT INTO cards (net_id,
-                    title, description, photo_url, location, location_url,
-                    dietary_tags, allergies, expiration, posted_at)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s,
+                    title, description, photo_url, location, latitude,
+                    longitude, dietary_tags, allergies, expiration, posted_at)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s,
                     CURRENT_TIMESTAMP + interval \'3 hours\', 
                     CURRENT_TIMESTAMP)
                 '''
@@ -247,6 +277,13 @@ def create_card():
 
                 # Commit to the database
                 conn.commit()
+                
+                # Notify connected users that new card has been created
+                try:
+                    for client in clients:
+                        socketio.emit("card created", "", room = client)
+                except Exception as ex:
+                    print(str(ex))
                 return jsonify({"success": True, "message": "Action successful!"}), 200
     except Exception as ex:
         print(str(ex))
@@ -260,31 +297,42 @@ def edit_card(card_id):
     try:
         # Retrieve JSON object
         card_data = request.get_json()
+
         # Get relevant fields
         title = bleach.clean(card_data.get('title'))
         description = bleach.clean(card_data.get('description'))
         photo_url = bleach.clean(card_data.get('photo_url'))
         location = bleach.clean(card_data.get('location'))
-        location_url = bleach.clean(card_data.get('location_url'))
+        latitude = float(card_data.get('latitude'))
+        longitude = float(card_data.get('longitude'))
         dietary_tags = card_data.get('dietary_tags')
         allergies = card_data.get('allergies')
 
         # Packaged parsed data
-        new_card = [title, description, photo_url, location, location_url,
-                    dietary_tags, allergies, card_id]
+        new_card = [title, description, photo_url, location, latitude,
+                    longitude, dietary_tags, allergies, card_id]
         
         # Connect to database
         with psycopg2.connect(DATABASE_URL) as conn:
             with conn.cursor() as cursor:
                 # Define update query
                 update_query = 'UPDATE cards SET (title, description, photo_url,'
-                update_query += ' location, location_url, dietary_tags, allergies, updated_at)'
-                update_query += ' = (%s, %s, %s, %s, %s, %s, %s, CURRENT_TIMESTAMP)'
+                update_query += ' location, latitude, longitude, dietary_tags, allergies, updated_at)'
+                update_query += ' = (%s, %s, %s, %s, %s, %s, %s, %s, CURRENT_TIMESTAMP)'
                 update_query += ' WHERE card_id = %s'
                 # Execute query to update row in the database
                 cursor.execute(update_query, new_card)
                 # Commit to database
                 conn.commit()
+
+                # Notify connected users that a card has been edited
+                try:
+                    for client in clients:
+                        socketio.emit("card edited", "net_id",
+                                      room = client)
+                except Exception as e:
+                    print(str(ex))
+
                 return jsonify({"success": True, "message": "Action successful!"}), 200
     except Exception as ex:
         print(str(ex))
@@ -296,12 +344,15 @@ def edit_card(card_id):
 @app.route('/api/cards/<int:card_id>', methods=['GET'])
 def retrieve_card(card_id):
     try:
+        if not card_id:
+            return jsonify({"error": "Invalid card_id"}), 400
+        
         # Connect to database
         with psycopg2.connect(DATABASE_URL) as conn:
             with conn.cursor() as cursor:
                 # Define insertion query
                 retrieval_query = ''' SELECT card_id, title, description,
-                    photo_url, location, location_url, dietary_tags, allergies 
+                    photo_url, location, latitude, longitude, dietary_tags, allergies 
                     FROM cards WHERE card_id = %s;'''
                 # Execute query to retrieve card with given card_id
                 cursor.execute(retrieval_query, [card_id])
@@ -313,9 +364,10 @@ def retrieve_card(card_id):
                         "description": row[2],
                         "photo_url": row[3],
                         "location": row[4],
-                        "location_url": row[5],
-                        "dietary_tags": row[6],
-                        "allergies": row[7]
+                        "latitude": row[5],
+                        "longitude": row[6],
+                        "dietary_tags": row[7],
+                        "allergies": row[8]
                     }
                     return jsonify(card)
                 else:
@@ -422,6 +474,14 @@ def create_card_comment(card_id):
                 
                 # Commit to the database
                 conn.commit()
+
+                # Notify connected users that a comment has been created
+                try:
+                    for client in clients:
+                        socketio.emit("comment created", card_id,
+                                      room = client)
+                except Exception as e:
+                    print(str(ex))
                 return jsonify({"success": True, "message": "Action successful!"}), 200
     except Exception as ex:
         print(str(ex))
@@ -449,7 +509,7 @@ def fetch_recent_rss_entries():
                 session.post(rss_url, data=payload)
 
                 # Define time threshold to retrieve most recent entries
-                time_threshold = datetime.now(eastern) - timedelta(minutes=1)
+                time_threshold = datetime.now(eastern) - timedelta(seconds=60)
 
                 # Retrieve entries from freefood listserv RSS script
                 rss_response = session.get(rss_url)
@@ -488,8 +548,8 @@ def fetch_recent_rss_entries():
 #-----------------------------------------------------------------------
 
 # Run scheduled tasks
-schedule.every(5).minutes.do(clean_expired_cards)
-schedule.every(5).minutes.do(fetch_recent_rss_entries)
+schedule.every(60).seconds.do(clean_expired_cards)
+schedule.every(60).seconds.do(fetch_recent_rss_entries)
 
 # Make sure the scheduler is always active
 def run_scheduler():
@@ -505,4 +565,4 @@ scheduler_thread.start()
 
 # Start the Flask app
 if __name__ == '__main__':
-    app.run()
+    socketio.run(app)

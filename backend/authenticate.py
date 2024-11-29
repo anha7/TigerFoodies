@@ -15,7 +15,6 @@ _CAS_URL = 'https://fed.princeton.edu/cas/'
 
 # Return url after stripping out the "ticket" parameter that was
 # added by the CAS server.
-
 def strip_ticket(url):
     if url is None:
         return "something is badly wrong"
@@ -27,7 +26,6 @@ def strip_ticket(url):
 
 # Validate a login ticket by contacting the CAS server. If
 # valid, return the user's username; otherwise, return None.
-
 def validate(ticket):
     val_url = (_CAS_URL + "validate" + '?service='
         + urllib.parse.quote(strip_ticket(flask.request.url))
@@ -47,7 +45,6 @@ def validate(ticket):
 
 # Authenticate the remote user, and return the user's username.
 # Do not return unless the user is successfully authenticated.
-
 def authenticate():
     # If the username is in the session, then the user was
     # authenticated previously.  So return the username.

@@ -4,8 +4,12 @@
 //----------------------------------------------------------------------
 
 import React, { useEffect, useState, useCallback, useRef } from 'react';
-import commentsIcon from './media/comments-icon.png';
-import mapIcon from './media/location-icon.png';
+import commentsIcon from './media/comment.svg';
+import mapIcon from './media/location.svg';
+import locationIcon from './media/description-location.svg';
+import dietaryPreferencesIcon from './media/dietary-preferences.svg';
+import allergensIcon from './media/allergens.svg';
+import backIcon from './media/back.svg';
 import io from 'socket.io-client';
 
 //----------------------------------------------------------------------
@@ -60,9 +64,9 @@ function Card({ onClick, card }) {
             <div className="card-content">
                 <div className="card-content-main">
                     <h3>{card.title}</h3>
-                    <p><b>Location:</b> {card.location}</p>
-                    <p><b>Dietary Preferences:</b> {card.dietary_tags?.join(', ') || 'None'}</p>
-                    <p><b>Allergens:</b> {card.allergies?.join(', ') || 'None'}</p>
+                    <p><img src={locationIcon} alt="Location" height="14px" /> {card.location}</p>
+                    <p><img src={dietaryPreferencesIcon} alt="Dietary Preferences" height="14px" /> {card.dietary_tags?.join(', ') || ' '}</p>
+                    <p><img src={allergensIcon} alt="Allergens" height="14px" /> {card.allergies?.join(', ') || ' '}</p>
                 </div>
                 <div className="card-content-footer">
                     <p className="posted-at">Posted {formatTimeAgo(card.posted_at)}</p>
@@ -78,15 +82,9 @@ function Card({ onClick, card }) {
 function Modal({ card, setIsModalActive, net_id }) {
     const [commentsIsActive, setCommentsIsActive] = useState(false);
     const [mapModalActive, setMapModalActive] = useState(false);
-    const socket = useRef(io("http://127.0.0.1:5000"));
+    const socket = useRef(io(`${window.location.protocol}//${window.location.hostname}:${window.location.port || 443}`));
 
     const handleLocationClick = () => {
-        // if (card.location_url) {
-        //     window.open(card.location_url, "_blank");
-        // } else {
-        //     alert("No location link available.");
-        // }
-
         setMapModalActive(true);
     };
 
@@ -101,7 +99,7 @@ function Modal({ card, setIsModalActive, net_id }) {
                     setIsModalActive(false);
                 }
             }}
-            className="modal-root"
+            className={`modal-root ${mapModalActive ? 'no-overlay' : ''}`}
         >
             <div className="modal-card" onClick={(e) => e.stopPropagation()}>
                 <div
@@ -112,7 +110,7 @@ function Modal({ card, setIsModalActive, net_id }) {
                     <div className="main-modal-content">
                         <h3>{card.title}</h3>
                         <p><b>Location:</b> {card.location}</p>
-                        <p><b>Dietary Preferences:</b> {card.dietary_tags?.join(', ') || 'None'}</p>
+                        <p><b>Preferences:</b> {card.dietary_tags?.join(', ') || 'None'}</p>
                         <p><b>Allergens:</b> {card.allergies?.join(', ') || 'None'}</p>
                         <p><b>Description:</b> {card.description}</p>
                     </div>
@@ -215,6 +213,8 @@ function CommentsSection({ card_id, net_id, socket }) {
         }
     };
 
+    const maxCommentLength = 200;
+
     return (
         <div className="modal-comments-section">
             <h3>Comments</h3>
@@ -228,11 +228,15 @@ function CommentsSection({ card_id, net_id, socket }) {
                 <input
                     type="text"
                     value={newComment}
-                    onChange={(e) => setNewComment(e.target.value)}
+                    onChange={(e) => {
+                        if (e.target.value.length <= maxCommentLength) {
+                            setNewComment(e.target.value);
+                        }
+                    }}
                     placeholder="Add comment..."
                     required
                 />
-                <button type="submit">Post</button>
+                <button>Post</button>
             </form>
         </div>
     );
@@ -240,7 +244,12 @@ function CommentsSection({ card_id, net_id, socket }) {
 
 //----------------------------------------------------------------------
 
+// Component for map modal
 function MapModal({ latitude, longitude, setMapModalActive }) {
+    const handleBackClick = () => {
+        setMapModalActive(false);
+    }
+
     const mapEmbedUrl = `https://www.google.com/maps/embed/v1/place?key=
         ${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
         &q=${latitude},${longitude}
@@ -267,6 +276,11 @@ function MapModal({ latitude, longitude, setMapModalActive }) {
                         style={{ border: "none" }}
                         allowFullScreen
                     />
+                </div>
+                <div className="map-close">
+                    <button onClick={handleBackClick}>
+                        <img src={backIcon} height="18px"/>
+                    </button>
                 </div>
             </div>
         </div>

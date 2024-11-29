@@ -4,17 +4,16 @@
 //----------------------------------------------------------------------
 
 // Imports
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import './Homepage.css'; // Import custom CSS file
-import searchIcon from './media/search-icon.png';
-import plusIcon from './media/plus.png';
-import matheyImage from './media/mathey.png';
-import hamburgerIcon from './media/hamburger-icon.png';
-import preferencesIcon from './media/preferences.png';
+import searchIcon from './media/search.svg';
+import createIcon from './media/create.svg';
+import hamburgerIcon from './media/hamburger.svg';
+import preferencesIcon from './media/preferences.svg';
 import CardDisplay from './CardDisplay'; // to view extended card info
 import Feedback from './Feedback';
-import io from 'socket.io-client';
+import { io } from "socket.io-client";
 
 //----------------------------------------------------------------------
 
@@ -77,9 +76,9 @@ const Homepage = ({ net_id }) => {
     const [isPreferencesOpen, setPreferencesOpen] = useState(false);
     // State for feedback modal
     const [isFeedbackModalActive, setFeedbackModalActive] = useState(false);
+    // Connection to flask-socketio server
+    const socket = useRef(null);
 
-    // connection to flask-socketio server
-    const socket = io("http://127.0.0.1:5000")
 //----------------------------------------------------------------------
 
     // function that toggles feedback modal
@@ -88,6 +87,10 @@ const Homepage = ({ net_id }) => {
 
     // Hook that fetches card data from the backend and sets greeting
     useEffect(() => {
+        // Initialize socket connection
+        socket.current = io(`${window.location.protocol}//${window.location.hostname}:${window.location.port || 443}`);
+
+        // Set greeting
         setGreeting(getGreeting());
 
         const fetchCards = async () => {
@@ -105,13 +108,17 @@ const Homepage = ({ net_id }) => {
 
         fetchCards();
 
-         // Fetch cards again if there are updates from the server
-         socket.on("card created", () => fetchCards())
-         socket.on("card edited", () => fetchCards())
-         socket.on("card deleted", () => fetchCards())
- 
-         // Close socket whenever component is dismounted
-         return () => socket.close()
+        // Set up socket event listeners
+        socket.current.on("card created", () => fetchCards())
+        socket.current.on("card edited", () => fetchCards())
+        socket.current.on("card deleted", () => fetchCards())
+
+        // Clean up the socket connection on unmount
+        return () => {
+            if (socket.current) {
+                socket.current.disconnect();
+            }
+        };
     }, []);
 
 //----------------------------------------------------------------------
@@ -213,17 +220,23 @@ const Homepage = ({ net_id }) => {
     const toggleHamburger = () => {
         setHamburgerOpen(!isHamburgerOpen);
 
-        // If hamburger is open, display the hidden navbar items
+        // Target the mobile navbar
         const mobileNavbar = document.querySelector('.mobile-navbar-left');
 
-        if(isHamburgerOpen) {
-            mobileNavbar.style.height = "5vh";
-            mobileNavbar.style.top = "7vh";
-            mobileNavbar.style.zIndex = "0";
-        } else {
-            mobileNavbar.style.height = "0px";
+        if (isHamburgerOpen) {
+            // Set opacity and visibility to hidden before fully hiding
             mobileNavbar.style.top = "3.5vh";
             mobileNavbar.style.zIndex = "-1";
+            mobileNavbar.style.opacity = '0';
+            mobileNavbar.style.visibility = 'hidden';
+            mobileNavbar.style.height = '0px';
+        } else {
+            // Make it visible first
+            mobileNavbar.style.top = "7vh";
+            mobileNavbar.style.zIndex = "0";
+            mobileNavbar.style.visibility = 'visible';
+            mobileNavbar.style.opacity = '1';
+            mobileNavbar.style.height = '5vh';
         }
     }
 
@@ -235,11 +248,25 @@ const Homepage = ({ net_id }) => {
 
         // If mobile preferences button is open, display the hidden items
         const preferences = document.querySelector('.mobile-preferences-menu');
-
-        if(isPreferencesOpen) {
-            preferences.style.display = "flex";
+        
+        if (isPreferencesOpen) {
+            // Set visibility and opacity to hidden before hiding
+            preferences.style.opacity = '0';
+            preferences.style.visibility = 'hidden';
+    
+            // Use a timeout to hide after the transition ends
+            setTimeout(() => {
+                preferences.style.display = 'none';
+            }, 300); // Matches the CSS transition duration
         } else {
-            preferences.style.display = "none";
+            // Make it visible first
+            preferences.style.display = 'flex';
+    
+            // Delay the opacity and visibility change to let it render
+            setTimeout(() => {
+                preferences.style.opacity = '1';
+                preferences.style.visibility = 'visible';
+            }, 0); // No delay to show immediately
         }
     }
 
@@ -254,15 +281,17 @@ const Homepage = ({ net_id }) => {
                 {/* Div to organize items on the left of the navbar */}
                 <div className = "navbar-left">
                     {/* Create card button */}
-                    <button className="nav-button">
-                        <Link to="/post">
-                            <img src={plusIcon} alt="createIcon" height="15px" />
-                        </Link>
-                    </button>
+                    <Link to="/post">
+                        <button className="nav-button">
+                            <img src={createIcon} alt="createIcon" height="12px" />
+                        </button>
+                    </Link>
                     {/* View my cards button */}
-                    <button className="nav-button">
-                        <Link to="/view">View My Cards</Link>
-                    </button>
+                    <Link to="/view">
+                        <button className="nav-button">
+                            View My Cards
+                        </button>
+                    </Link>
                     {/* Report bugs button */}
                     <button className="nav-button" onClick={toggleFeedbackModal}>
                         Report Bugs...
@@ -271,7 +300,6 @@ const Homepage = ({ net_id }) => {
 
                 {/* Div to organize items on the right of the navbar */}
                 <div className="navbar-right">
-                    
                     {/* Hamburger icon to condense left navbar buttons on smaller screens */}
                     <button className="nav-button nav-menu-open" onClick={toggleHamburger}>
                         <img src={hamburgerIcon} alt="Open Menu" height="15px" />
@@ -280,8 +308,8 @@ const Homepage = ({ net_id }) => {
                     {/* Search bar */}
                     <form onSubmit={handleSearch} className="search-form">
                         <div className="search-container">
-                            <span class="search-icon">
-                                <img src={searchIcon} alt="SearchIcon" height="15px" />
+                            <span className="search-icon">
+                                <img src={searchIcon} alt="SearchIcon" height="18px" />
                             </span>
                             <input
                                 type="text"
@@ -298,15 +326,17 @@ const Homepage = ({ net_id }) => {
             {/* Container for navbar buttons on mobile view */}
             <div className="mobile-navbar-left">
                 {/* Create card button */}
-                <button className="nav-button">
-                    <Link to="/post">
-                        <img src={plusIcon} alt="createIcon" height="15px" />
-                    </Link>
-                </button>
+                <Link to="/post">
+                    <button className="nav-button">
+                        <img src={createIcon} alt="createIcon" height="12px" />
+                    </button>
+                </Link>
                 {/* View my cards button */}
-                <button className="nav-button">
-                    <Link to="/view">View My Cards</Link>
-                </button>
+                <Link to="/view">
+                    <button className="nav-button">
+                        View My Cards
+                    </button>
+                </Link>
                 {/* Report bugs button */}
                 <button className="nav-button" onClick={toggleFeedbackModal}>
                     Report Bugs...
@@ -330,8 +360,8 @@ const Homepage = ({ net_id }) => {
                     </div>
                     <aside className="mobile-preferences-menu">
                         {/* Section for dietary preferences */}
-                        <div className="mobile-food-preference-selection">
-                            <h3>Dietary Preferences</h3>
+                        <div className="mobile-preferences-selection">
+                            <h3>Preferences</h3>
                             <label>
                                 <input type="checkbox" name="vegetarian" checked={foodFilters.dietary['vegetarian']} onChange={(filter) => handleFilter(filter, 'dietary')} />
                                 Vegetarian
@@ -355,7 +385,7 @@ const Homepage = ({ net_id }) => {
                         </div>
 
                         {/* Section for allergy filtering */}
-                        <div className="mobile-food-preference-selection">
+                        <div className="mobile-preferences-selection">
                             <h3>Allergens</h3>
                             <label>
                                 <input type="checkbox" name="nuts" checked={foodFilters.allergies['nuts']} onChange={(filter) => handleFilter(filter, 'allergies')} />
@@ -377,22 +407,6 @@ const Homepage = ({ net_id }) => {
                         {filterCards().map((card) => (
                             <CardDisplay card = {card} net_id = {net_id}/>
                         ))}
-
-                        {/* Fake card for filter testing purposes
-                        <div className="card">
-                            <div 
-                                className="card-image"
-                                style={{ backgroundImage: `url(${matheyImage})`}}
-                            >
-                            </div>
-                            <div className="card-content"> 
-                                <h3>title</h3>
-                                <p>location</p>
-                                <p>dietary restrictions</p>
-                                <p>allergens</p>
-                                <p className="posted-at">posted at</p>
-                            </div>
-                        </div> */}
                     </div>
                 </div>
                 
@@ -400,7 +414,7 @@ const Homepage = ({ net_id }) => {
                 <aside className="sidebar">
                     {/* Section for dietary preferences */}
                     <div className="food-preferences-selection">
-                        <h3>Dietary Preferences</h3>
+                        <h3>Preferences</h3>
                         <label>
                             <input type="checkbox" name="vegetarian" checked={foodFilters.dietary['vegetarian']} onChange={(filter) => handleFilter(filter, 'dietary')} />
                             Vegetarian
