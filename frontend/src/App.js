@@ -39,6 +39,16 @@ function App() {
         authenticate();
     }, []);
 
+    // Cleanup URL logic
+    useEffect(() => {
+        const url = new URL(window.location.href);
+        if (url.searchParams.has('ticket')) {
+            // Remove the "ticket" parameter and update the URL
+            url.searchParams.delete('ticket');
+            window.history.replaceState({}, document.title, url.pathname + url.search);
+        }
+    }, []); // This runs once when the app loads
+
     return (
         <Router>
             <div>
