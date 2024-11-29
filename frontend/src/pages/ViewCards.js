@@ -14,20 +14,20 @@ import io from 'socket.io-client';
 
 //----------------------------------------------------------------------
 
+// Connection to flask-socketio server
+const socket = io();
+
+//----------------------------------------------------------------------
+
 const ViewCards = ({ net_id }) => {
     // State to store fetched cards
     const [cards, setCards] = useState([]);
     const navigate = useNavigate();
 
-    // Connection to Flask-socketio server
-    const socket = useRef(null);
 //----------------------------------------------------------------------
 
     // Send request to fetch user's cards from the back-end
     useEffect(() => {
-        // Initialize socket connection
-        socket.current = io();
-
         const fetchUserCards = async () => {
             try {
                 let response;
@@ -48,16 +48,12 @@ const ViewCards = ({ net_id }) => {
         fetchUserCards();
 
         // Fetch cards again if there are updates from the server
-        socket.current.on("card created", () => fetchUserCards())
-        socket.current.on("card edited", () => fetchUserCards())
-        socket.current.on("card deleted", () => fetchUserCards())
+        socket.on("card created", () => fetchUserCards());
+        socket.on("card edited", () => fetchUserCards());
+        socket.on("card deleted", () => fetchUserCards());
 
-        // Clean up the socket connection on unmount
-        return () => {
-            if (socket.current) {
-                socket.current.disconnect();
-            }
-        };
+        // Close socket whenever component is dismounted
+        return () => socket.close();
     }, [net_id]);
 
 //----------------------------------------------------------------------

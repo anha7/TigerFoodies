@@ -14,6 +14,11 @@ import io from 'socket.io-client';
 
 //----------------------------------------------------------------------
 
+// Initialize socket globally
+const socket = io();
+
+//----------------------------------------------------------------------
+
 // Function to format the time into a relative "time ago" format
 const formatTimeAgo = (timestamp) => {
     const currentTime = new Date();
@@ -82,7 +87,6 @@ function Card({ onClick, card }) {
 function Modal({ card, setIsModalActive, net_id }) {
     const [commentsIsActive, setCommentsIsActive] = useState(false);
     const [mapModalActive, setMapModalActive] = useState(false);
-    const socket = useRef(io());
 
     const handleLocationClick = () => {
         setMapModalActive(true);
@@ -134,7 +138,7 @@ function Modal({ card, setIsModalActive, net_id }) {
                             <CommentsSection
                                 card_id={card.card_id}
                                 net_id={net_id}
-                                socket={socket.current}
+                                socket={socket}
                             />
                         )}
                     </div>
@@ -182,11 +186,14 @@ function CommentsSection({ card_id, net_id, socket }) {
             }
         };
 
-        socket.on("comment created", handleNewComment);
+        socket.on("comment created", card_of_new_comment => {
+            if (card_of_new_comment === card_id) {
+                fetchComments()
+            }
+        })
 
-        return () => {
-            socket.off("comment created", handleNewComment);
-        };
+        // Close socket whenever component is dismounted
+        return () => socket.close();
     }, [card_id, fetchComments, socket]);
 
     const handleCommentPosting = async (e) => {

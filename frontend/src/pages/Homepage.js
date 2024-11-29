@@ -17,6 +17,11 @@ import { io } from "socket.io-client";
 
 //----------------------------------------------------------------------
 
+// Connection to flask-socketio server
+const socket = io();
+
+//----------------------------------------------------------------------
+
 // Function to determine the greeting based on the current time of day
 const getGreeting = () => {
     const currentDate = new Date();
@@ -76,8 +81,6 @@ const Homepage = ({ net_id }) => {
     const [isPreferencesOpen, setPreferencesOpen] = useState(false);
     // State for feedback modal
     const [isFeedbackModalActive, setFeedbackModalActive] = useState(false);
-    // Connection to flask-socketio server
-    const socket = useRef(null);
 
 //----------------------------------------------------------------------
 
@@ -87,9 +90,6 @@ const Homepage = ({ net_id }) => {
 
     // Hook that fetches card data from the backend and sets greeting
     useEffect(() => {
-        // Initialize socket connection
-        socket.current = io();
-
         // Set greeting
         setGreeting(getGreeting());
 
@@ -108,17 +108,13 @@ const Homepage = ({ net_id }) => {
 
         fetchCards();
 
-        // Set up socket event listeners
-        socket.current.on("card created", () => fetchCards())
-        socket.current.on("card edited", () => fetchCards())
-        socket.current.on("card deleted", () => fetchCards())
+         // Fetch cards again if there are updates from the server
+         socket.on("card created", () => fetchCards());
+         socket.on("card edited", () => fetchCards());
+         socket.on("card deleted", () => fetchCards());
 
         // Clean up the socket connection on unmount
-        return () => {
-            if (socket.current) {
-                socket.current.disconnect();
-            }
-        };
+        return () => socket.close();
     }, []);
 
 //----------------------------------------------------------------------
