@@ -26,7 +26,7 @@ const ViewCards = ({ net_id }) => {
     // Send request to fetch user's cards from the back-end
     useEffect(() => {
         // Initialize socket connection
-        socket.current = io(`${window.location.protocol}//${window.location.hostname}:${window.location.port || 443}`);
+        socket.current = io();
 
         const fetchUserCards = async () => {
             try {

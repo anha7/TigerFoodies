@@ -88,7 +88,7 @@ const Homepage = ({ net_id }) => {
     // Hook that fetches card data from the backend and sets greeting
     useEffect(() => {
         // Initialize socket connection
-        socket.current = io(`${window.location.protocol}//${window.location.hostname}:${window.location.port || 443}`);
+        socket.current = io();
 
         // Set greeting
         setGreeting(getGreeting());

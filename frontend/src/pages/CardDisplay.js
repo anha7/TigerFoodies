@@ -82,7 +82,7 @@ function Card({ onClick, card }) {
 function Modal({ card, setIsModalActive, net_id }) {
     const [commentsIsActive, setCommentsIsActive] = useState(false);
     const [mapModalActive, setMapModalActive] = useState(false);
-    const socket = useRef(io(`${window.location.protocol}//${window.location.hostname}:${window.location.port || 443}`));
+    const socket = useRef(io());
 
     const handleLocationClick = () => {
         setMapModalActive(true);
