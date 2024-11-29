@@ -44,7 +44,7 @@ pylint==3.2.7
 PySocks==1.7.1
 python-dotenv==1.0.1
 python-engineio==4.10.1
-python-socketio==5.11.4
+python-socketio>=5.0.0
 pytz==2024.2
 pywebpush==2.0.1
 requests==2.32.3
