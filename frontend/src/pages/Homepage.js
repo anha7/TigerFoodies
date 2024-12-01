@@ -116,7 +116,12 @@ const Homepage = ({ net_id }) => {
          socket.on("card deleted", () => fetchCards());
 
         // Clean up the socket connection on unmount
-        return () => socket.close();
+        return () => {
+            if (socket.readyState == 1) 
+                {
+                    socket.close()
+                };
+        }
     }, []);
 
 //----------------------------------------------------------------------
