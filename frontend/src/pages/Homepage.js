@@ -18,9 +18,7 @@ import { io } from "socket.io-client";
 //----------------------------------------------------------------------
 
 // Connection to flask-socketio server
-const socket = io('http://127.0.0.1:5000', {
-  transports: ['websocket']
-});
+const socket = io();
 
 //----------------------------------------------------------------------
 
@@ -116,12 +114,7 @@ const Homepage = ({ net_id }) => {
          socket.on("card deleted", () => fetchCards());
 
         // Clean up the socket connection on unmount
-        return () => {
-            if (socket.readyState == 1) 
-                {
-                    socket.close()
-                };
-        }
+        return () => socket.close();
     }, []);
 
 //----------------------------------------------------------------------
