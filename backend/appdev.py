@@ -61,7 +61,7 @@ def handle_connect():
 
 # Route to handle a new client disconnecting
 @socketio.on('disconnect')
-def handle_connect():
+def handle_disconnect():
     clients.remove(request.sid)
 
 # Route to serve the React app's index.html
