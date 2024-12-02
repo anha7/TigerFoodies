@@ -10,12 +10,7 @@ import locationIcon from './media/description-location.svg';
 import dietaryPreferencesIcon from './media/dietary-preferences.svg';
 import allergensIcon from './media/allergens.svg';
 import backIcon from './media/back.svg';
-import io from 'socket.io-client';
-
-//----------------------------------------------------------------------
-
-// Initialize socket globally
-const socket = io();
+import { socket } from "../Socket";
 
 //----------------------------------------------------------------------
 
@@ -162,6 +157,7 @@ function CommentsSection({ card_id, net_id, socket }) {
     const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState('');
 
+    // Function to fetch comments from the server
     const fetchComments = useCallback(async () => {
         try {
             const response = await fetch(`/api/comments/${card_id}`);
@@ -170,32 +166,32 @@ function CommentsSection({ card_id, net_id, socket }) {
                 setComments(data);
             } else {
                 console.error('Error fetching comments:', data.message || 'Unknown error');
-                setComments([]);
             }
         } catch (error) {
             console.error('Error fetching comments:', error);
         }
     }, [card_id]);
 
+    // Effect to fetch comments initially and set up socket listener
     useEffect(() => {
-        fetchComments();
+        fetchComments(); // Fetch comments when the component mounts
 
-        const handleNewComment = (card_of_new_comment) => {
-            if (card_of_new_comment === card_id) {
-                fetchComments();
+        const handleNewComment = (updatedCardId) => {
+            if (updatedCardId === card_id) {
+                fetchComments(); // Re-fetch comments if a new one is added for this card
             }
         };
 
-        socket.on("comment created", card_of_new_comment => {
-            if (card_of_new_comment === card_id) {
-                fetchComments()
-            }
-        })
+        // Listen for "comment created" event
+        socket.on('comment created', handleNewComment);
 
-        // Close socket whenever component is dismounted
-        return () => socket.close();
+        // Clean up the socket listener when the component unmounts
+        return () => {
+            socket.off('comment created', handleNewComment);
+        };
     }, [card_id, fetchComments, socket]);
 
+    // Function to handle posting a new comment
     const handleCommentPosting = async (e) => {
         e.preventDefault();
 
@@ -211,7 +207,7 @@ function CommentsSection({ card_id, net_id, socket }) {
             });
 
             if (response.ok) {
-                setNewComment('');
+                setNewComment(''); // Clear the input field
             } else {
                 console.error('Error creating new comment');
             }
@@ -247,7 +243,7 @@ function CommentsSection({ card_id, net_id, socket }) {
             </form>
         </div>
     );
-};
+}
 
 //----------------------------------------------------------------------
 

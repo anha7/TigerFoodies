@@ -13,12 +13,7 @@ import hamburgerIcon from './media/hamburger.svg';
 import preferencesIcon from './media/preferences.svg';
 import CardDisplay from './CardDisplay'; // to view extended card info
 import Feedback from './Feedback';
-import { io } from "socket.io-client";
-
-//----------------------------------------------------------------------
-
-// Connection to flask-socketio server
-const socket = io();
+import { socket } from "../Socket";
 
 //----------------------------------------------------------------------
 
@@ -114,7 +109,11 @@ const Homepage = ({ net_id }) => {
          socket.on("card deleted", () => fetchCards());
 
         // Clean up the socket connection on unmount
-        return () => socket.close();
+        return () => {
+            socket.off('card created', fetchCards);
+            socket.off('card edited', fetchCards);
+            socket.off('card deleted', fetchCards);
+        };
     }, []);
 
 //----------------------------------------------------------------------

@@ -10,12 +10,7 @@ import './ViewCards.css'; // Import custom CSS file
 import CardDisplay from './CardDisplay'; // To view extended card info
 import editIcon from './media/edit.svg';
 import deleteIcon from './media/delete.svg';
-import io from 'socket.io-client';
-
-//----------------------------------------------------------------------
-
-// Connection to flask-socketio server
-const socket = io();
+import { socket } from "../Socket";
 
 //----------------------------------------------------------------------
 
@@ -53,7 +48,11 @@ const ViewCards = ({ net_id }) => {
         socket.on("card deleted", () => fetchUserCards());
 
         // Close socket whenever component is dismounted
-        return () => socket.close();
+        return () => {
+            socket.off('card created', setCards);
+            socket.off('card edited', setCards);
+            socket.off('card deleted', setCards);
+        };
     }, [net_id]);
 
 //----------------------------------------------------------------------
