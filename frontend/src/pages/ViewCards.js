@@ -15,7 +15,9 @@ import io from 'socket.io-client';
 //----------------------------------------------------------------------
 
 // Connection to flask-socketio server
-const socket = io();
+const socket = io({
+    transports: ['websocket']
+  });
 
 //----------------------------------------------------------------------
 
