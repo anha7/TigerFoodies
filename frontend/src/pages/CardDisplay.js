@@ -133,7 +133,6 @@ function Modal({ card, setIsModalActive, net_id }) {
                             <CommentsSection
                                 card_id={card.card_id}
                                 net_id={net_id}
-                                socket={socket}
                             />
                         )}
                     </div>
@@ -153,7 +152,7 @@ function Modal({ card, setIsModalActive, net_id }) {
 //----------------------------------------------------------------------
 
 // Component for managing and displaying comments
-function CommentsSection({ card_id, net_id, socket }) {
+function CommentsSection({ card_id, net_id }) {
     const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState('');
 
