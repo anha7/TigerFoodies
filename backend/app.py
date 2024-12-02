@@ -56,7 +56,9 @@ eastern = pytz.timezone('US/Eastern')
 # Route to handle a new client connecting
 @socketio.on('connect')
 def handle_connect():
-    join_room(request.sid)
+    if 'username' in session:
+        join_room(request.sid)
+        print(session['username'], "has joined")
 
 # Route to handle a new client disconnecting
 @socketio.on('disconnect')
