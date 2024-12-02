@@ -18,21 +18,10 @@ import { io } from "socket.io-client";
 //----------------------------------------------------------------------
 
 // Connection to flask-socketio server
-var socket;
-try {
-    socket = io("ws://tigerfoodies.com", {
-        transports: ['websocket']
-    });
-}
-catch (error) {
-    console.error(error)
-} 
-  socket.onclose = (event) => {
-    console.log('WebSocket connection closed:', event);
-    if (event.code !== 1000) {
-      console.error('Connection closed unexpectedly');
-    }
-  };
+const socket = io('wss://' + window.location.host, {
+    transports: ['websocket']
+});
+
   
 //----------------------------------------------------------------------
 
