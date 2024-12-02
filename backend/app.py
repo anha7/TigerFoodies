@@ -4,7 +4,7 @@
 #-----------------------------------------------------------------------
 
 from flask import Flask, send_from_directory, jsonify, request, session
-from flask_socketio import SocketIO, join_room, leave_room
+from flask_socketio import SocketIO, join_room, leave_room, disconnect
 from dotenv import load_dotenv
 from .authenticate import authenticate
 import os
@@ -58,7 +58,9 @@ eastern = pytz.timezone('US/Eastern')
 def handle_connect():
     if 'username' in session:
         join_room(request.sid)
-        print(session['username'], "has joined")
+        print(session['username'])
+    else:
+        disconnect()
 
 # Route to handle a new client disconnecting
 @socketio.on('disconnect')
