@@ -10,7 +10,7 @@ import './ViewCards.css'; // Import custom CSS file
 import CardDisplay from './CardDisplay'; // To view extended card info
 import editIcon from './media/edit.svg';
 import deleteIcon from './media/delete.svg';
-import { socket } from '../Socket';
+import socket from '../Socket';
 
 //----------------------------------------------------------------------
 

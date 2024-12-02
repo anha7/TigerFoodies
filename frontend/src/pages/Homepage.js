@@ -13,7 +13,7 @@ import hamburgerIcon from './media/hamburger.svg';
 import preferencesIcon from './media/preferences.svg';
 import CardDisplay from './CardDisplay'; // to view extended card info
 import Feedback from './Feedback';
-import { socket } from '../Socket';
+import socket from '../Socket';
 
 //----------------------------------------------------------------------
 

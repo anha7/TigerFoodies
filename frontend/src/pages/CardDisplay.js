@@ -10,7 +10,7 @@ import locationIcon from './media/description-location.svg';
 import dietaryPreferencesIcon from './media/dietary-preferences.svg';
 import allergensIcon from './media/allergens.svg';
 import backIcon from './media/back.svg';
-import { socket } from "../Socket";
+import socket from "../Socket";
 
 //----------------------------------------------------------------------
 

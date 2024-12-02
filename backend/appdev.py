@@ -4,7 +4,7 @@
 #-----------------------------------------------------------------------
 
 from flask import Flask, send_from_directory, jsonify, request, session
-from flask_socketio import SocketIO, join_room, leave_room
+from flask_socketio import SocketIO, join_room, leave_room, emit
 from dotenv import load_dotenv
 import os
 import psycopg2
@@ -63,6 +63,7 @@ def handle_connect():
 def handle_disconnect():
     leave_room(request.sid)
     print("USER DISCONNECTED")
+    
 # Route to serve the React app's index.html
 @app.route('/')
 def serve():
@@ -220,7 +221,7 @@ def delete_card(card_id):
 
                 # Notify connected users that a card has been deleted
                 try:
-                    socketio.emit("card deleted", "")
+                    emit("card deleted", "")
                 except Exception as ex:
                     print(str(ex))
                 return jsonify({"success": True, "message": "Action successful!"}), 200
@@ -276,7 +277,7 @@ def create_card():
                 
                 # Notify connected users that new card has been created
                 try:
-                    socketio.emit("card created", "")
+                    emit("card created", "")
                 except Exception as ex:
                     print(str(ex))
                 return jsonify({"success": True, "message": "Action successful!"}), 200
@@ -322,7 +323,7 @@ def edit_card(card_id):
 
                 # Notify connected users that a card has been edited
                 try:
-                        socketio.emit("card edited", "net_id")
+                    emit("card edited", "net_id")
                 except Exception as e:
                     print(str(ex))
 
@@ -470,7 +471,7 @@ def create_card_comment(card_id):
 
                 # Notify connected users that a comment has been created
                 try:
-                    socketio.emit("comment created", card_id)
+                    emit("comment created", card_id)
                 except Exception as e:
                     print(str(ex))
                 return jsonify({"success": True, "message": "Action successful!"}), 200
