@@ -53,7 +53,12 @@ const ViewCards = ({ net_id }) => {
         socket.on("card deleted", () => fetchUserCards());
 
         // Close socket whenever component is dismounted
-        return () => socket.close();
+        return () => {
+            socket.off("card created", () => fetchUserCards());
+            socket.off("card edited", () => fetchUserCards());
+            socket.off("card deleted", () => fetchUserCards());
+            socket.close();
+        }
     }, [net_id]);
 
 //----------------------------------------------------------------------
