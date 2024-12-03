@@ -53,6 +53,7 @@ const ViewCards = ({ net_id }) => {
             socket.off('card created', setCards);
             socket.off('card edited', setCards);
             socket.off('card deleted', setCards);
+            socket.close()
         };
     }, [net_id]);
 

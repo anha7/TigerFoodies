@@ -187,7 +187,7 @@ function CommentsSection({ card_id, net_id }) {
 
         // Clean up the socket listener when the component unmounts
         return () => {
-            socket.off('comment created', handleNewComment);
+            socket.close('comment created', handleNewComment);
         };
     }, [card_id, fetchComments, socket]);
 

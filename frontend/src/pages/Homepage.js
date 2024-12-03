@@ -19,6 +19,12 @@ import { io } from 'socket.io-client';
 
 const socket = io()
 
+socket.on('disconnect', (reason, details) => {
+    console.log("Socket disconnected!");
+    console.log("Reason:", reason);
+    console.log("Details:", details);
+    })
+    
 // Function to determine the greeting based on the current time of day
 const getGreeting = () => {
     const currentDate = new Date();
@@ -115,6 +121,7 @@ const Homepage = ({ net_id }) => {
             socket.off('card created', fetchCards);
             socket.off('card edited', fetchCards);
             socket.off('card deleted', fetchCards);
+            socket.close()
         };
     }, []);
 
