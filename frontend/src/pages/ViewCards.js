@@ -14,6 +14,7 @@ import { io } from 'socket.io-client';
 //----------------------------------------------------------------------
 
 const socket = io()
+
 const ViewCards = ({ net_id }) => {
     // State to store fetched cards
     const [cards, setCards] = useState([]);

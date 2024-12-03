@@ -17,6 +17,8 @@ import { io } from 'socket.io-client';
 
 //----------------------------------------------------------------------
 
+const socket = io()
+
 // Function to determine the greeting based on the current time of day
 const getGreeting = () => {
     const currentDate = new Date();
@@ -77,7 +79,6 @@ const Homepage = ({ net_id }) => {
     // State for feedback modal
     const [isFeedbackModalActive, setFeedbackModalActive] = useState(false);
 
-    const socket = io()
 //----------------------------------------------------------------------
 
     // function that toggles feedback modal

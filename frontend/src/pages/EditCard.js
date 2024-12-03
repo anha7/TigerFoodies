@@ -60,17 +60,19 @@ function EditCard({ net_id }) {
         fetchCard();
     }, [card_id, net_id]);
 
+    // Connect to Google Maps API for autocomplete
+    const { isLoaded, loadError } = useLoadScript({
+        googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
+        libraries: LIBRARIES, // Include places library for autocomplete
+    });
+    
     // If user is not card creator or admin, redirect to homepage
     if (!isAuthorized) {
         return <Navigate to="/" replace />;
     }
 //----------------------------------------------------------------------
 
-    // Connect to Google Maps API for autocomplete
-    const { isLoaded, loadError } = useLoadScript({
-        googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
-        libraries: LIBRARIES, // Include places library for autocomplete
-    });
+    
 
     if (loadError) {
         console.error("Error loading Google Maps API:", loadError);
