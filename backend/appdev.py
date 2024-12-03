@@ -4,7 +4,7 @@
 #-----------------------------------------------------------------------
 
 from flask import Flask, send_from_directory, jsonify, request, session
-from flask_socketio import SocketIO, join_room, leave_room, emit
+from flask_socketio import SocketIO
 from dotenv import load_dotenv
 import os
 import psycopg2
@@ -29,11 +29,13 @@ conn = psycopg2.connect(DATABASE_URL)
 # Initialize Flask app
 app = Flask(__name__, static_folder='build', static_url_path='')
 
-socketio = SocketIO(app, cors_allowed_origins="*", async_mode="eventlet", engineio_logger = True)
+socketio = SocketIO(app, cors_allowed_origins="*", engineio_logger = True)
 
 # Set up secret key
 app.secret_key = secrets.token_hex(32)
 
+# set of connected clients
+clients = set()
 
 # Email configuration
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
@@ -55,15 +57,13 @@ eastern = pytz.timezone('US/Eastern')
 # Route to handle a new client connecting
 @socketio.on('connect')
 def handle_connect():
-    join_room(request.sid)
-    print("USER CONNECTED")
+    clients.add(request.sid)
 
 # Route to handle a new client disconnecting
 @socketio.on('disconnect')
-def handle_disconnect():
-    leave_room(request.sid)
-    print("USER DISCONNECTED")
-    
+def handle_connect():
+    clients.remove(request.sid)
+
 # Route to serve the React app's index.html
 @app.route('/')
 def serve():
@@ -221,7 +221,9 @@ def delete_card(card_id):
 
                 # Notify connected users that a card has been deleted
                 try:
-                    emit("card deleted", "")
+                    for client in clients:
+                        socketio.emit("card deleted", "",
+                                      room = client)
                 except Exception as ex:
                     print(str(ex))
                 return jsonify({"success": True, "message": "Action successful!"}), 200
@@ -277,7 +279,8 @@ def create_card():
                 
                 # Notify connected users that new card has been created
                 try:
-                    emit("card created", "")
+                    for client in clients:
+                        socketio.emit("card created", "", room = client)
                 except Exception as ex:
                     print(str(ex))
                 return jsonify({"success": True, "message": "Action successful!"}), 200
@@ -323,7 +326,9 @@ def edit_card(card_id):
 
                 # Notify connected users that a card has been edited
                 try:
-                    emit("card edited", "net_id")
+                    for client in clients:
+                        socketio.emit("card edited", "net_id",
+                                      room = client)
                 except Exception as e:
                     print(str(ex))
 
@@ -471,7 +476,9 @@ def create_card_comment(card_id):
 
                 # Notify connected users that a comment has been created
                 try:
-                    emit("comment created", card_id)
+                    for client in clients:
+                        socketio.emit("comment created", card_id,
+                                      room = client)
                 except Exception as e:
                     print(str(ex))
                 return jsonify({"success": True, "message": "Action successful!"}), 200

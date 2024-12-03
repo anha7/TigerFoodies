@@ -13,7 +13,7 @@ import hamburgerIcon from './media/hamburger.svg';
 import preferencesIcon from './media/preferences.svg';
 import CardDisplay from './CardDisplay'; // to view extended card info
 import Feedback from './Feedback';
-import socket from '../Socket';
+import { io } from 'socket.io-client';
 
 //----------------------------------------------------------------------
 
@@ -77,6 +77,7 @@ const Homepage = ({ net_id }) => {
     // State for feedback modal
     const [isFeedbackModalActive, setFeedbackModalActive] = useState(false);
 
+    const socket = io()
 //----------------------------------------------------------------------
 
     // function that toggles feedback modal

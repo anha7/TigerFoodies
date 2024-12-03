@@ -10,9 +10,10 @@ import locationIcon from './media/description-location.svg';
 import dietaryPreferencesIcon from './media/dietary-preferences.svg';
 import allergensIcon from './media/allergens.svg';
 import backIcon from './media/back.svg';
-import socket from "../Socket";
-
+import { io } from 'socket.io-client';
 //----------------------------------------------------------------------
+
+const socket = io()
 
 // Function to format the time into a relative "time ago" format
 const formatTimeAgo = (timestamp) => {
