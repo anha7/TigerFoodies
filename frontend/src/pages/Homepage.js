@@ -13,18 +13,18 @@ import hamburgerIcon from './media/hamburger.svg';
 import preferencesIcon from './media/preferences.svg';
 import CardDisplay from './CardDisplay'; // to view extended card info
 import Feedback from './Feedback';
-import { io } from 'socket.io-client';
+import socket from '../Socket';
 
 //----------------------------------------------------------------------
 
-const socket = io()
+
 
 socket.on('disconnect', (reason, details) => {
     console.log("Socket disconnected!");
     console.log("Reason:", reason);
     console.log("Details:", details);
     })
-    
+
 // Function to determine the greeting based on the current time of day
 const getGreeting = () => {
     const currentDate = new Date();

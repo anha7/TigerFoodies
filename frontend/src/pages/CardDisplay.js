@@ -10,10 +10,15 @@ import locationIcon from './media/description-location.svg';
 import dietaryPreferencesIcon from './media/dietary-preferences.svg';
 import allergensIcon from './media/allergens.svg';
 import backIcon from './media/back.svg';
-import { io } from 'socket.io-client';
+import socket from '../Socket';
 //----------------------------------------------------------------------
 
-const socket = io()
+
+socket.on('disconnect', (reason, details) => {
+    console.log("Socket disconnected!");
+    console.log("Reason:", reason);
+    console.log("Details:", details);
+    })
 
 // Function to format the time into a relative "time ago" format
 const formatTimeAgo = (timestamp) => {
@@ -187,7 +192,8 @@ function CommentsSection({ card_id, net_id }) {
 
         // Clean up the socket listener when the component unmounts
         return () => {
-            socket.close('comment created', handleNewComment);
+            socket.off('comment created', handleNewComment);
+            socket.close();
         };
     }, [card_id, fetchComments, socket]);
 
