@@ -10,21 +10,21 @@ import './ViewCards.css'; // Import custom CSS file
 import CardDisplay from './CardDisplay'; // To view extended card info
 import editIcon from './media/edit.svg';
 import deleteIcon from './media/delete.svg';
-import socket from '../Socket';
+// import socket from '../Socket';
 //----------------------------------------------------------------------
 
 
-socket.on('disconnect', (reason, details) => {
-    console.log("Socket disconnected!");
-    console.log("Reason:", reason);
-    console.log("Details:", details);
-    })
+// socket.on('disconnect', (reason, details) => {
+//     console.log("Socket disconnected!");
+//     console.log("Reason:", reason);
+//     console.log("Details:", details);
+//     })
 
 const ViewCards = ({ net_id }) => {
     // State to store fetched cards
     const [cards, setCards] = useState([]);
     const navigate = useNavigate();
-
+    const intervalIDRef = useRef(null)
 //----------------------------------------------------------------------
 
     // Send request to fetch user's cards from the back-end
@@ -48,18 +48,31 @@ const ViewCards = ({ net_id }) => {
 
         fetchUserCards();
 
-        // Fetch cards again if there are updates from the server
-        socket.on("card created", () => fetchUserCards());
-        socket.on("card edited", () => fetchUserCards());
-        socket.on("card deleted", () => fetchUserCards());
+        // // Fetch cards again if there are updates from the server
+        // socket.on("card created", () => fetchUserCards());
+        // socket.on("card edited", () => fetchUserCards());
+        // socket.on("card deleted", () => fetchUserCards());
 
-        // Close socket whenever component is dismounted
-        return () => {
-            socket.off('card created', setCards);
-            socket.off('card edited', setCards);
-            socket.off('card deleted', setCards);
-            socket.close()
+        // // Close socket whenever component is dismounted
+        // return () => {
+        //     socket.off('card created', setCards);
+        //     socket.off('card edited', setCards);
+        //     socket.off('card deleted', setCards);
+        //     socket.close()
+        // };
+        
+        // fetches cards from the backend every 60 seconds
+        const startPolling = () => {
+            intervalIDRef.current = setInterval(fetchUserCards, 60000)
         };
+
+        startPolling();
+
+        // Clean up the interval id on unmount
+        return () => {
+            if (intervalIDRef.current) clearInterval(intervalIDRef.current)
+        }
+
     }, [net_id]);
 
 //----------------------------------------------------------------------
@@ -118,7 +131,7 @@ const ViewCards = ({ net_id }) => {
                                 </button>
                             </div>
                             {/* Get card info */}
-                            <CardDisplay card = {card}/>
+                            <CardDisplay card = {card} net_id={net_id}/>
                         </div>
                     ))}
                 </div>

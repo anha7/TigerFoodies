@@ -10,15 +10,15 @@ import locationIcon from './media/description-location.svg';
 import dietaryPreferencesIcon from './media/dietary-preferences.svg';
 import allergensIcon from './media/allergens.svg';
 import backIcon from './media/back.svg';
-import socket from '../Socket';
+// import socket from '../Socket';
 //----------------------------------------------------------------------
 
 
-socket.on('disconnect', (reason, details) => {
-    console.log("Socket disconnected!");
-    console.log("Reason:", reason);
-    console.log("Details:", details);
-    })
+// socket.on('disconnect', (reason, details) => {
+//     console.log("Socket disconnected!");
+//     console.log("Reason:", reason);
+//     console.log("Details:", details);
+//     })
 
 // Function to format the time into a relative "time ago" format
 const formatTimeAgo = (timestamp) => {
@@ -162,6 +162,9 @@ function CommentsSection({ card_id, net_id }) {
     const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState('');
 
+    // Ref that stores interval ID of polling timer
+    const intervalIDRef = useRef(null)
+    
     // Function to fetch comments from the server
     const fetchComments = useCallback(async () => {
         try {
@@ -177,25 +180,37 @@ function CommentsSection({ card_id, net_id }) {
         }
     }, [card_id]);
 
-    // Effect to fetch comments initially and set up socket listener
+    // Effect to fetch comments initially
     useEffect(() => {
         fetchComments(); // Fetch comments when the component mounts
 
-        const handleNewComment = (updatedCardId) => {
-            if (updatedCardId === card_id) {
-                fetchComments(); // Re-fetch comments if a new one is added for this card
-            }
+        // const handleNewComment = (updatedCardId) => {
+        //     if (updatedCardId === card_id) {
+        //         fetchComments(); // Re-fetch comments if a new one is added for this card
+        //     }
+        // };
+
+        // // Listen for "comment created" event
+        // socket.on('comment created', handleNewComment);
+
+        // // Clean up the socket listener when the component unmounts
+        // return () => {
+        //     socket.off('comment created', handleNewComment);
+        //     socket.close();
+        // };
+
+        // fetches cards from the backend every 60 seconds
+        const startPolling = () => {
+            intervalIDRef.current = setInterval(fetchComments, 60000)
         };
 
-        // Listen for "comment created" event
-        socket.on('comment created', handleNewComment);
+        startPolling();
 
-        // Clean up the socket listener when the component unmounts
+        // Clean up the interval id on unmount
         return () => {
-            socket.off('comment created', handleNewComment);
-            socket.close();
-        };
-    }, [card_id, fetchComments, socket]);
+            if (intervalIDRef.current) clearInterval(intervalIDRef.current)
+        }
+    }, [card_id, fetchComments]);
 
     // Function to handle posting a new comment
     const handleCommentPosting = async (e) => {
@@ -214,6 +229,7 @@ function CommentsSection({ card_id, net_id }) {
 
             if (response.ok) {
                 setNewComment(''); // Clear the input field
+                fetchComments(); // fetch again so user can see theirs
             } else {
                 console.error('Error creating new comment');
             }
