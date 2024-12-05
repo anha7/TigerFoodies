@@ -15,6 +15,7 @@ from datetime import datetime, timedelta
 import schedule
 import time
 import threading
+import html
 import requests
 from bs4 import BeautifulSoup
 import pytz
@@ -142,14 +143,14 @@ def get_data():
                 for row in rows:
                     cards.append({
                         'card_id': row[0],
-                        'title': row[1],
-                        'photo_url': row[2],
-                        'location': row[3],
+                        'title': html.unescape(row[1]),
+                        'photo_url': html.unescape(row[2]) if row[2] else row[2],
+                        'location': html.unescape(row[3]) if row[3] else row[3],
                         'latitude': row[4],
                         'longitude': row[5],
                         'dietary_tags': row[6],
                         'allergies': row[7],
-                        'description': row[8],
+                        'description': html.unescape(row[8]) if row[8] else row[8],
                         'posted_at': row[9],
                         'net_id': row[10]
                     })
@@ -184,14 +185,14 @@ def retrieve_user_cards(net_id):
                 for row in rows:
                     cards.append({
                         'card_id': row[0],
-                        'title': row[1],
-                        'photo_url': row[2],
-                        'location': row[3],
+                        'title': html.unescape(row[1]),
+                        'photo_url': html.unescape(row[2]) if row[2] else row[2],
+                        'location': html.unescape(row[3]) if row[3] else row[3],
                         'latitude': row[4],
                         'longitude': row[5],
                         'dietary_tags': row[6],
                         'allergies': row[7],
-                        'description': row[8],
+                        'description': html.unescape(row[8]) if row[8] else row[8],
                         'posted_at': row[9],
                         'net_id': row[10]
                     })
@@ -359,10 +360,10 @@ def retrieve_card(card_id):
                 if row:
                     card = {
                         "card_id": row[0],
-                        "title": row[1],
-                        "description": row[2],
-                        "photo_url": row[3],
-                        "location": row[4],
+                        "title": html.unescape(row[1]),
+                        "description": html.unescape(row[2]) if row[2] else row[2],
+                        "photo_url": html.unescape(row[3]) if row[3] else row[3],
+                        "location": html.unescape(row[4]) if row[4] else row[4],
                         "latitude": row[5],
                         "longitude": row[6],
                         "dietary_tags": row[7],
@@ -422,7 +423,7 @@ def retrieve_card_comments(card_id):
                     for row in rows:
                         comments.append({
                             'net_id': row[0],
-                            'comment': row[1],
+                            'comment': html.unescape(row[1]) if row[1] else row[1],
                             'posted_at': row[2],
                         })
                     return jsonify(comments)
