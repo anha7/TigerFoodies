@@ -92,7 +92,8 @@ def get_user():
     if 'username' in session:
         return jsonify({'net_id': session['username']})
     else:
-        return jsonify({"success": False, "message": "User not logged in"}), 500
+        return jsonify(
+            {"success": False, "message": "User not logged in"}), 500
 
 #-----------------------------------------------------------------------
 
@@ -117,8 +118,9 @@ def get_data():
             with conn.cursor() as cursor:
                 # Execute query to retrieve all active cards information
                 cursor.execute('''
-                    SELECT card_id, title, photo_url, location, latitude, longitude, 
-                    dietary_tags, allergies, description, posted_at, net_id
+                    SELECT card_id, title, photo_url, location, 
+                    latitude, longitude, dietary_tags, allergies, 
+                    description, posted_at, net_id
                     FROM cards ORDER BY posted_at DESC;
                 ''')
                 rows = cursor.fetchall()
@@ -129,13 +131,16 @@ def get_data():
                     cards.append({
                         'card_id': row[0],
                         'title': html.unescape(row[1]),
-                        'photo_url': html.unescape(row[2]) if row[2] else row[2],
-                        'location': html.unescape(row[3]) if row[3] else row[3],
+                        'photo_url': html.unescape(row[2]) if 
+                            row[2] else row[2],
+                        'location': html.unescape(row[3]) if 
+                            row[3] else row[3],
                         'latitude': row[4],
                         'longitude': row[5],
                         'dietary_tags': row[6],
                         'allergies': row[7],
-                        'description': html.unescape(row[8]) if row[8] else row[8],
+                        'description': html.unescape(row[8]) if 
+                            row[8] else row[8],
                         'posted_at': row[9],
                         'net_id': row[10]
                     })
@@ -156,8 +161,9 @@ def retrieve_user_cards(net_id):
             with conn.cursor() as cursor:
                 # Define insertion query
                 insertion_query = '''SELECT card_id, title, photo_url,
-                    location, latitude, longitude, dietary_tags, allergies, description, 
-                    posted_at, net_id FROM cards WHERE net_id = %s
+                    location, latitude, longitude, dietary_tags, 
+                    allergies, description, posted_at, net_id 
+                    FROM cards WHERE net_id = %s
                     ORDER BY posted_at DESC;
                 '''
                             
@@ -171,13 +177,16 @@ def retrieve_user_cards(net_id):
                     cards.append({
                         'card_id': row[0],
                         'title': html.unescape(row[1]),
-                        'photo_url': html.unescape(row[2]),
-                        'location': html.unescape(row[3]),
+                        'photo_url': html.unescape(row[2]) if 
+                            row[2] else row[2],
+                        'location': html.unescape(row[3]) if 
+                            row[3] else row[3],
                         'latitude': row[4],
                         'longitude': row[5],
                         'dietary_tags': row[6],
                         'allergies': row[7],
-                        'description': html.unescape(row[8]),
+                        'description': html.unescape(row[8]) if 
+                            row[8] else row[8],
                         'posted_at': row[9],
                         'net_id': row[10]
                     })
@@ -205,7 +214,8 @@ def delete_card(card_id):
                 # Commit to the database
                 conn.commit()
 
-                return jsonify({"success": True, "message": "Action successful!"}), 200
+                return jsonify({"success": True, "message": 
+                                "Action successful!"}), 200
     except Exception as ex:
         print(str(ex))
         return jsonify({"success": False, "message": str(ex)}), 500
@@ -244,10 +254,11 @@ def create_card():
                 # Define insertion query
                 insertion_query = '''INSERT INTO cards (net_id,
                     title, description, photo_url, location, latitude,
-                    longitude, dietary_tags, allergies, expiration, posted_at)
+                    longitude, dietary_tags, allergies, expiration, 
+                    posted_at)
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s,
                     CURRENT_TIMESTAMP + interval \'3 hours\', 
-                    CURRENT_TIMESTAMP)
+                    CURRENT_TIMESTAMP);
                 '''
 
                 # Execute query to store new card into the database
@@ -256,7 +267,8 @@ def create_card():
                 # Commit to the database
                 conn.commit()
                 
-                return jsonify({"success": True, "message": "Action successful!"}), 200
+                return jsonify({"success": True, "message": 
+                                "Action successful!"}), 200
     except Exception as ex:
         print(str(ex))
         return jsonify({"success": False, "message": str(ex)}), 500
@@ -288,16 +300,20 @@ def edit_card(card_id):
         with psycopg2.connect(DATABASE_URL) as conn:
             with conn.cursor() as cursor:
                 # Define update query
-                update_query = 'UPDATE cards SET (title, description, photo_url,'
-                update_query += ' location, latitude, longitude, dietary_tags, allergies, updated_at)'
-                update_query += ' = (%s, %s, %s, %s, %s, %s, %s, %s, CURRENT_TIMESTAMP)'
-                update_query += ' WHERE card_id = %s'
+                update_query = '''UPDATE cards SET (title, description,
+                    photo_url, location, latitude, longitude, 
+                    dietary_tags, allergies, updated_at)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, 
+                    CURRENT_TIMESTAMP)
+                    WHERE card_id = %s;
+                '''
                 # Execute query to update row in the database
                 cursor.execute(update_query, new_card)
                 # Commit to database
                 conn.commit()
 
-                return jsonify({"success": True, "message": "Action successful!"}), 200
+                return jsonify({"success": True, "message": 
+                                "Action successful!"}), 200
     except Exception as ex:
         print(str(ex))
         return jsonify({"success": False, "message": str(ex)}), 500
@@ -315,8 +331,9 @@ def retrieve_card(card_id):
         with psycopg2.connect(DATABASE_URL) as conn:
             with conn.cursor() as cursor:
                 # Define insertion query
-                retrieval_query = ''' SELECT card_id, title, description,
-                    photo_url, location, latitude, longitude, dietary_tags, allergies 
+                retrieval_query = '''SELECT card_id, title, description,
+                    photo_url, location, latitude, longitude, 
+                    dietary_tags, allergies 
                     FROM cards WHERE card_id = %s;'''
                 # Execute query to retrieve card with given card_id
                 cursor.execute(retrieval_query, [card_id])
@@ -325,9 +342,12 @@ def retrieve_card(card_id):
                     card = {
                         "card_id": row[0],
                         "title": html.unescape(row[1]),
-                        "description": html.unescape(row[2]) if row[2] else row[2],
-                        "photo_url": html.unescape(row[3]) if row[3] else row[3],
-                        "location": html.unescape(row[4]) if row[4] else row[4],
+                        "description": html.unescape(row[2]) if 
+                            row[2] else row[2],
+                        "photo_url": html.unescape(row[3]) if 
+                            row[3] else row[3],
+                        "location": html.unescape(row[4]) if 
+                            row[4] else row[4],
                         "latitude": row[5],
                         "longitude": row[6],
                         "dietary_tags": row[7],
@@ -357,13 +377,16 @@ def submit_feedback():
             subject="TigerFoodies Bug",
             sender=app.config['MAIL_USERNAME'],
             recipients=['cs-tigerfoodies@princeton.edu'],
-            body=f"Feedback received from {feedback_sender}:\n\n{feedback_text}"
+            body=
+        f"Feedback received from {feedback_sender}:\n\n{feedback_text}"
         )
         mail.send(msg)
-        return jsonify({"success": True, "message": "Action successful!"}), 200
+        return jsonify({"success": True, "message":
+                        "Action successful!"}), 200
     except Exception as ex:
         print(ex)
-        return jsonify({"success": False, "message": "Action unsuccessful"}), 500
+        return jsonify({"success": False, "message":
+                        "Action unsuccessful"}), 500
 
 #-----------------------------------------------------------------------
 
@@ -376,7 +399,8 @@ def retrieve_card_comments(card_id):
             with conn.cursor() as cursor:
                 # Define insertion query
                 retrieval_query = ''' SELECT net_id, comment, posted_at 
-                FROM comments WHERE card_id = %s ORDER BY posted_at DESC;'''
+                FROM comments WHERE card_id = %s 
+                ORDER BY posted_at DESC;'''
                 # Execute query to retrieve card with given card_id
                 cursor.execute(retrieval_query, [card_id])
                 rows = cursor.fetchall()
@@ -387,7 +411,8 @@ def retrieve_card_comments(card_id):
                     for row in rows:
                         comments.append({
                             'net_id': row[0],
-                            'comment': html.unescape(row[1]) if row[1] else row[1],
+                            'comment': html.unescape(row[1]) if 
+                                row[1] else row[1],
                             'posted_at': row[2],
                         })
                     return jsonify(comments)
@@ -408,7 +433,8 @@ def create_card_comment(card_id):
         new_comment_data = request.get_json()
         # testing message if comment wasn't recognized / put in 
         if not new_comment_data or 'comment' not in new_comment_data:
-            return jsonify({"success": False, "message": "Missing comment data"}), 400
+            return jsonify({"success": False, "message": 
+                            "Missing comment data"}), 400
 
         # Parse relevant fields
         net_id = new_comment_data.get('net_id')
@@ -422,9 +448,11 @@ def create_card_comment(card_id):
             with conn.cursor() as cursor:
                
                  # test for me to verify the card exists
-                cursor.execute("SELECT 1 FROM cards WHERE card_id = %s", (card_id,))
+                cursor.execute("SELECT 1 FROM cards WHERE card_id = %s", 
+                               (card_id,))
                 if not cursor.fetchone():
-                    return jsonify({"success": False, "message": "Card not found"}), 404
+                    return jsonify({"success": False, 
+                                    "message": "Card not found"}), 404
                 
                 # Define insertion query
                 insertion_query = '''INSERT INTO comments (net_id,
@@ -439,7 +467,8 @@ def create_card_comment(card_id):
                 # Commit to the database
                 conn.commit()
 
-                return jsonify({"success": True, "message": "Action successful!"}), 200
+                return jsonify({"success": True, "message": 
+                                "Action successful!"}), 200
     except Exception as ex:
         print(str(ex))
         return jsonify({"success": False, "message": str(ex)}), 500
@@ -458,7 +487,8 @@ def fetch_recent_rss_entries():
                 # Log into the listserv site
                 login_page = session.get(rss_url)
                 soup_login = BeautifulSoup(login_page.text, "lxml")
-                hidden_inputs = soup_login.find_all("input", type="hidden")
+                hidden_inputs = soup_login.find_all("input", 
+                                                    type="hidden")
                 payload = {input_tag["name"]: input_tag.get("value", "") 
                            for input_tag in hidden_inputs}
                 payload["Y"] = os.environ["LISTSERV_USERNAME"]
@@ -466,7 +496,8 @@ def fetch_recent_rss_entries():
                 session.post(rss_url, data=payload)
 
                 # Define time threshold to retrieve most recent entries
-                time_threshold = datetime.now(eastern) - timedelta(seconds=60)
+                time_threshold = datetime.now(eastern) - timedelta(
+                    seconds=60)
 
                 # Retrieve entries from freefood listserv RSS script
                 rss_response = session.get(rss_url)
@@ -481,17 +512,18 @@ def fetch_recent_rss_entries():
                         item.pubDate.text, "%a, %d %b %Y %H:%M:%S %z")
                     if pubDate < time_threshold:
                         break
+                    
+                    # Scrape relevant information from entry
+                    title = item.title.text
 
                     # Check if the title already exists in the database
-                    check_query = """SELECT COUNT(*) FROM cards WHERE title = %s"""
+                    check_query = """SELECT COUNT(*) FROM cards 
+                                    WHERE title = %s"""
                     cursor.execute(check_query, (title,))
                     result = cursor.fetchone()
                     if result[0] > 0:
                         # If the title already exists, skip this entry
                         continue
-                    
-                    # Scrape relevant information from entry
-                    title = item.title.text
 
                     # Package data to be inserted into database
                     data = ["cs-tigerfoodies", title]
