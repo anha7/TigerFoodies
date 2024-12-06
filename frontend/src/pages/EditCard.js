@@ -42,7 +42,8 @@ function EditCard({ net_id }) {
     // is the creator of the card
     const [isAuthorized, setIsAuthorized] = useState(true);
 
-    // Fetch existing card data to pre-fill the form
+    // Fetch existing card data to pre-fill the form when component
+    // mounts
     useEffect(() => {
         const fetchCard = async () => {        
             try {
