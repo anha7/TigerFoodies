@@ -10,15 +10,8 @@ import locationIcon from './media/description-location.svg';
 import dietaryPreferencesIcon from './media/dietary-preferences.svg';
 import allergensIcon from './media/allergens.svg';
 import backIcon from './media/back.svg';
-// import socket from '../Socket';
+
 //----------------------------------------------------------------------
-
-
-// socket.on('disconnect', (reason, details) => {
-//     console.log("Socket disconnected!");
-//     console.log("Reason:", reason);
-//     console.log("Details:", details);
-//     })
 
 // Function to format the time into a relative "time ago" format
 const formatTimeAgo = (timestamp) => {
@@ -183,21 +176,6 @@ function CommentsSection({ card_id, net_id }) {
     // Effect to fetch comments initially
     useEffect(() => {
         fetchComments(); // Fetch comments when the component mounts
-
-        // const handleNewComment = (updatedCardId) => {
-        //     if (updatedCardId === card_id) {
-        //         fetchComments(); // Re-fetch comments if a new one is added for this card
-        //     }
-        // };
-
-        // // Listen for "comment created" event
-        // socket.on('comment created', handleNewComment);
-
-        // // Clean up the socket listener when the component unmounts
-        // return () => {
-        //     socket.off('comment created', handleNewComment);
-        //     socket.close();
-        // };
 
         // fetches cards from the backend every 60 seconds
         const startPolling = () => {

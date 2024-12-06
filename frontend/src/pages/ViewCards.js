@@ -40,19 +40,6 @@ const ViewCards = ({ net_id }) => {
         };
 
         fetchUserCards();
-
-        // // Fetch cards again if there are updates from the server
-        // socket.on("card created", () => fetchUserCards());
-        // socket.on("card edited", () => fetchUserCards());
-        // socket.on("card deleted", () => fetchUserCards());
-
-        // // Close socket whenever component is dismounted
-        // return () => {
-        //     socket.off('card created', setCards);
-        //     socket.off('card edited', setCards);
-        //     socket.off('card deleted', setCards);
-        //     socket.close()
-        // };
         
         // fetches cards from the backend every 60 seconds
         const startPolling = () => {

@@ -15,17 +15,8 @@ import dietaryPreferencesIcon from './media/dietary-preferences.svg';
 import allergensIcon from './media/allergens.svg';
 import CardDisplay from './CardDisplay'; // to view extended card info
 import Feedback from './Feedback';
-// import socket from '../Socket';
 
 //----------------------------------------------------------------------
-
-
-
-// socket.on('disconnect', (reason, details) => {
-//     console.log("Socket disconnected!");
-//     console.log("Reason:", reason);
-//     console.log("Details:", details);
-//     })
 
 // Function to determine the greeting based on the current time of day
 const getGreeting = () => {
@@ -126,20 +117,6 @@ const Homepage = ({ net_id }) => {
         return () => {
             if (intervalIDRef.current) clearInterval(intervalIDRef.current)
         }
-
-        //  // Fetch cards again if there are updates from the server
-        //  socket.on("card created", () => fetchCards());
-        //  socket.on("card edited", () => fetchCards());
-        //  socket.on("card deleted", () => fetchCards());
-
-        // // Clean up the socket connection on unmount
-        // return () => {
-        //     socket.off('card created', fetchCards);
-        //     socket.off('card edited', fetchCards);
-        //     socket.off('card deleted', fetchCards);
-        //     socket.close()
-        // };
-
 
     }, []);
 
