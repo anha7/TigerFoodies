@@ -27,7 +27,7 @@ DATABASE_URL = os.environ.get('DATABASE_URL')
 conn = psycopg2.connect(DATABASE_URL)
 
 # Initialize Flask app
-app = Flask(__name__, static_folder='build', static_url_path='')
+app = Flask(__name__, static_folder='build')
 
 # Set up secret key
 app.secret_key = secrets.token_hex(32)
@@ -50,14 +50,19 @@ eastern = pytz.timezone('US/Eastern')
 #-----------------------------------------------------------------------
 
 # Route to serve the React app's index.html
-@app.route('/')
-def serve():
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def serve(path):
     # Authenticate user when they access the site and store username
     username = 'ab123'
     if username:
         session['username'] = username
         add_user(username)
-    return send_from_directory(app.static_folder, 'index.html')
+        
+    if path != "" and os.path.exists(app.static_folder + '/' + path):
+        return send_from_directory(app.static_folder, path)
+    else:
+        return send_from_directory(app.static_folder, 'index.html')
 
 # Route to serve static files (like CSS, JS, images, etc.)
 @app.route('/static/<path:path>')
@@ -496,7 +501,7 @@ def fetch_recent_rss_entries():
 
                 # Define time threshold to retrieve most recent entries
                 time_threshold = datetime.now(eastern) - timedelta(
-                    seconds=60)
+                    seconds=300)
 
                 # Retrieve entries from freefood listserv RSS script
                 rss_response = session.get(rss_url)
@@ -561,4 +566,4 @@ scheduler_thread.start()
 
 # Start the Flask app
 if __name__ == '__main__':
-    Flask.run(app)
+    app.run(use_reloader=True, port=5000, threaded=True)

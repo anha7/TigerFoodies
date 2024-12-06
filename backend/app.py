@@ -51,14 +51,19 @@ eastern = pytz.timezone('US/Eastern')
 #-----------------------------------------------------------------------
 
 # Route to serve the React app's index.html
-@app.route('/')
-def serve():
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def serve(path):
     # Authenticate user when they access the site and store username
     username = authenticate()
     if username:
         session['username'] = username
         add_user(username)
-    return send_from_directory(app.static_folder, 'index.html')
+        
+    if path != "" and os.path.exists(app.static_folder + '/' + path):
+        return send_from_directory(app.static_folder, path)
+    else:
+        return send_from_directory(app.static_folder, 'index.html')
 
 # Route to serve static files (like CSS, JS, images, etc.)
 @app.route('/static/<path:path>')

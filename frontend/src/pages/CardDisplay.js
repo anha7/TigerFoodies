@@ -75,26 +75,39 @@ function Card({ onClick, card }) {
             ></div>
 
             {/* Shorthand information related to food */}
+            {/* Only show associated icons if such info is present */}
             <div className="card-content">
                 <div className="card-content-main">
                     <h3>{card.title}</h3>
                     <p>
-                        <img src={locationIcon}
-                            alt="Location"
-                            height="14px" /> 
-                        {card.location}
+                        {card.location && (
+                            <>
+                                <img src={locationIcon}
+                                alt="Location"
+                                height="14px" /> 
+                                {card.location}
+                            </>
+                        )}
                     </p>
                     <p>
-                        <img src={dietaryPreferencesIcon} 
-                            alt="Dietary Preferences"
-                            height="14px" />
-                        {card.dietary_tags?.join(', ') || ' '}
+                        {card.dietary_tags.length > 0 && (
+                            <>
+                                <img src={dietaryPreferencesIcon} 
+                                alt="Dietary Preferences"
+                                height="14px" /> 
+                                {card.dietary_tags?.join(', ') || ' '}
+                            </>
+                        )}
                     </p>
                     <p>
-                        <img src={allergensIcon}
-                            alt="Allergens"
-                            height="14px" /> 
-                        {card.allergies?.join(', ') || ' '}
+                        {card.allergies.length > 0 && (
+                            <>
+                                <img src={allergensIcon}
+                                alt="Allergens"
+                                height="14px" /> 
+                                {card.allergies?.join(', ') || ' '}
+                            </>
+                        )}
                     </p>
                 </div>
 
@@ -127,7 +140,6 @@ function Modal({ card, setIsModalActive, net_id }) {
         setCommentsIsActive(!commentsIsActive);
     };
 
-    console.log("Modal", card !== null && card.photo_url !== null)
     return (
         <div
             onClick={(e) => {
@@ -142,23 +154,23 @@ function Modal({ card, setIsModalActive, net_id }) {
                 <div
                     className="modal-card-image"
                     style={card !== null && card.photo_url !== null ? 
-                { backgroundImage: `url(${card.photo_url})` } : {}}
+                { backgroundImage: `url(${card.photo_url})` || '' } : {}}
                 />
                 {/* Information related to the food */}
                 <div className="modal-card-content">
                     <div className="main-modal-content">
                         <h3>{card.title}</h3>
                         <p>
-                            <b>Location:</b> {card.location}
+                            <b>Location:</b> {card.location || ''}
                         </p>
                         <p>
-                            <b>Preferences:</b> {card.dietary_tags?.join(', ') || 'None'}
+                            <b>Preferences:</b> {card.dietary_tags?.join(', ') || ''}
                         </p>
                         <p>
-                            <b>Allergens:</b> {card.allergies?.join(', ') || 'None'}
+                            <b>Allergens:</b> {card.allergies?.join(', ') || ''}
                         </p>
                         <p>
-                            <b>Description:</b> {card.description}
+                            <b>Description:</b> {card.description || ''}
                         </p>
                     </div>
 
@@ -226,7 +238,7 @@ function CommentsSection({ card_id, net_id }) {
             const response = await fetch(`/api/comments/${card_id}`);
             const data = await response.json();
             if (Array.isArray(data)) {
-                // Update statew with fetch comments
+                // Update state with fetched comments
                 setComments(data);
             } else {
                 // Otherwise return an error
@@ -263,29 +275,36 @@ function CommentsSection({ card_id, net_id }) {
         // Prevent form submission from freshing the page
         e.preventDefault();
 
-        // Prepare new comment data
-        const newCommentData = { comment: newComment, net_id };
+        // Ensure user wants to actually submit their comment
+        const userConfirmed = window.confirm(
+            "Are you sure you want to submit this comment?");
+        
+        // Continue with posting comment since user confirmed
+        if (userConfirmed) {
+            // Prepare new comment data
+            const newCommentData = { comment: newComment, net_id };
 
-        try {
-            // Send new comment data to server
-            const response = await fetch(`/api/comments/${card_id}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(newCommentData),
-            });
+            try {
+                // Send new comment data to server
+                const response = await fetch(`/api/comments/${card_id}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(newCommentData),
+                });
 
-            if (response.ok) {
-                setNewComment(''); // Clear the input field
-                fetchComments(); // Refresh comments after posting
-            } else {
-                // Otherwise display error
-                console.error('Error creating new comment');
+                if (response.ok) {
+                    setNewComment(''); // Clear the input field
+                    fetchComments(); // Refresh comments after posting
+                } else {
+                    // Otherwise display error
+                    console.error('Error creating new comment');
+                }
+            } catch (error) {
+                // Display any other errors related to comment submission
+                console.error('Error submitting the new comment:', error);
             }
-        } catch (error) {
-            // Display any other errors related to comment submission
-            console.error('Error submitting the new comment:', error);
         }
     };
 

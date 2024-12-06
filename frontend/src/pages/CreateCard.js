@@ -4,7 +4,7 @@
 //----------------------------------------------------------------------
 
 // Import statements
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './CreateEditCard.css'; // Import custom CSS file
 import { useLoadScript, Autocomplete } from "@react-google-maps/api";
@@ -37,6 +37,25 @@ function CreateCard( { net_id } ) {
     const navigate = useNavigate();
     // Ref for referencing the Autocomplete instance
     const autocompleteRef = useRef(null);
+    // Check if there's new info in the form
+    const [isFormDirty, setIsFormDirty] = useState(false);
+
+//----------------------------------------------------------------------
+
+    // Warn users attempting to refresh / close the page when they have
+    // unsaved form data
+    useEffect(() => {
+        const unloadCallback = (event) => {
+            if (isFormDirty) {
+              event.preventDefault();
+              event.returnValue = "";
+              return "";
+            }
+          };
+          window.addEventListener("beforeunload", unloadCallback);
+          return () => 
+            window.removeEventListener("beforeunload", unloadCallback);
+    }, [isFormDirty]); 
 
 //----------------------------------------------------------------------
 
@@ -103,8 +122,7 @@ function CreateCard( { net_id } ) {
 //----------------------------------------------------------------------
 
     // Cloudinary URL and preset for image uploads
-    const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/
-        ${process.env.REACT_APP_CLOUDINARY_KEY}/image/upload`;
+    const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/${process.env.REACT_APP_CLOUDINARY_KEY}/image/upload`;
     const CLOUDINARY_UPLOAD_PRESET = 'TigerFoodies';
 
     // Handle image uploads to Cloudinary
@@ -149,48 +167,83 @@ function CreateCard( { net_id } ) {
         // Prevent default form submission
         e.preventDefault();
 
-        // Validation: ensure location and coordinates are set
-        if (!location || !latitude || !longitude) {
-            alert(
-                "Please select a valid location from the suggestions.");
-            return; // Stop form submission
-        }
-
-        // Prepare card data
-        const cardData = {
-            net_id: net_id,
-            title: title, 
-            description: description,
-            photo_url: photo, 
-            location: location,
-            latitude: latitude,
-            longitude: longitude,
-            dietary_tags: dietary_tags, 
-            allergies: allergies
-        };
+        // Prompt user to confirm if the information they want to post
+        // is correct
+        const userConfirmed = window.confirm(
+            "Are you sure all information you want to post is correct?");
         
-        try {
-            // Send card data to backend
-            const response = await fetch(`/api/cards`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(cardData),
-            });
-
-            // Redirect to homepage after successful submission
-            if (response.ok) {
-                navigate('/');
-            } else {
-                // Otherwise catch error
-                console.error('Error creating card');
+        // Post card if they confirm
+        if (userConfirmed) {
+            // Validation: ensure location and coordinates are set
+            if (!location || !latitude || !longitude) {
+                alert(
+                    "Please select a valid location from the suggestions.");
+                return; // Stop form submission
             }
-        } catch (error) {
-            // Catch any errors related to new card submission
-            console.error('Error submitting the card:', error);
+
+            // Prepare card data
+            const cardData = {
+                net_id: net_id,
+                title: title, 
+                description: description,
+                photo_url: photo, 
+                location: location,
+                latitude: latitude,
+                longitude: longitude,
+                dietary_tags: dietary_tags, 
+                allergies: allergies
+            };
+            
+            try {
+                // Send card data to backend
+                const response = await fetch(`/api/cards`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(cardData),
+                });
+
+                // Redirect to homepage after successful submission
+                if (response.ok) {
+                    navigate('/');
+                } else {
+                    // Otherwise catch error
+                    console.error('Error creating card');
+                }
+            } catch (error) {
+                // Catch any errors related to new card submission
+                console.error('Error submitting the card:', error);
+            }
         }
     };
+
+//----------------------------------------------------------------------
+
+    const handleNavigation = () => {
+        // Check if user really wants to leave page if they have edited
+        // the form in anyway
+        if (isFormDirty) {
+            const confirmLeave = window.confirm(
+                "Form data will be lost. Are you sure you want to leave?"
+            )
+
+            // Don't redirect if they don't want to leave yet
+            if (!confirmLeave) return;
+        }
+
+        // Redirect to homepage if they confirmed they want to leave
+        navigate("/");
+    }
+
+//----------------------------------------------------------------------
+
+    // Functional component that marks form as being modified by user
+    const markFormDirty = () => {
+        if (!isFormDirty) {
+            setIsFormDirty(true);
+        }
+    }
 
 //----------------------------------------------------------------------
 
@@ -204,7 +257,16 @@ function CreateCard( { net_id } ) {
             {/* Navigation Bar */}
             <nav className = "nav">
                 {/* Button that redirects to homepages */}
-                <a href="/"><h1>TigerFoodies</h1></a>
+                <a 
+                    onClick={(e) => {
+                        // Prevent default link behavior
+                        e.preventDefault();
+                        handleNavigation();
+                    }}
+                    href="/"
+                >
+                    <h1>TigerFoodies</h1>
+                </a>
             </nav>
 
             {/* Main content container for form data */}
@@ -229,6 +291,7 @@ function CreateCard( { net_id } ) {
                                         if (e.target.value.length <= maxTitleLength) {
                                             setTitle(e.target.value);
                                         }
+                                        markFormDirty();
                                     }}
                                     placeholder="Enter a title..."
                                     maxLength={maxTitleLength}
@@ -243,8 +306,10 @@ function CreateCard( { net_id } ) {
                                 required
                                 type="file"
                                 name="photo_url"
-                                // accept="image/*"
-                                onChange={handleImageChange}
+                                onChange={(e) => {
+                                    handleImageChange(e);
+                                    markFormDirty();
+                                }}
                                 className="upload-button"
                             />
                             </h4>
@@ -268,8 +333,10 @@ function CreateCard( { net_id } ) {
                                     <input
                                         type="text"
                                         value={location}
-                                        onChange={(e) => 
-                                            setLocation(e.target.value)}
+                                        onChange={(e) => {
+                                            setLocation(e.target.value);
+                                            markFormDirty();
+                                        }}
                                         placeholder="Enter a location..."
                                     />
                                 </Autocomplete>
@@ -284,7 +351,10 @@ function CreateCard( { net_id } ) {
                                     name="dietary_tags"
                                     value="Halal"
                                     checked={dietary_tags.includes('Halal')}
-                                    onChange={handleDietaryChange}/>
+                                    onChange={(e) => {
+                                        handleDietaryChange(e);
+                                        markFormDirty();
+                                    }}/>
                                 Halal
                             </label>
                             <label>
@@ -292,7 +362,10 @@ function CreateCard( { net_id } ) {
                                     name="dietary_tags"
                                     value="Kosher"
                                     checked={dietary_tags.includes('Kosher')}
-                                    onChange={handleDietaryChange}/> 
+                                    onChange={(e) => {
+                                        handleDietaryChange(e);
+                                        markFormDirty();
+                                    }}/>
                                 Kosher
                             </label>
                             <label>
@@ -300,7 +373,10 @@ function CreateCard( { net_id } ) {
                                     name="dietary_tags"
                                     value="Vegetarian"
                                     checked={dietary_tags.includes('Vegetarian')}
-                                    onChange={handleDietaryChange}/> 
+                                    onChange={(e) => {
+                                        handleDietaryChange(e);
+                                        markFormDirty();
+                                    }}/>
                                 Vegetarian
                             </label>
                             <label>
@@ -308,7 +384,10 @@ function CreateCard( { net_id } ) {
                                     name="dietary_tags"
                                     value="Vegan"
                                     checked={dietary_tags.includes('Vegan')}
-                                    onChange={handleDietaryChange}/> 
+                                    onChange={(e) => {
+                                        handleDietaryChange(e);
+                                        markFormDirty();
+                                    }}/>
                                 Vegan
                             </label>
                             <label>
@@ -316,7 +395,10 @@ function CreateCard( { net_id } ) {
                                     name="dietary_tags"
                                     value="Gluten-Free"
                                     checked={dietary_tags.includes('Gluten-Free')}
-                                    onChange={handleDietaryChange}/>
+                                    onChange={(e) => {
+                                        handleDietaryChange(e);
+                                        markFormDirty();
+                                    }}/>
                                 Gluten-Free
                             </label>
                         </div>
@@ -329,7 +411,10 @@ function CreateCard( { net_id } ) {
                                     name="allergies" 
                                     value="Nuts" 
                                     checked={allergies.includes('Nuts')} 
-                                    onChange={handleAllergiesChange}/>
+                                    onChange={(e) => {
+                                        handleAllergiesChange(e);
+                                        markFormDirty();
+                                    }}/>
                                 Nuts
                             </label>
                             <label>
@@ -337,7 +422,10 @@ function CreateCard( { net_id } ) {
                                     name="allergies"
                                     value="Dairy"
                                     checked={allergies.includes('Dairy')} 
-                                    onChange={handleAllergiesChange}/>
+                                    onChange={(e) => {
+                                        handleAllergiesChange(e);
+                                        markFormDirty();
+                                    }}/>
                                 Dairy
                             </label>
                             <label>
@@ -345,7 +433,10 @@ function CreateCard( { net_id } ) {
                                     name="allergies"
                                     value="Shellfish"
                                     checked={allergies.includes('Shellfish')}
-                                    onChange={handleAllergiesChange}/>
+                                    onChange={(e) => {
+                                        handleAllergiesChange(e);
+                                        markFormDirty();
+                                    }}/>
                                 Shellfish
                             </label>
                         </div>
@@ -361,6 +452,7 @@ function CreateCard( { net_id } ) {
                                         if (e.target.value.length <= maxDescriptionLength) {
                                             setDescription(e.target.value);
                                         }
+                                        markFormDirty();
                                     }}
                                     placeholder=
         "Enter any extra information, such as specific room numbers..."

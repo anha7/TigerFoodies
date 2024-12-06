@@ -67,22 +67,29 @@ const ViewCards = ({ net_id }) => {
 
     // Handle deletion of a card
     const handleDeleteCard = async (card_id) => {
-        try {
-            // Send a delete request to the server
-            const response = await fetch(`/api/cards/${card_id}`, {
-                method: 'DELETE',
-            });
-            if (response.ok) {
-                // Remove deleted card from the state
-                setCards(cards.filter((card) => 
-                    card.card_id !== card_id));
-            } else {
-                // Warn if endpoint is not available
-                console.warn('Backend delete endpoint not available.');
+        // Prompt user to confirm if actually want to delete the card
+        const userConfirmed = window.confirm(
+            "Are you sure you want to delete this card?");
+        
+        // Go through with deleting the card if they confirm
+        if (userConfirmed) {
+            try {
+                // Send a delete request to the server
+                const response = await fetch(`/api/cards/${card_id}`, {
+                    method: 'DELETE',
+                });
+                if (response.ok) {
+                    // Remove deleted card from the state
+                    setCards(cards.filter((card) => 
+                        card.card_id !== card_id));
+                } else {
+                    // Warn if endpoint is not available
+                    console.warn('Backend delete endpoint not available.');
+                }
+            } catch (error) {
+                // Catch any errors related to deleting a card
+                console.error('Error deleting card:', error);
             }
-        } catch (error) {
-            // Catch any errors related to deleting a card
-            console.error('Error deleting card:', error);
         }
     };
 
