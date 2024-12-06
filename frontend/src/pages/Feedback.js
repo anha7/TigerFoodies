@@ -10,6 +10,7 @@ import React, { useState } from 'react';
 
 // Feedback functional component
 const Feedback = ({ isModalActive, setIsModalActive, net_id }) => {
+    // State to store user's feedback input
     const [feedbackInput, setFeedbackInput] = useState("");
 
     // Functional component to close modal
@@ -17,11 +18,12 @@ const Feedback = ({ isModalActive, setIsModalActive, net_id }) => {
         setIsModalActive(false);
     }
 
-    // Functional component to submit feedback to the backend
+    // Send the feedback data to the server
     const handleSubmit = async (e) => {
+        // Prevent default form submission
         e.preventDefault();
 
-        // Send request to backend
+        // Send post request to the backend with the user's input
         try {
             const response = await fetch(`/api/feedback`, {
                 method: 'POST',
@@ -33,13 +35,16 @@ const Feedback = ({ isModalActive, setIsModalActive, net_id }) => {
             });
 
             if (response.ok) {
+                // If feedback sent successfully, alert the user
                 alert('Feedback sent successfully!');
                 setFeedbackInput("");
                 handleCloseModal();
             } else {
+                // If the feedback did not send, tell user to try again
                 alert('Feedback did not send. Try again.');
             }
         } catch (error) {
+            // Otherwise catch any errors related to sending feedback
             console.error('Error:', error);
             alert('An error occurred. Please try again.');
         }
@@ -48,12 +53,17 @@ const Feedback = ({ isModalActive, setIsModalActive, net_id }) => {
     return (
         <>
             {isModalActive && (
+                // Render modal only if `isModalActive` is true
                 <div className="modal-root" onClick={handleCloseModal}>
+                    {/* Modal content */}
                     <div className="modal-card" onClick={e => 
                             e.stopPropagation()}>
+                        {/* Modal title */}
                         <div className="feedback-title">
                             <h2>Report Bugs</h2>
                         </div>
+
+                        {/* Feedback form */}
                         <form className="feedback-form">
                             <textarea
                                 type="text"
