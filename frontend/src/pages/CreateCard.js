@@ -388,4 +388,6 @@ function CreateCard( { net_id } ) {
     );
 };
 
+//----------------------------------------------------------------------
+
 export default CreateCard;
