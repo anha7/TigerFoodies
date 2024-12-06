@@ -3,7 +3,7 @@
 // Authors: Anha Khan, Arika Hassan, Laiba Ali, Mark Gazzerro, Sami Dalu
 //----------------------------------------------------------------------
 
-// Imports
+// Import statements
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import './Homepage.css'; // Import custom CSS file
@@ -13,29 +13,32 @@ import hamburgerIcon from './media/hamburger.svg';
 import preferencesIcon from './media/preferences.svg';
 import dietaryPreferencesIcon from './media/dietary-preferences.svg';
 import allergensIcon from './media/allergens.svg';
-import CardDisplay from './CardDisplay'; // to view extended card info
+import CardDisplay from './CardDisplay';
 import Feedback from './Feedback';
 
 //----------------------------------------------------------------------
 
-// Function to determine the greeting based on the current time of day
+// Utility function to determine the greeting based on the current time
+// of day
 const getGreeting = () => {
+    // Create a current data object, returns time in UTC
     const currentDate = new Date();
 
     // Convert UTC time to Eastern Time (Princeton's timezone)
-    const estOffset = -5;
-    const edtOffset = -4; // Different offset for daylight savings
+    const estOffset = -5; // UTC-5 for EST
+    const edtOffset = -4; // UTC-4 for EDT
 
     // Checks whether it is currently daylight savings time
     const isDaylightSaving = currentDate.toLocaleString(
         'en-US', { timeZoneName: 'short'}).includes('EDT');
+    // Set offset accordingly
     const offset = isDaylightSaving ? edtOffset : estOffset;
 
     // Adjusts timezone to Eastern Time
     const timeOfDay = new Date(
         currentDate.getTime() + offset * 60 * 60 * 1000).getUTCHours();
 
-    // Checks current time of day
+    // Return appropriate greeting based on time of day
     if (timeOfDay >= 0 && timeOfDay < 12) {
         return "Good morning";
     } else if (timeOfDay >= 12 && timeOfDay < 17) {
@@ -51,7 +54,7 @@ const getGreeting = () => {
 const Homepage = ({ net_id }) => {
     // State to store fetched cards
     const [cards, setCards] = useState([]);
-    // State to store search input
+    // State to store user's search input
     const [searchInput, setSearchInput] = useState('');
     // State that stores greeting to reflect time of day
     const [greeting, setGreeting] = useState('');
@@ -70,70 +73,71 @@ const Homepage = ({ net_id }) => {
             "shellfish": false
         }
     });
+    // List of cards filtered by user search input and preferences
     const [filteredCards, setFilteredCards] = useState([]);
     // State that stores whether mobile hamburger menu is open
     const [isHamburgerOpen, setHamburgerOpen] = useState(false);
     // State that stores whether mobile preferences is open
     const [isPreferencesOpen, setPreferencesOpen] = useState(false);
-    // State for feedback modal
+    // State for feedback modal visibility
     const [isFeedbackModalActive, setFeedbackModalActive] = 
         useState(false);
-    // Ref that stores interval ID of polling timer
+    // Reference for interval polling
     const intervalIDRef = useRef(null);
 
 //----------------------------------------------------------------------
 
-    // function that toggles feedback modal
+    // Function that toggles feedback modal visibility
     const toggleFeedbackModal = () => 
         setFeedbackModalActive(!isFeedbackModalActive);
 
 //----------------------------------------------------------------------
 
-    // Hook that fetches card data from the backend and sets greeting
+    // Hook that fetches cards and sets greeting when the component
+    // mounts
     useEffect(() => {
-        // Set greeting
+        // Set greeting message
         setGreeting(getGreeting());
 
+        // Fetch free food listings
         const fetchCards = async () => {
             try{
-                // Fetch and wait for card data from backend
                 const response = await fetch(`/api/cards`);
                 const data = await response.json();
-                // Store fetched data in state
-                setCards(data);
-                setFilteredCards(data);
+                setCards(data); // Store fetched data
+                setFilteredCards(data); // Initialize filtered cards
             } catch(error) {
+                // Catch any errors related to fetching listings
                 console.error('Error fetching cards:', error);
             }
         };
 
+        // Initial fetch
         fetchCards();
 
-        // fetches cards from the backend every 60 seconds
+        // Poll the backend for new cards every 60 seconds
         const startPolling = () => {
             intervalIDRef.current = setInterval(fetchCards, 60000)
         };
-
         startPolling();
 
-        // Clean up the interval id on unmount
+        // Cleanup interval on component unmount
         return () => {
             if (intervalIDRef.current) {
                 clearInterval(intervalIDRef.current);
             }
         }
-
     }, []);
 
 //----------------------------------------------------------------------
 
     // Function that handles the search functionality
     const handleSearch = (event) => {
-        // Update search input state
+        // Normalize search input
         const query = event.target.value.toLowerCase();
+        // Update search input state
         setSearchInput(query);
-
-        // Call filter cards function to filter cards based on search query
+        // Update filtered cards 
         setFilteredCards(filterCards());
     }
 
@@ -142,13 +146,14 @@ const Homepage = ({ net_id }) => {
     // Function that toggles dietary filters and allergen filters
     // checkboxes
     const handleFilter = (filter, type) => {
+        // Extract name and checked state of a specific filter
         const { name, checked } = filter.target;
 
         setFoodFilters((prevFoodFilters) => ({
-            ...prevFoodFilters,
+            ...prevFoodFilters, // Preserve existing filters
             [type]: {
                 ...prevFoodFilters[type],
-                [name]: checked,
+                [name]: checked, // Update the selected filter
             },
         }));
     };
@@ -158,7 +163,7 @@ const Homepage = ({ net_id }) => {
     // Function to filter cards based on search query and preferences
     const filterCards = () => {
         return cards.filter((card) => {
-            // Ensure card.allergies and card.dietary_tags are arrays
+            // Ensure allergies and dietary tags are arrays
             const cardAllergies = Array.isArray(card.allergies) ? 
                 card.allergies : [];
             const cardDietaryTags = Array.isArray(card.dietary_tags) ? 
@@ -177,46 +182,53 @@ const Homepage = ({ net_id }) => {
                     card.location,
                     ...card.dietary_tags,
                     ...card.allergies
-                ].join(' ').toLowerCase(); // Combine and normalize case
-    
+                ].join(' ').toLowerCase(); // Combine and normalize text
+                                            // for matching
+                
+               // Exclude card that doesn't match search query
                 if (!combinedCardText.includes(searchInput.toLowerCase())) {
-                    return false; // Exclude if the search query doesn't match
+                    return false;
                 }
             }
 
-            // Check for allergy filters (allergies take precedence)
+            // Allergen filtering
             const selectedAllergens = Object.keys(
                 foodFilters.allergies).filter((allergen) => 
                     foodFilters.allergies[allergen]
-            ).map((a) => a.toLowerCase()); // Normalize selected allergens for comparison
+            ).map((a) => a.toLowerCase()); // Normalize data for case
+                                            // sensitivity
 
             if (selectedAllergens.length > 0) {
                 const hasAllergen = selectedAllergens.some((allergen) =>
                     normalizedAllergies.includes(allergen)
                 );
+                // Exclude card if it has selected allergen
                 if (hasAllergen) {
-                    return false; // Exclude card if it has a selected allergen
+                    return false;
                 }
             }
 
-            // Check for dietary preference filters
+            // Dietary preference filtering
             const activeDietaryPreferences = Object.keys(
                 foodFilters.dietary).filter((preference) => 
                     foodFilters.dietary[preference]
-            ).map((p) => p.toLowerCase()); // Normalize for comparison
+            ).map((p) => p.toLowerCase()); // Normalize data for case
+                                            // sensitivity
 
-            // No dietary preferences selected, include all cards that pass the allergen check
+            // No dietary preferences selected, 
+            // include all cards that pass the allergen check
             if (activeDietaryPreferences.length === 0) {
                 return true;
             }
 
-            // Check if card matches any of the selected dietary preferences
+            // Check if card matches any of the selected dietary 
+            // preferences
             const matchesDietaryPreferences = 
                     activeDietaryPreferences.every((preference) => {
                 return normalizedDietaryTags.includes(preference);
             });
 
-            // Exclude a card if it doesn't match dietary prefs
+            // Exclude a card if it doesn't match dietary preferences
             if (!matchesDietaryPreferences) {
                 return false;
             }
@@ -228,23 +240,22 @@ const Homepage = ({ net_id }) => {
 
 //----------------------------------------------------------------------
 
-    // Function that toggles hamburger menu (for mobile)
+    // Function that toggles mobile hamburger menu
     const toggleHamburger = () => {
         setHamburgerOpen(!isHamburgerOpen);
 
         // Target the mobile navbar
         const mobileNavbar = 
             document.querySelector('.mobile-navbar-left');
-
+        
+        // Define styles based on navbar visibility
         if (isHamburgerOpen) {
-            // Set opacity and visibility to hidden before fully hiding
             mobileNavbar.style.top = "3.5vh";
             mobileNavbar.style.zIndex = "-1";
             mobileNavbar.style.opacity = '0';
             mobileNavbar.style.visibility = 'hidden';
             mobileNavbar.style.height = '0px';
         } else {
-            // Make it visible first
             mobileNavbar.style.top = "7vh";
             mobileNavbar.style.zIndex = "0";
             mobileNavbar.style.visibility = 'visible';
@@ -255,32 +266,27 @@ const Homepage = ({ net_id }) => {
 
 //----------------------------------------------------------------------
 
-    // Function that toggles small preferences menu (for mobile)
+    // Function that toggles mobile preferences menu
     const toggleSmallPreferences = () => {
         setPreferencesOpen(!isPreferencesOpen);
 
-        // If mobile preferences button is open, display the hidden items
+        // Target preferences navbar
         const preferences = 
             document.querySelector('.mobile-preferences-menu');
         
+        // Define styles based on menu visibility
         if (isPreferencesOpen) {
-            // Set visibility and opacity to hidden before hiding
             preferences.style.opacity = '0';
             preferences.style.visibility = 'hidden';
-    
-            // Use a timeout to hide after the transition ends
             setTimeout(() => {
                 preferences.style.display = 'none';
-            }, 300); // Matches the CSS transition duration
+            }, 300);
         } else {
-            // Make it visible first
             preferences.style.display = 'flex';
-    
-            // Delay the opacity and visibility change to let it render
             setTimeout(() => {
                 preferences.style.opacity = '1';
                 preferences.style.visibility = 'visible';
-            }, 0); // No delay to show immediately
+            }, 0);
         }
     }
 
@@ -316,7 +322,7 @@ const Homepage = ({ net_id }) => {
 
                 {/* Div to organize items on the right of the navbar */}
                 <div className="navbar-right">
-                    {/* Hamburger icon to condense left navbar buttons on smaller screens */}
+                    {/* Hamburger icon */}
                     <button className="nav-button nav-menu-open" onClick={toggleHamburger}>
                         <img src={hamburgerIcon}
                             alt="Open Menu"
@@ -370,12 +376,12 @@ const Homepage = ({ net_id }) => {
             <main>
                 {/* Div for left side content */}
                 <div className="content-container">
-                    {/* Welcome section */}
+                    {/* Greeting message */}
                     <div className="greeting">
                         <h1>{greeting} {net_id}, welcome to TigerFoodies!</h1>
                     </div>
 
-                    {/* Div for preferences layout for when screen is smaller */}
+                    {/* Mobile preferences menu */}
                     <div className="smaller-preferences">
                         <button className="preferences-button" onClick={toggleSmallPreferences}>
                             <img src={preferencesIcon}
@@ -384,8 +390,9 @@ const Homepage = ({ net_id }) => {
                         </button>
                     </div>
 
+                    {/* Filtering menu for smaller screens */}
                     <aside className="mobile-preferences-menu">
-                        {/* Section for dietary preferences */}
+                        {/* Dietary preferences filtering */}
                         <div className="mobile-preferences-selection">
                             <div className="mobile-preferences-header">
                                 <h3>Preferences</h3>
@@ -434,8 +441,7 @@ const Homepage = ({ net_id }) => {
                                 Gluten-Free
                             </label>
                         </div>
-
-                        {/* Section for allergy filtering */}
+                        {/* Allergens filtering */}
                         <div className="mobile-preferences-selection">
                             <div className="mobile-preferences-header">
                                 <h3>Allergens</h3>
@@ -476,9 +482,9 @@ const Homepage = ({ net_id }) => {
                     </div>
                 </div>
                 
-                {/* Right sidebar with dietary preferences and allergy filters */}
+                {/* Sidebar food filtering */}
                 <aside className="sidebar">
-                    {/* Section for dietary preferences */}
+                    {/* Dietary preferences filtering */}
                     <div className="food-preferences-selection">
                         <div className="preferences-header">
                             <h3>Preferences</h3>
@@ -528,8 +534,7 @@ const Homepage = ({ net_id }) => {
                             Gluten-Free
                         </label>
                     </div>
-
-                    {/* Section for allergy filtering */}
+                    {/* Allergen filtering */}
                     <div className="food-preferences-selection">
                         <div className="preferences-header">
                             <h3>Allergens</h3>
