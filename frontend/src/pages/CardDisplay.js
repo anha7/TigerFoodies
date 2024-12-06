@@ -63,7 +63,7 @@ function Card({ onClick, card }) {
         <div key={card.card_id} className="card" onClick={onClick}>
             <div
                 className="card-image"
-                style={{ backgroundImage: `url(${card.photo_url})` }}
+                style={(card.photo_url && {backgroundImage: (`url(${card.photo_url})`) })}
             ></div>
             <div className="card-content">
                 <div className="card-content-main">
@@ -124,7 +124,7 @@ function Modal({ card, setIsModalActive, net_id }) {
             <div className="modal-card" onClick={(e) => e.stopPropagation()}>
                 <div
                     className="modal-card-image"
-                    style={{ backgroundImage: `url(${card.photo_url})` }}
+                    style={(card.photo_url && {backgroundImage: `url(${card.photo_url})`})}
                 />
                 <div className="modal-card-content">
                     <div className="main-modal-content">
