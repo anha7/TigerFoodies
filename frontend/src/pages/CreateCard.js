@@ -3,7 +3,7 @@
 // Authors: Anha Khan, Arika Hassan, Laiba Ali, Mark Gazzerro, Sami Dalu
 //----------------------------------------------------------------------
 
-// Imports
+// Import statements
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './CreateEditCard.css'; // Import custom CSS file
@@ -11,31 +11,42 @@ import { useLoadScript, Autocomplete } from "@react-google-maps/api";
 
 //----------------------------------------------------------------------
 
-// Define which Google Maps libraries we're going to use
-// (places for autocomplete)
+// Specify the Google Maps API libraries to be used
+// (Autocomplete functionality)
 const LIBRARIES = ["places"];
 
+// Main CreateCard functional component
 function CreateCard( { net_id } ) {
-    // Initialize state and other utility variables
+    // Card title
     const [title, setTitle] = useState('');
+    // Card description
     const [description, setDescription] = useState('');
+    // URL of uploaded image
     const [photo, setPhoto] = useState('');
+    // Location name/address
     const [location, setLocation] = useState('');
+    // Latitude of location
     const [latitude, setLatitude] = useState('');
+    // Longitude of location
     const [longitude, setLongitude] = useState('');
+    // List of selected dietary preferences
     const [dietary_tags, setDietary] = useState([]);
+    // List of selected allergens
     const [allergies, setAllergies] = useState([]);
+    // Navigation hook for redirecting the user
     const navigate = useNavigate();
+    // Ref for referencing the Autocomplete instance
     const autocompleteRef = useRef(null);
 
 //----------------------------------------------------------------------
 
-    // Connect to Google Maps API for autocomplete
+    // Load Google Maps API script
     const { isLoaded, loadError } = useLoadScript({
         googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
-        libraries: LIBRARIES, // Include places library for autocomplete
+        libraries: LIBRARIES, // Include "places"
     });
     
+    // Display error or loading status if API fails to load
     if (loadError) {
         console.error("Error loading Google Maps API:", loadError);
         return <div>Error loading map</div>;
@@ -46,16 +57,20 @@ function CreateCard( { net_id } ) {
 
 //----------------------------------------------------------------------
 
-    // Update location
+    // Handle changes in the Autocomplete input field
     const handlePlaceChanged = () => {
         if (autocompleteRef.current) {
+            // Get selected place details
             const place = autocompleteRef.current.getPlace();
-            const name = place?.name || ''; // Short name of the place
+            // Extract the shorthand name of a place
+            const name = place?.name || ''; 
+            // Extract the formatted address
             const address = place?.formatted_address || '';
     
-            // Use the name if it exists; fallback to formatted_address
+            // Update location state with name or address
             setLocation(name || address);
-    
+            
+            // Update latitude and longitude if geometry is available
             if (place.geometry) {
                 setLatitude(place.geometry.location.lat());
                 setLongitude(place.geometry.location.lng());
@@ -87,20 +102,25 @@ function CreateCard( { net_id } ) {
 
 //----------------------------------------------------------------------
 
+    // Cloudinary URL and preset for image uploads
     const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/
         ${process.env.REACT_APP_CLOUDINARY_KEY}/image/upload`;
     const CLOUDINARY_UPLOAD_PRESET = 'TigerFoodies';
 
-    // Sets image using Cloudinary
+    // Handle image uploads to Cloudinary
     const handleImageChange = async (event) => {
+        // Get selected file
         const file = event.target.files[0];
         if (!file) return;
-   
+        
         const formData = new FormData();
+        // Add file to form data
         formData.append('file', file);
+        // Add upload preset
         formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
    
         try {
+            // Upload image to Cloudinary
             const response = await fetch(CLOUDINARY_URL, {
                 method: 'POST',
                 body: formData
@@ -108,12 +128,15 @@ function CreateCard( { net_id } ) {
             const data = await response.json();
    
             if (data.secure_url) {
+                // Update photo state with the secure URL
                 setPhoto(data.secure_url);
             } else {
+                // Otherwise catch the error
                 throw new Error(
             'Failed to retrieve image URL from Cloudinary response');
             }
         } catch (error) {
+            // Catch any other errors related to image uploading
             console.error('Error uploading the image:', error);
             alert('Image upload failed. Please try again.');
         }
@@ -123,15 +146,17 @@ function CreateCard( { net_id } ) {
 
     // Handles submitting the card to the database
     const handleSubmit = async (e) => {
-        e.preventDefault(); // Prevent default form submission
+        // Prevent default form submission
+        e.preventDefault();
 
-        // Validation: Ensure location and coordinates are set
+        // Validation: ensure location and coordinates are set
         if (!location || !latitude || !longitude) {
             alert(
                 "Please select a valid location from the suggestions.");
             return; // Stop form submission
         }
 
+        // Prepare card data
         const cardData = {
             net_id: net_id,
             title: title, 
@@ -145,33 +170,37 @@ function CreateCard( { net_id } ) {
         };
         
         try {
+            // Send card data to backend
             const response = await fetch(`/api/cards`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(cardData), // Send card data
+                body: JSON.stringify(cardData),
             });
 
+            // Redirect to homepage after successful submission
             if (response.ok) {
-                navigate('/'); // Redirect to homepage after success
+                navigate('/');
             } else {
+                // Otherwise catch error
                 console.error('Error creating card');
             }
         } catch (error) {
+            // Catch any errors related to new card submission
             console.error('Error submitting the card:', error);
         }
     };
 
 //----------------------------------------------------------------------
 
-    // Character limit for title and description
+    // Character limits for title and description
     const maxTitleLength = 100;
     const maxDescriptionLength = 250;
 
+    // Render the form
     return (
         <div className="CreateCard">
-
             {/* Navigation Bar */}
             <nav className = "nav">
                 {/* Button that redirects to homepages */}
@@ -181,10 +210,12 @@ function CreateCard( { net_id } ) {
             {/* Main content container for form data */}
             <div className='main' >
                 <div className="entire-form">
+                    {/* Name of page */}
                     <div className="page-name">
                         <h2> Make a Card </h2> 
                     </div>
 
+                    {/* Card creation form */}
                     <form onSubmit={handleSubmit}>
                         {/* Title field */}
                         <div className="title">
@@ -205,7 +236,7 @@ function CreateCard( { net_id } ) {
                             </h4>
                         </div>
 
-                        {/* Field to upload food image */}
+                        {/* Image upload field */}
                         <div className="photo">
                             <h4>Image: * <br/>
                             <input
