@@ -64,13 +64,13 @@ function CardDisplay({ card, net_id }) {
 //----------------------------------------------------------------------
 
 // Component to render an individual card
-function Card({ onClick, card }) {  
+function Card({ onClick, card }) {
     return (
         <div key={card.card_id} className="card" onClick={onClick}>
             {/* Background image of modal is of the food */}
             <div
                 className="card-image"
-                style={card != null && card.photo_url != null ? 
+                style={card !== null && card.photo_url !== null ? 
                 { backgroundImage: `url(${card.photo_url})` } : {}}
             ></div>
 
@@ -127,8 +127,7 @@ function Modal({ card, setIsModalActive, net_id }) {
         setCommentsIsActive(!commentsIsActive);
     };
 
-    console.log("Modal", card&& card.photo_url)
-
+    console.log("Modal", card !== null && card.photo_url !== null)
     return (
         <div
             onClick={(e) => {
@@ -142,7 +141,7 @@ function Modal({ card, setIsModalActive, net_id }) {
                 {/* Background image of modal is of the food */}
                 <div
                     className="modal-card-image"
-                    style={card != null && card.photo_url != null ? 
+                    style={card !== null && card.photo_url !== null ? 
                 { backgroundImage: `url(${card.photo_url})` } : {}}
                 />
                 {/* Information related to the food */}
