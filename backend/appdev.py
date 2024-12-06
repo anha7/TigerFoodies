@@ -528,6 +528,14 @@ def fetch_recent_rss_entries():
                     # Scrape relevant information from entry
                     title = item.title.text
 
+                    # Check if the title already exists in the database
+                    check_query = """SELECT COUNT(*) FROM cards WHERE title = %s"""
+                    cursor.execute(check_query, (title,))
+                    result = cursor.fetchone()
+                    if result[0] > 0:
+                        # If the title already exists, skip this entry
+                        continue
+
                     # Package data to be inserted into database
                     data = ["cs-tigerfoodies", title]
 

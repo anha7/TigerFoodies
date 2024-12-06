@@ -524,6 +524,14 @@ def fetch_recent_rss_entries():
                         item.pubDate.text, "%a, %d %b %Y %H:%M:%S %z")
                     if pubDate < time_threshold:
                         break
+
+                    # Check if the title already exists in the database
+                    check_query = """SELECT COUNT(*) FROM cards WHERE title = %s"""
+                    cursor.execute(check_query, (title,))
+                    result = cursor.fetchone()
+                    if result[0] > 0:
+                        # If the title already exists, skip this entry
+                        continue
                     
                     # Scrape relevant information from entry
                     title = item.title.text
