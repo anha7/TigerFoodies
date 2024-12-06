@@ -30,7 +30,7 @@ conn = psycopg2.connect(DATABASE_URL)
 # Initialize Flask app
 app = Flask(__name__, static_folder='build', static_url_path='')
 
-socketio = SocketIO(app, cors_allowed_origins="*", engineio_logger = True)
+# socketio = SocketIO(app, cors_allowed_origins="*", engineio_logger = True)
 
 # Set up secret key
 app.secret_key = secrets.token_hex(32)
