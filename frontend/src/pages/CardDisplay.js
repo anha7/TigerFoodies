@@ -3,6 +3,7 @@
 // Authors: Anha Khan, Arika Hassan, Laiba Ali, Mark Gazzerro, Sami Dalu
 //----------------------------------------------------------------------
 
+// Import statements
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import commentsIcon from './media/comment.svg';
 import mapIcon from './media/location.svg';
@@ -13,13 +14,17 @@ import backIcon from './media/back.svg';
 
 //----------------------------------------------------------------------
 
-// Function to format the time into a relative "time ago" format
+// Utility function to format the time into a relative "time ago" format
 const formatTimeAgo = (timestamp) => {
+    // Current time
     const currentTime = new Date();
-    const postedTime = new Date(timestamp);
+    // Posted time from the timestamp
+    const postedTime = new Date(timestamp); 
+    // Calculate time difference in seconds
     const differenceInSeconds = Math.floor(
         (currentTime - postedTime) / 1000);
-
+    
+    // Return time in appropriate format: seconds, minutes, or hours ago
     if (differenceInSeconds < 60) {
         return `${differenceInSeconds} second${
             differenceInSeconds !== 1 ? 's' : ''} ago`;
@@ -34,10 +39,11 @@ const formatTimeAgo = (timestamp) => {
 
 //----------------------------------------------------------------------
 
-// Displays a card and manages modal state
+// Main component to display a card and its modal
 function CardDisplay({ card, net_id }) {
+    // State to track modal visibility
     const [isModalActive, setIsModalActive] = useState(false);
-
+    // Handle card click to show modal
     const handleCardClick = useCallback(() => {
         setIsModalActive(true);
     }, []);
@@ -57,14 +63,17 @@ function CardDisplay({ card, net_id }) {
 
 //----------------------------------------------------------------------
 
-// Component for rendering individual cards
+// Component to render an individual card
 function Card({ onClick, card }) {
     return (
         <div key={card.card_id} className="card" onClick={onClick}>
+            {/* Background image of modal is of the food */}
             <div
                 className="card-image"
                 style={{ backgroundImage: `url(${card.photo_url})` }}
             ></div>
+
+            {/* Shorthand information related to food */}
             <div className="card-content">
                 <div className="card-content-main">
                     <h3>{card.title}</h3>
@@ -87,6 +96,8 @@ function Card({ onClick, card }) {
                         {card.allergies?.join(', ') || ' '}
                     </p>
                 </div>
+
+                {/* Footer contains posted at time */}
                 <div className="card-content-footer">
                     <p className="posted-at">
                         Posted {formatTimeAgo(card.posted_at)}
@@ -99,15 +110,18 @@ function Card({ onClick, card }) {
 
 //----------------------------------------------------------------------
 
-// Modal component for displaying card details and comments
+// Modal component to display card details and additional options
 function Modal({ card, setIsModalActive, net_id }) {
+    // State for comments visibility
     const [commentsIsActive, setCommentsIsActive] = useState(false);
+    // State for map modal visibility
     const [mapModalActive, setMapModalActive] = useState(false);
 
+    // Handle location button click to open map modal
     const handleLocationClick = () => {
         setMapModalActive(true);
     };
-
+    // Toggle visibiliy of comments section
     const handleCommentsButtonClick = () => {
         setCommentsIsActive(!commentsIsActive);
     };
@@ -122,10 +136,13 @@ function Modal({ card, setIsModalActive, net_id }) {
             className={`modal-root ${mapModalActive ? 'no-overlay' : ''}`}
         >
             <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+                {/* Background image of modal is of the food */}
                 <div
                     className="modal-card-image"
                     style={{ backgroundImage: `url(${card.photo_url})` }}
                 />
+
+                {/* Information related to the food */}
                 <div className="modal-card-content">
                     <div className="main-modal-content">
                         <h3>{card.title}</h3>
@@ -142,6 +159,9 @@ function Modal({ card, setIsModalActive, net_id }) {
                             <b>Description:</b> {card.description}
                         </p>
                     </div>
+
+                    {/* Footer of modal contains comments and location */}
+                    {/* functionality, as well as posted at time */}
                     <div className="modal-footer">
                         <div className="modal-icons">
                             <button className="comments-button" onClick={handleCommentsButtonClick}>
@@ -173,6 +193,8 @@ function Modal({ card, setIsModalActive, net_id }) {
                     </div>
                 </div>
             </div>
+
+            {/* Location modal component  */}
             {mapModalActive && (
                 <MapModal
                     latitude={card.latitude}
@@ -186,42 +208,47 @@ function Modal({ card, setIsModalActive, net_id }) {
 
 //----------------------------------------------------------------------
 
-// Component for managing and displaying comments
+// Component to manage and display the comments section
 function CommentsSection({ card_id, net_id }) {
+    // State to store fetched comments
     const [comments, setComments] = useState([]);
+    // State to manage the new comment input
     const [newComment, setNewComment] = useState('');
-
     // Ref that stores interval ID of polling timer
     const intervalIDRef = useRef(null)
     
     // Function to fetch comments from the server
     const fetchComments = useCallback(async () => {
         try {
+            // Fetch comments for a specfic card
             const response = await fetch(`/api/comments/${card_id}`);
             const data = await response.json();
             if (Array.isArray(data)) {
+                // Update statew with fetch comments
                 setComments(data);
             } else {
+                // Otherwise return an error
                 console.error('Error fetching comments:', data.message 
                     || 'Unknown error');
             }
         } catch (error) {
+            // Catch any errors related to fetching a card's comments
             console.error('Error fetching comments:', error);
         }
     }, [card_id]);
 
-    // Effect to fetch comments initially
+    // Effect to fetch comments when the component mounts
     useEffect(() => {
-        fetchComments(); // Fetch comments when the component mounts
+        fetchComments(); // Initial fetch of comments
 
-        // fetches cards from the backend every 60 seconds
+        // Set up polling to refresh comments every 60 seconds
         const startPolling = () => {
             intervalIDRef.current = setInterval(fetchComments, 60000)
         };
 
         startPolling();
 
-        // Clean up the interval id on unmount
+        // Clean up the interval on component unmount
         return () => {
             if (intervalIDRef.current) {
                 clearInterval(intervalIDRef.current);
@@ -231,11 +258,14 @@ function CommentsSection({ card_id, net_id }) {
 
     // Function to handle posting a new comment
     const handleCommentPosting = async (e) => {
+        // Prevent form submission from freshing the page
         e.preventDefault();
 
+        // Prepare new comment data
         const newCommentData = { comment: newComment, net_id };
 
         try {
+            // Send new comment data to server
             const response = await fetch(`/api/comments/${card_id}`, {
                 method: 'POST',
                 headers: {
@@ -246,26 +276,34 @@ function CommentsSection({ card_id, net_id }) {
 
             if (response.ok) {
                 setNewComment(''); // Clear the input field
-                fetchComments(); // fetch again so user can see theirs
+                fetchComments(); // Refresh comments after posting
             } else {
+                // Otherwise display error
                 console.error('Error creating new comment');
             }
         } catch (error) {
+            // Display any other errors related to comment submission
             console.error('Error submitting the new comment:', error);
         }
     };
 
+    // Limit character length of a comment
     const maxCommentLength = 200;
 
     return (
         <div className="modal-comments-section">
-            <h3>Comments</h3>
+            {/* Comments section title */}
+            <h3>Comments</h3> 
+
+            {/* All comments of a card */}
             {comments.map((comment_info) => (
                 <div className="modal-comment" key={comment_info.posted_at}>
                     <h4>{comment_info.net_id} · {formatTimeAgo(comment_info.posted_at)}</h4>
                     <p>{comment_info.comment}</p>
                 </div>
             ))}
+
+            {/* Comment submission form */}
             <form className="comment-form" onSubmit={handleCommentPosting}>
                 <input
                     type="text"
@@ -286,12 +324,15 @@ function CommentsSection({ card_id, net_id }) {
 
 //----------------------------------------------------------------------
 
-// Component for map modal
+// Component to render a modal with an embedded map
 function MapModal({ latitude, longitude, setMapModalActive }) {
+    // Function to close the map model
     const handleBackClick = () => {
         setMapModalActive(false);
     }
 
+    // Google maps embed URL, dynamically constructed with provided
+    // latitude and longitude
     const mapEmbedUrl = `https://www.google.com/maps/embed/v1/place?key=
         ${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
         &q=${latitude},${longitude}
@@ -303,14 +344,18 @@ function MapModal({ latitude, longitude, setMapModalActive }) {
             className="modal-root"
             onClick={(e) => {
                 if (e.target === e.currentTarget) {
+                    // Close modal when clicking outside of it
                     setMapModalActive(false);
                 }
             }}
         >
             <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+                {/* Location section title */}
                 <div className="map-title">
                     <h2>Location of Food</h2>
                 </div>
+
+                {/* Map embed of food location */}
                 <div className="map-embed">
                     <iframe
                         src={mapEmbedUrl}
@@ -319,6 +364,8 @@ function MapModal({ latitude, longitude, setMapModalActive }) {
                         allowFullScreen
                     />
                 </div>
+
+                {/* Functionality to return to card modal */}
                 <div className="map-close">
                     <button onClick={handleBackClick}>
                         <img src={backIcon} height="18px"/>
