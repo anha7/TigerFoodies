@@ -11,6 +11,8 @@ import searchIcon from './media/search.svg';
 import createIcon from './media/create.svg';
 import hamburgerIcon from './media/hamburger.svg';
 import preferencesIcon from './media/preferences.svg';
+import dietaryPreferencesIcon from './media/dietary-preferences.svg';
+import allergensIcon from './media/allergens.svg';
 import CardDisplay from './CardDisplay'; // to view extended card info
 import Feedback from './Feedback';
 // import socket from '../Socket';
@@ -381,7 +383,10 @@ const Homepage = ({ net_id }) => {
                     <aside className="mobile-preferences-menu">
                         {/* Section for dietary preferences */}
                         <div className="mobile-preferences-selection">
-                            <h3>Preferences</h3>
+                            <div className="mobile-preferences-header">
+                                <h3>Preferences</h3>
+                                <img src={dietaryPreferencesIcon} alt="Dietary Preferences" height="18px"/>
+                            </div>
                             <label>
                                 <input type="checkbox" name="vegetarian" checked={foodFilters.dietary['vegetarian']} onChange={(filter) => handleFilter(filter, 'dietary')} />
                                 Vegetarian
@@ -406,7 +411,10 @@ const Homepage = ({ net_id }) => {
 
                         {/* Section for allergy filtering */}
                         <div className="mobile-preferences-selection">
-                            <h3>Allergens</h3>
+                            <div className="mobile-preferences-header">
+                                <h3>Allergens</h3>
+                                <img src={allergensIcon} alt="Allergens" height="18px" />
+                            </div>
                             <label>
                                 <input type="checkbox" name="nuts" checked={foodFilters.allergies['nuts']} onChange={(filter) => handleFilter(filter, 'allergies')} />
                                 Nuts
@@ -434,7 +442,10 @@ const Homepage = ({ net_id }) => {
                 <aside className="sidebar">
                     {/* Section for dietary preferences */}
                     <div className="food-preferences-selection">
-                        <h3>Preferences</h3>
+                        <div className="preferences-header">
+                            <h3>Preferences</h3>
+                            <img src={dietaryPreferencesIcon} alt="Dietary Preferences" height="18px"/>
+                        </div>
                         <label>
                             <input type="checkbox" name="vegetarian" checked={foodFilters.dietary['vegetarian']} onChange={(filter) => handleFilter(filter, 'dietary')} />
                             Vegetarian
@@ -459,7 +470,10 @@ const Homepage = ({ net_id }) => {
 
                     {/* Section for allergy filtering */}
                     <div className="food-preferences-selection">
-                        <h3>Allergens</h3>
+                        <div className="preferences-header">
+                            <h3>Allergens</h3>
+                            <img src={allergensIcon} alt="Allergens" height="18px" />
+                        </div>
                         <label>
                             <input type="checkbox" name="nuts" checked={foodFilters.allergies['nuts']} onChange={(filter) => handleFilter(filter, 'allergies')} />
                             Nuts
