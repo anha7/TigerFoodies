@@ -3,7 +3,7 @@
 // Authors: Anha Khan, Arika Hassan, Laiba Ali, Mark Gazzerro, Sami Dalu
 //----------------------------------------------------------------------
 
-// Imports
+// Import statements
 import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate, useParams, Navigate } from 'react-router-dom';
 import './CreateEditCard.css'; // Import custom CSS file
@@ -11,38 +11,57 @@ import { useLoadScript, Autocomplete } from "@react-google-maps/api";
 
 //----------------------------------------------------------------------
 
-// Define which Google Maps libraries we're going to use
-// (places for autocomplete)
+// Specify the Google Maps API libraries to be used
+// (Autocomplete functionality)
 const LIBRARIES = ["places"];
 
 function EditCard({ net_id }) {
-    // Set state and other utility variables
+    // ID of card to be edited
     const {card_id} = useParams();
+    // Card title
     const [title, setTitle] = useState('');
+    // Card description
     const [description, setDescription] = useState('');
+    // URL of uploaded image
     const [photo, setPhoto] = useState('');
+    // Location name/address
     const [location, setLocation] = useState('');
+    // Latitude of location
     const [latitude, setLatitude] = useState('');
+    // Longitude of location
     const [longitude, setLongitude] = useState('');
+    // List of selected dietary preferences
     const [dietary_tags, setDietary] = useState([]);
+    // List of selected allergens
     const [allergies, setAllergies] = useState([]);
-    const [isAuthorized, setIsAuthorized] = useState(true);
+    // Navigation hook for redirecting the user
     const navigate = useNavigate();
+    // Ref for referencing the Autocomplete instance
     const autocompleteRef = useRef(null);
+    // State variable that holds whether user accessing edit form
+    // is the creator of the card
+    const [isAuthorized, setIsAuthorized] = useState(true);
 
-    // Retrieve and populate form with card data for associated id
+    // Fetch existing card data to pre-fill the form
     useEffect(() => {
         const fetchCard = async () => {        
             try {
+                // Retrieve existing card data
                 const response = await fetch(`/api/cards/${card_id}`, {
                     method: 'GET',
                 });
                 if (response.ok) {
                     const data = await response.json();
+
+                    // Check if logged-in user isn't the creator or an
+                    // admin
                     if (data.net_id !== net_id && 
                             net_id !== 'cs-tigerfoodies') {
+                        // Not authorized to edit
                         setIsAuthorized(false);
                     }
+
+                    // Populate form fields with the existing card data
                     setTitle(data.title || '');
                     setDescription(data.description || '');
                     setPhoto(data.photo_url || '');
@@ -52,26 +71,29 @@ function EditCard({ net_id }) {
                     setDietary(data.dietary_tags || []);
                     setAllergies(data.allergies || []);
                 } else {
+                    // Otherwise catch errors
                     console.warn(
                         'Backend card information not available.');
                 }
             } catch (error) {
-                console.error('Error Editing card:', error);
+                // Catch any errors related to fetching card data
+                console.error('Error fetching card data:', error);
             }
 
         };
+
         fetchCard();
     }, [card_id, net_id]);
 
 //----------------------------------------------------------------------
 
-    // Connect to Google Maps API for autocomplete
+    // Load Google Maps API script
     const { isLoaded, loadError } = useLoadScript({
         googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
-        libraries: LIBRARIES, // Include places library for autocomplete
+        libraries: LIBRARIES, // Include "places"
     });
     
-
+    // Display error or loading status if API fails to load
     if (loadError) {
         console.error("Error loading Google Maps API:", loadError);
         return <div>Error loading map</div>;
@@ -82,23 +104,27 @@ function EditCard({ net_id }) {
 
 //----------------------------------------------------------------------
 
-    // If user is not card creator or admin, redirect to homepage
+    // Redirect to homepage if the user is not authorized
     if (!isAuthorized) {
         return <Navigate to="/" replace />;
     }
 
 //----------------------------------------------------------------------
 
-    // Update location
+    // Handle changes in the Autocomplete input field
     const handlePlaceChanged = () => {
         if (autocompleteRef.current) {
+            // Get selected place details
             const place = autocompleteRef.current.getPlace();
-            const name = place?.name || ''; // Get the short name
+            // Extract the shorthand name of a place
+            const name = place?.name || ''; 
+            // Extract the formatted address
             const address = place?.formatted_address || '';
     
-            // Use the name if it exists; fallback to formatted_address
+            // Update location state with name or address
             setLocation(name || address);
-    
+            
+            // Update latitude and longitude if geometry is available
             if (place.geometry) {
                 setLatitude(place.geometry.location.lat());
                 setLongitude(place.geometry.location.lng());
@@ -130,20 +156,24 @@ function EditCard({ net_id }) {
 
 //----------------------------------------------------------------------
 
+    // Cloudinary URL and preset for image uploads
     const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/
         ${process.env.REACT_APP_CLOUDINARY_KEY}/image/upload`;
     const CLOUDINARY_UPLOAD_PRESET = 'TigerFoodies';
 
-    // Sets image
+    // Handle image uploads to Cloudinary
     const handleImageChange = async (event) => {
         const file = event.target.files[0];
         if (!file) return;
 
         const formData = new FormData();
+        // Add file to form data
         formData.append('file', file);
+        // Add upload preset
         formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
 
         try {
+            // Upload image to Cloudinary
             const response = await fetch(CLOUDINARY_URL, {
                 method: 'POST',
                 body: formData
@@ -151,12 +181,15 @@ function EditCard({ net_id }) {
             const data = await response.json();
 
             if (data.secure_url) {
+                // Update photo state with the secure URL
                 setPhoto(data.secure_url);
             } else {
+                // Otherwise catch the error
                 throw new Error(
             'Failed to retrieve image URL from Cloudinary response');
             }
         } catch (error) {
+            // Catch any other errors related to image uploading
             console.error('Error uploading the image:', error);
             alert('Image upload failed. Please try again.');
         }
@@ -166,7 +199,8 @@ function EditCard({ net_id }) {
     
     // Handles submitting the card to the database
     const handleSubmit = async (e) => {
-        e.preventDefault(); // Prevent default form submission
+        // Prevent default form submission
+        e.preventDefault();
 
         // Validation: Ensure location and coordinates are set
         if (!location || !latitude || !longitude) {
@@ -175,6 +209,7 @@ function EditCard({ net_id }) {
             return; // Stop form submission
         }
 
+        // Prepare card data
         const cardData = {
             net_id: net_id,
             title: title, 
@@ -188,6 +223,7 @@ function EditCard({ net_id }) {
         };
         
         try {
+            // Send card data to backend
             const response = await fetch(`/api/cards/${card_id}`, {
                 method: 'PUT',
                 headers: {
@@ -196,15 +232,18 @@ function EditCard({ net_id }) {
                 body: JSON.stringify(cardData), // Send card data 
             });
 
+            // Redirect to view cards page after successful submission
             if (response.ok) {
-                navigate('/view'); // Redirect to view after success
+                navigate('/view');
             } else {
+                // Otherwise catch error
                 const errorDetails = await response.json();
                 console.error("Failed to edit card:", 
                     errorDetails.message || "Unknown error");
             }
         } catch (error) {
-            console.error('Error updating the card:', error);
+            // Catch any errors related to editing the card
+            console.error('Error editing the card:', error);
         }
     };
 
@@ -214,6 +253,7 @@ function EditCard({ net_id }) {
     const maxTitleLength = 100;
     const maxDescriptionLength = 250;
 
+    // Render the form
     return (
         <div className="EditCard">
 
@@ -226,10 +266,12 @@ function EditCard({ net_id }) {
             {/* Main content container for form data */}
             <div className='main' >
                 <div className="entire-form">
+                    {/* Name of page */}
                     <div className="page-name">
                         <h2>Edit Card</h2> 
                     </div>
 
+                    {/* Card editing form */}
                     <form onSubmit={handleSubmit}>
                         {/* Title field */}
                         <div className="title">
@@ -248,7 +290,7 @@ function EditCard({ net_id }) {
                             </h4>
                         </div>
 
-                        {/* Field to upload food image */}
+                        {/* Image upload field */}
                         <div className="photo">
                             <h4>Image: * <br/>
                             <input
