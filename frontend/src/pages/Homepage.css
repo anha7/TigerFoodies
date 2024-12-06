@@ -608,7 +608,8 @@ input[type="checkbox"]:checked:after {
 
 /* Style mobile food preferences menu */
 .mobile-preferences-menu {
-    display: none; /* Hide mobile preferences selection in normal display */
+    display: none; /* Hide mobile preferences selection in normal 
+        display */
     visibility: hidden;
     opacity: 0;
     align-self: center;
@@ -736,7 +737,7 @@ footer p {
         width: 90%;
     }
 
-    /* Move last button over to accommodate for padding from input (30px) */
+    /* Move last button over to accommodate for padding from input */
     .navbar-right button:last-child {
         margin-left: 32px;
     }
@@ -778,7 +779,8 @@ footer p {
         background-color: #E79781;
     }
 
-    /* Will display filters in a menu instead of on the side to account for smaller screens*/
+    /* Will display filters in a menu instead of on the side to account for 
+        smaller screens*/
     .sidebar {
         display: none;
     }
