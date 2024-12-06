@@ -303,7 +303,7 @@ def edit_card(card_id):
                 update_query = '''UPDATE cards SET (title, description,
                     photo_url, location, latitude, longitude, 
                     dietary_tags, allergies, updated_at)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, 
+                    = (%s, %s, %s, %s, %s, %s, %s, %s, 
                     CURRENT_TIMESTAMP)
                     WHERE card_id = %s;
                 '''
