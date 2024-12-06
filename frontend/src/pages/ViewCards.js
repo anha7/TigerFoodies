@@ -3,82 +3,92 @@
 // Authors: Anha Khan, Arika Hassan, Laiba Ali, Mark Gazzerro, Sami Dalu
 //----------------------------------------------------------------------
 
-// Imports
+// Import statements
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './ViewCards.css'; // Import custom CSS file
-import CardDisplay from './CardDisplay'; // To view extended card info
+import './ViewCards.css';
+import CardDisplay from './CardDisplay';
 import editIcon from './media/edit.svg';
 import deleteIcon from './media/delete.svg';
 
 //----------------------------------------------------------------------
 
 const ViewCards = ({ net_id }) => {
-    // State to store fetched cards
+    // State to list of cards fetched from the backend
     const [cards, setCards] = useState([]);
+    // Navigation hook for redirecting users
     const navigate = useNavigate();
+    // Ref to store interval ID for periodic polling
     const intervalIDRef = useRef(null)
 //----------------------------------------------------------------------
 
-    // Send request to fetch user's cards from the back-end
+    // Fetch user's cards from the backend when component mounts
     useEffect(() => {
         const fetchUserCards = async () => {
             try {
                 let response;
-                if (net_id == 'cs-tigerfoodies') { // Grant cs-tigerfoodies admin perms
+                // If user is an admin, fetch all cards
+                if (net_id == 'cs-tigerfoodies') {
                     response = await fetch(`/api/cards`);
                 } else {
+                    // If user is not an admin, fetch only their cards
                     response = await fetch(`/api/cards/${net_id}`, {
                         method: 'GET'
                     });
                 }
+
+                // Parse response data and update the state
                 const data = await response.json();
                 setCards(data);
             } catch (error) {
+                // Otherwise catch error
                 console.error('Error fetching user cards:', error);
             }
         };
 
+        // Initial fetch
         fetchUserCards();
         
-        // fetches cards from the backend every 60 seconds
+        // Poll the server for update card data every 60 seconds
         const startPolling = () => {
             intervalIDRef.current = setInterval(fetchUserCards, 60000)
         };
-
         startPolling();
 
-        // Clean up the interval id on unmount
+        // Clean up the interval on component unmount
         return () => {
             if (intervalIDRef.current) {
                 clearInterval(intervalIDRef.current);
             }
         }
-
     }, [net_id]);
 
 //----------------------------------------------------------------------
 
-    // Send request to delete cards
+    // Handle deletion of a card
     const handleDeleteCard = async (card_id) => {
         try {
+            // Send a delete request to the server
             const response = await fetch(`/api/cards/${card_id}`, {
                 method: 'DELETE',
             });
             if (response.ok) {
+                // Remove deleted card from the state
                 setCards(cards.filter((card) => 
                     card.card_id !== card_id));
             } else {
+                // Warn if endpoint is not available
                 console.warn('Backend delete endpoint not available.');
             }
         } catch (error) {
+            // Catch any errors related to deleting a card
             console.error('Error deleting card:', error);
         }
     };
 
 //----------------------------------------------------------------------
 
-    // Handle editing cards
+    // Handle navigation to the card editing page
     const handleEditCard = (card_id) => {
         navigate(`/edit/${card_id}`);
     };
@@ -108,7 +118,7 @@ const ViewCards = ({ net_id }) => {
                 <div className="viewcards-card-list">
                     {cards.map((card) => (
                         <div className='viewcards-container'>
-                            {/* Makes the edit and delete buttons */}
+                            {/* Displays the edit and delete buttons */}
                             <div className="card-actions">
                                 <button className="edit-button" onClick={() => handleEditCard(card.card_id)}>
                                     <img src={editIcon}
@@ -123,7 +133,9 @@ const ViewCards = ({ net_id }) => {
                                     />
                                 </button>
                             </div>
-                            {/* Get card info */}
+
+                            {/* Card content rendered by the */}
+                            {/* CardDisplay component */}
                             <CardDisplay card = {card} 
                                 net_id={net_id}
                             />
