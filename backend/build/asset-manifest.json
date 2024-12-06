@@ -1,9 +1,9 @@
 {
   "files": {
     "main.css": "/static/css/main.fad0f62e.css",
-    "main.js": "/static/js/main.fb15ebe4.js",
-    "static/media/allergens.svg": "/static/media/allergens.434a63e76f184f214270f7cf3e1c9117.svg",
+    "main.js": "/static/js/main.f81f73e4.js",
     "static/media/dietary-preferences.svg": "/static/media/dietary-preferences.a3672fde21cf00a753939e7a79499927.svg",
+    "static/media/allergens.svg": "/static/media/allergens.d22189c1241c5dad0d54af7f54b6f3e5.svg",
     "static/media/comment.svg": "/static/media/comment.054e659c86fa300f910102ad43407dc4.svg",
     "index.html": "/index.html",
     "static/media/preferences.svg": "/static/media/preferences.79af1ca8c7ce084a8e81b9de3df21afc.svg",
@@ -16,10 +16,10 @@
     "static/media/hamburger.svg": "/static/media/hamburger.5e3a84dcccd54aa1df79328b4f21a350.svg",
     "static/media/delete.svg": "/static/media/delete.eece3fb7c5f47f597f22c6e621e592e8.svg",
     "main.fad0f62e.css.map": "/static/css/main.fad0f62e.css.map",
-    "main.fb15ebe4.js.map": "/static/js/main.fb15ebe4.js.map"
+    "main.f81f73e4.js.map": "/static/js/main.f81f73e4.js.map"
   },
   "entrypoints": [
     "static/css/main.fad0f62e.css",
-    "static/js/main.fb15ebe4.js"
+    "static/js/main.f81f73e4.js"
   ]
 }
