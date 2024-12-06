@@ -70,8 +70,8 @@ function Card({ onClick, card }) {
             {/* Background image of modal is of the food */}
             <div
                 className="card-image"
-                style={(card.photo_url && card.photo_url !== "null" &&
-                    {backgroundImage: (`url(${card.photo_url})`) })}
+                style={card?.photo_url && card.photo_url !== "null" ? 
+                { backgroundImage: `url(${card.photo_url})` } : {}}
             ></div>
 
             {/* Shorthand information related to food */}
@@ -140,9 +140,9 @@ function Modal({ card, setIsModalActive, net_id }) {
                 {/* Background image of modal is of the food */}
                 <div
                     className="modal-card-image"
-                    style={(card.photo_url && {backgroundImage: `url(${card.photo_url})`})}
+                    style={card?.photo_url && card.photo_url !== "null" ? 
+                { backgroundImage: `url(${card.photo_url})` } : {}}
                 />
-
                 {/* Information related to the food */}
                 <div className="modal-card-content">
                     <div className="main-modal-content">
