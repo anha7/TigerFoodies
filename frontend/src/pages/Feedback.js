@@ -28,7 +28,8 @@ const Feedback = ({ isModalActive, setIsModalActive, net_id }) => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ net_id: net_id, feedback: feedbackInput }),
+                body: JSON.stringify({ net_id: net_id, 
+                    feedback: feedbackInput }),
             });
 
             if (response.ok) {
@@ -48,7 +49,8 @@ const Feedback = ({ isModalActive, setIsModalActive, net_id }) => {
         <>
             {isModalActive && (
                 <div className="modal-root" onClick={handleCloseModal}>
-                    <div className="modal-card" onClick={e => e.stopPropagation()}>
+                    <div className="modal-card" onClick={e => 
+                            e.stopPropagation()}>
                         <div className="feedback-title">
                             <h2>Report Bugs</h2>
                         </div>
@@ -56,10 +58,13 @@ const Feedback = ({ isModalActive, setIsModalActive, net_id }) => {
                             <textarea
                                 type="text"
                                 placeholder="Report any bugs..."
-                                onChange={e => setFeedbackInput(e.target.value)}
+                                onChange={e => 
+                                    setFeedbackInput(e.target.value)}
                                 required
                             />
-                            <button onClick={handleSubmit}>Submit</button>
+                            <button onClick={handleSubmit}>
+                                Submit
+                            </button>
                         </form>
                     </div>
                 </div>

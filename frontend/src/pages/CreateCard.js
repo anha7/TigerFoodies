@@ -11,7 +11,8 @@ import { useLoadScript, Autocomplete } from "@react-google-maps/api";
 
 //----------------------------------------------------------------------
 
-// Define which Google Maps libraries we're going to use (places for autocomplete)
+// Define which Google Maps libraries we're going to use
+// (places for autocomplete)
 const LIBRARIES = ["places"];
 
 function CreateCard( { net_id } ) {
@@ -49,7 +50,7 @@ function CreateCard( { net_id } ) {
     const handlePlaceChanged = () => {
         if (autocompleteRef.current) {
             const place = autocompleteRef.current.getPlace();
-            const name = place?.name || ''; // Get the short name of the place
+            const name = place?.name || ''; // Short name of the place
             const address = place?.formatted_address || '';
     
             // Use the name if it exists; fallback to formatted_address
@@ -68,7 +69,8 @@ function CreateCard( { net_id } ) {
     const handleDietaryChange = (event) => {
         const { value, checked } = event.target;
         setDietary((prevDietary) =>
-          checked ? [...prevDietary, value] : prevDietary.filter((d) => d !== value)
+          checked ? [...prevDietary, value] : 
+            prevDietary.filter((d) => d !== value)
         );
     };
 
@@ -78,13 +80,15 @@ function CreateCard( { net_id } ) {
     const handleAllergiesChange = (event) => {
         const { value, checked } = event.target;
         setAllergies((prevAllergies) =>
-          checked ? [...prevAllergies, value] : prevAllergies.filter((d) => d !== value)
+          checked ? [...prevAllergies, value] : 
+            prevAllergies.filter((d) => d !== value)
         );
     };
 
 //----------------------------------------------------------------------
 
-    const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/${process.env.REACT_APP_CLOUDINARY_KEY}/image/upload`;
+    const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/
+        ${process.env.REACT_APP_CLOUDINARY_KEY}/image/upload`;
     const CLOUDINARY_UPLOAD_PRESET = 'TigerFoodies';
 
     // Sets image using Cloudinary
@@ -106,7 +110,8 @@ function CreateCard( { net_id } ) {
             if (data.secure_url) {
                 setPhoto(data.secure_url);
             } else {
-                throw new Error('Failed to retrieve image URL from Cloudinary response');
+                throw new Error(
+            'Failed to retrieve image URL from Cloudinary response');
             }
         } catch (error) {
             console.error('Error uploading the image:', error);
@@ -122,7 +127,8 @@ function CreateCard( { net_id } ) {
 
         // Validation: Ensure location and coordinates are set
         if (!location || !latitude || !longitude) {
-            alert("Please select a valid location from the suggestions.");
+            alert(
+                "Please select a valid location from the suggestions.");
             return; // Stop form submission
         }
 
@@ -144,11 +150,11 @@ function CreateCard( { net_id } ) {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(cardData), // Send card data as JSON
+                body: JSON.stringify(cardData), // Send card data
             });
 
             if (response.ok) {
-                navigate('/'); // Redirect to homepage after successful card creation
+                navigate('/'); // Redirect to homepage after success
             } else {
                 console.error('Error creating card');
             }
@@ -175,7 +181,9 @@ function CreateCard( { net_id } ) {
             {/* Main content container for form data */}
             <div className='main' >
                 <div className="entire-form">
-                    <div className="page-name"> <h2> Make a Card </h2> </div>
+                    <div className="page-name">
+                        <h2> Make a Card </h2> 
+                    </div>
 
                     <form onSubmit={handleSubmit}>
                         {/* Title field */}
@@ -212,7 +220,9 @@ function CreateCard( { net_id } ) {
                             <div className='uploadedImage'>
                                 {photo && <img src={photo} 
                                     alt="Uploaded preview" 
-                                    style={{ width: '100%', height: 'auto', borderRadius: '8px'}} />}
+                                    style={{ width: '100%', 
+                                            height: 'auto', 
+                                            borderRadius: '10px'}} />}
                             </div>
                         </div>
 
@@ -220,13 +230,15 @@ function CreateCard( { net_id } ) {
                         <div className="location">
                             <h4> Location: * <br/> 
                                 <Autocomplete
-                                    onLoad={(autocomplete) => (autocompleteRef.current = autocomplete)}
+                                    onLoad={(autocomplete) => (
+                            autocompleteRef.current = autocomplete)}
                                     onPlaceChanged={handlePlaceChanged}
                                     >
                                     <input
                                         type="text"
                                         value={location}
-                                        onChange={(e) => setLocation(e.target.value)}
+                                        onChange={(e) => 
+                                            setLocation(e.target.value)}
                                         placeholder="Enter a location..."
                                     />
                                 </Autocomplete>
@@ -236,19 +248,75 @@ function CreateCard( { net_id } ) {
                         {/* Dietary preferences field */}
                         <div className="dietary_tags">
                             <h4>Preferences:</h4>
-                            <label><input type="checkbox" name="dietary_tags" value="Halal" checked={dietary_tags.includes('Halal')} onChange={handleDietaryChange}/> Halal</label>
-                            <label><input type="checkbox" name="dietary_tags" value="Kosher" checked={dietary_tags.includes('Kosher')} onChange={handleDietaryChange}/> Kosher</label>
-                            <label><input type="checkbox" name="dietary_tags" value="Vegetarian" checked={dietary_tags.includes('Vegetarian')} onChange={handleDietaryChange}/> Vegetarian</label>
-                            <label><input type="checkbox" name="dietary_tags" value="Vegan" checked={dietary_tags.includes('Vegan')} onChange={handleDietaryChange}/> Vegan</label>
-                            <label><input type="checkbox" name="dietary_tags" value="Gluten-Free" checked={dietary_tags.includes('Gluten-Free')} onChange={handleDietaryChange}/> Gluten-Free</label>
+                            <label>
+                                <input type="checkbox" 
+                                    name="dietary_tags"
+                                    value="Halal"
+                                    checked={dietary_tags.includes('Halal')}
+                                    onChange={handleDietaryChange}/>
+                                Halal
+                            </label>
+                            <label>
+                                <input type="checkbox"
+                                    name="dietary_tags"
+                                    value="Kosher"
+                                    checked={dietary_tags.includes('Kosher')}
+                                    onChange={handleDietaryChange}/> 
+                                Kosher
+                            </label>
+                            <label>
+                                <input type="checkbox"
+                                    name="dietary_tags"
+                                    value="Vegetarian"
+                                    checked={dietary_tags.includes('Vegetarian')}
+                                    onChange={handleDietaryChange}/> 
+                                Vegetarian
+                            </label>
+                            <label>
+                                <input type="checkbox"
+                                    name="dietary_tags"
+                                    value="Vegan"
+                                    checked={dietary_tags.includes('Vegan')}
+                                    onChange={handleDietaryChange}/> 
+                                Vegan
+                            </label>
+                            <label>
+                                <input type="checkbox"
+                                    name="dietary_tags"
+                                    value="Gluten-Free"
+                                    checked={dietary_tags.includes('Gluten-Free')}
+                                    onChange={handleDietaryChange}/>
+                                Gluten-Free
+                            </label>
                         </div>
                         
                         {/* Allergens field */}
                         <div className="allergies">
                             <h4>Allergens:</h4>
-                            <label><input type="checkbox" name="allergies" value="Nuts" checked={allergies.includes('Nuts')} onChange={handleAllergiesChange}/> Nuts</label>
-                            <label><input type="checkbox" name="allergies" value="Dairy" checked={allergies.includes('Dairy')} onChange={handleAllergiesChange}/> Dairy</label>
-                            <label><input type="checkbox" name="allergies" value="Shellfish" checked={allergies.includes('Shellfish')} onChange={handleAllergiesChange}/> Shellfish</label>
+                            <label>
+                                <input type="checkbox" 
+                                    name="allergies" 
+                                    value="Nuts" 
+                                    checked={allergies.includes('Nuts')} 
+                                    onChange={handleAllergiesChange}/>
+                                Nuts
+                            </label>
+                            <label>
+                                <input type="checkbox"
+                                    name="allergies"
+                                    value="Dairy"
+                                    checked={allergies.includes('Dairy')} 
+                                    onChange={handleAllergiesChange}/>
+                                Dairy
+                            </label>
+                            <label>
+                                <input type="checkbox"
+                                    name="allergies"
+                                    value="Shellfish"
+                                    checked={allergies.includes('Shellfish')}
+                                    onChange={handleAllergiesChange}/>
+                                Shellfish
+                            </label>
                         </div>
 
                         {/* Description field */}    
@@ -263,7 +331,8 @@ function CreateCard( { net_id } ) {
                                             setDescription(e.target.value);
                                         }
                                     }}
-                                    placeholder="Enter any extra information, such as specific room numbers..."
+                                    placeholder=
+        "Enter any extra information, such as specific room numbers..."
                                     maxLength={maxDescriptionLength}
                                 />
                             </h4>  
@@ -281,7 +350,7 @@ function CreateCard( { net_id } ) {
             {/* Footer */}
             <footer>
                 <p>
-                Created by Anha Khan '26, Arika Hassan '26, Laiba Ali '26, Mark Gazzerro '25, Sami Dalu '27
+                    Created by Anha Khan '26, Arika Hassan '26, Laiba Ali '26, Mark Gazzerro '25, Sami Dalu '27
                 </p>
             </footer>
         </div>

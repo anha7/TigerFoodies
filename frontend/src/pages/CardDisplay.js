@@ -17,10 +17,12 @@ import backIcon from './media/back.svg';
 const formatTimeAgo = (timestamp) => {
     const currentTime = new Date();
     const postedTime = new Date(timestamp);
-    const differenceInSeconds = Math.floor((currentTime - postedTime) / 1000);
+    const differenceInSeconds = Math.floor(
+        (currentTime - postedTime) / 1000);
 
     if (differenceInSeconds < 60) {
-        return `${differenceInSeconds} second${differenceInSeconds !== 1 ? 's' : ''} ago`;
+        return `${differenceInSeconds} second${
+            differenceInSeconds !== 1 ? 's' : ''} ago`;
     } else if (differenceInSeconds < 3600) {
         const minutes = Math.floor(differenceInSeconds / 60);
         return `${minutes} minute${minutes !== 1 ? 's' : ''} ago`;
@@ -44,7 +46,10 @@ function CardDisplay({ card, net_id }) {
         <div className="card-and-modal-container">
             <Card onClick={handleCardClick} card={card} />
             {isModalActive && (
-                <Modal card={card} setIsModalActive={setIsModalActive} net_id={net_id} />
+                <Modal card={card}
+                    setIsModalActive={setIsModalActive}
+                    net_id={net_id} 
+                />
             )}
         </div>
     );
@@ -63,12 +68,29 @@ function Card({ onClick, card }) {
             <div className="card-content">
                 <div className="card-content-main">
                     <h3>{card.title}</h3>
-                    <p><img src={locationIcon} alt="Location" height="14px" /> {card.location}</p>
-                    <p><img src={dietaryPreferencesIcon} alt="Dietary Preferences" height="14px" /> {card.dietary_tags?.join(', ') || ' '}</p>
-                    <p><img src={allergensIcon} alt="Allergens" height="14px" /> {card.allergies?.join(', ') || ' '}</p>
+                    <p>
+                        <img src={locationIcon}
+                            alt="Location"
+                            height="14px" /> 
+                        {card.location}
+                    </p>
+                    <p>
+                        <img src={dietaryPreferencesIcon} 
+                            alt="Dietary Preferences"
+                            height="14px" />
+                        {card.dietary_tags?.join(', ') || ' '}
+                    </p>
+                    <p>
+                        <img src={allergensIcon}
+                            alt="Allergens"
+                            height="14px" /> 
+                        {card.allergies?.join(', ') || ' '}
+                    </p>
                 </div>
                 <div className="card-content-footer">
-                    <p className="posted-at">Posted {formatTimeAgo(card.posted_at)}</p>
+                    <p className="posted-at">
+                        Posted {formatTimeAgo(card.posted_at)}
+                    </p>
                 </div>
             </div>
         </div>
@@ -77,7 +99,7 @@ function Card({ onClick, card }) {
 
 //----------------------------------------------------------------------
 
-// Modal Component for displaying card details and comments
+// Modal component for displaying card details and comments
 function Modal({ card, setIsModalActive, net_id }) {
     const [commentsIsActive, setCommentsIsActive] = useState(false);
     const [mapModalActive, setMapModalActive] = useState(false);
@@ -107,24 +129,38 @@ function Modal({ card, setIsModalActive, net_id }) {
                 <div className="modal-card-content">
                     <div className="main-modal-content">
                         <h3>{card.title}</h3>
-                        <p><b>Location:</b> {card.location}</p>
-                        <p><b>Preferences:</b> {card.dietary_tags?.join(', ') || 'None'}</p>
-                        <p><b>Allergens:</b> {card.allergies?.join(', ') || 'None'}</p>
-                        <p><b>Description:</b> {card.description}</p>
+                        <p>
+                            <b>Location:</b> {card.location}
+                        </p>
+                        <p>
+                            <b>Preferences:</b> {card.dietary_tags?.join(', ') || 'None'}
+                        </p>
+                        <p>
+                            <b>Allergens:</b> {card.allergies?.join(', ') || 'None'}
+                        </p>
+                        <p>
+                            <b>Description:</b> {card.description}
+                        </p>
                     </div>
                     <div className="modal-footer">
                         <div className="modal-icons">
                             <button className="comments-button" onClick={handleCommentsButtonClick}>
-                                <img src={commentsIcon} alt="Comments" height="15px" />
+                                <img src={commentsIcon} 
+                                    alt="Comments" 
+                                    height="15px" />
                             </button>
                             {card.net_id !== 'cs-tigerfoodies' && (
                                 <button className="location-button" onClick={handleLocationClick}>
-                                    <img src={mapIcon} alt="Map" height="15px" />
+                                    <img src={mapIcon} 
+                                        alt="Map" 
+                                        height="15px" />
                                 </button>
                             )}
                         </div>
                         <div>
-                            <p className="posted-at">Posted {formatTimeAgo(card.posted_at)}</p>
+                            <p className="posted-at">
+                                Posted {formatTimeAgo(card.posted_at)}
+                            </p>
                         </div>
                     </div>
                     <div className="comments-portion">
@@ -166,7 +202,8 @@ function CommentsSection({ card_id, net_id }) {
             if (Array.isArray(data)) {
                 setComments(data);
             } else {
-                console.error('Error fetching comments:', data.message || 'Unknown error');
+                console.error('Error fetching comments:', data.message 
+                    || 'Unknown error');
             }
         } catch (error) {
             console.error('Error fetching comments:', error);
@@ -186,7 +223,9 @@ function CommentsSection({ card_id, net_id }) {
 
         // Clean up the interval id on unmount
         return () => {
-            if (intervalIDRef.current) clearInterval(intervalIDRef.current)
+            if (intervalIDRef.current) {
+                clearInterval(intervalIDRef.current);
+            };
         }
     }, [card_id, fetchComments]);
 

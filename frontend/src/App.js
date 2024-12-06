@@ -45,7 +45,8 @@ function App() {
         if (url.searchParams.has('ticket')) {
             // Remove the "ticket" parameter and update the URL
             url.searchParams.delete('ticket');
-            window.history.replaceState({}, document.title, url.pathname + url.search);
+            window.history.replaceState({},
+                document.title, url.pathname + url.search);
         }
     }, []); // This runs once when the app loads
 
@@ -53,13 +54,18 @@ function App() {
         <Router>
             <div>
             <Routes>
-                <Route path="/" element={<Homepage net_id={net_id}/>} />
-                <Route path="/post" element={<CreateCard net_id={net_id}/>} />
-                <Route path="/view" element={<ViewCards net_id={net_id}/>} />
-                <Route path="/edit/:card_id" element={<EditCard/>} />
+                <Route path="/" element={<Homepage
+                    net_id={net_id}/>} />
+                <Route path="/post" element={<CreateCard 
+                    net_id={net_id}/>} />
+                <Route path="/view" element={<ViewCards
+                    net_id={net_id}/>} />
+                <Route path="/edit/:card_id" 
+                    element={<EditCard/>} />
 
                 {/* Fallback Route */}
-                <Route path="*"element={<Navigate to="/" replace state={{ net_id }}/>}/>
+                <Route path="*"element={<Navigate to="/" 
+                    replace state={{ net_id }}/>}/>
             </Routes>
             </div>
         </Router>

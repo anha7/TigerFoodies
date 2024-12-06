@@ -50,7 +50,9 @@ const ViewCards = ({ net_id }) => {
 
         // Clean up the interval id on unmount
         return () => {
-            if (intervalIDRef.current) clearInterval(intervalIDRef.current)
+            if (intervalIDRef.current) {
+                clearInterval(intervalIDRef.current);
+            }
         }
 
     }, [net_id]);
@@ -64,7 +66,8 @@ const ViewCards = ({ net_id }) => {
                 method: 'DELETE',
             });
             if (response.ok) {
-                setCards(cards.filter((card) => card.card_id !== card_id));
+                setCards(cards.filter((card) => 
+                    card.card_id !== card_id));
             } else {
                 console.warn('Backend delete endpoint not available.');
             }
@@ -95,7 +98,11 @@ const ViewCards = ({ net_id }) => {
             {/* Main content container for user's card dashboard */}
             <div className="viewcards-main">
                 {/* Page name */}
-                <div className="page-name"> <h2>{net_id === 'cs-tigerfoodies' ? 'All Cards' : 'My Cards'}</h2> </div>
+                <div className="page-name"> 
+                    <h2>
+                        {net_id === 'cs-tigerfoodies' ? 'All Cards' : 'My Cards'}
+                    </h2> 
+                </div>
                 
                 {/* Display list of user's free food cards */}
                 <div className="viewcards-card-list">
@@ -104,14 +111,22 @@ const ViewCards = ({ net_id }) => {
                             {/* Makes the edit and delete buttons */}
                             <div className="card-actions">
                                 <button className="edit-button" onClick={() => handleEditCard(card.card_id)}>
-                                    <img src={editIcon} alt="editIcon" height="14px" />
+                                    <img src={editIcon}
+                                        alt="editIcon"
+                                        height="14px" 
+                                    />
                                 </button>
                                 <button className="delete-button" onClick={() => handleDeleteCard(card.card_id)}>
-                                    <img src={deleteIcon} alt="deleteIcon" height="17px" />
+                                    <img src={deleteIcon}
+                                        alt="deleteIcon" 
+                                        height="17px"
+                                    />
                                 </button>
                             </div>
                             {/* Get card info */}
-                            <CardDisplay card = {card} net_id={net_id}/>
+                            <CardDisplay card = {card} 
+                                net_id={net_id}
+                            />
                         </div>
                     ))}
                 </div>

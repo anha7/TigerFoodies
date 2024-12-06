@@ -11,7 +11,8 @@ import { useLoadScript, Autocomplete } from "@react-google-maps/api";
 
 //----------------------------------------------------------------------
 
-// Define which Google Maps libraries we're going to use (places for autocomplete)
+// Define which Google Maps libraries we're going to use
+// (places for autocomplete)
 const LIBRARIES = ["places"];
 
 function EditCard({ net_id }) {
@@ -38,7 +39,8 @@ function EditCard({ net_id }) {
                 });
                 if (response.ok) {
                     const data = await response.json();
-                    if (data.net_id !== net_id && net_id !== 'cs-tigerfoodies') {
+                    if (data.net_id !== net_id && 
+                            net_id !== 'cs-tigerfoodies') {
                         setIsAuthorized(false);
                     }
                     setTitle(data.title || '');
@@ -50,7 +52,8 @@ function EditCard({ net_id }) {
                     setDietary(data.dietary_tags || []);
                     setAllergies(data.allergies || []);
                 } else {
-                    console.warn('Backend card information not available.');
+                    console.warn(
+                        'Backend card information not available.');
                 }
             } catch (error) {
                 console.error('Error Editing card:', error);
@@ -60,18 +63,13 @@ function EditCard({ net_id }) {
         fetchCard();
     }, [card_id, net_id]);
 
+//----------------------------------------------------------------------
+
     // Connect to Google Maps API for autocomplete
     const { isLoaded, loadError } = useLoadScript({
         googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
         libraries: LIBRARIES, // Include places library for autocomplete
     });
-    
-    // If user is not card creator or admin, redirect to homepage
-    if (!isAuthorized) {
-        return <Navigate to="/" replace />;
-    }
-//----------------------------------------------------------------------
-
     
 
     if (loadError) {
@@ -84,11 +82,18 @@ function EditCard({ net_id }) {
 
 //----------------------------------------------------------------------
 
+    // If user is not card creator or admin, redirect to homepage
+    if (!isAuthorized) {
+        return <Navigate to="/" replace />;
+    }
+
+//----------------------------------------------------------------------
+
     // Update location
     const handlePlaceChanged = () => {
         if (autocompleteRef.current) {
             const place = autocompleteRef.current.getPlace();
-            const name = place?.name || ''; // Get the short name of the place
+            const name = place?.name || ''; // Get the short name
             const address = place?.formatted_address || '';
     
             // Use the name if it exists; fallback to formatted_address
@@ -107,23 +112,26 @@ function EditCard({ net_id }) {
     const handleDietaryChange = (event) => {
         const { value, checked } = event.target;
         setDietary((prevDietary) =>
-          checked ? [...prevDietary, value] : prevDietary.filter((d) => d !== value)
+          checked ? [...prevDietary, value] : 
+            prevDietary.filter((d) => d !== value)
         );
     };
 
 //----------------------------------------------------------------------
-    
+
     // Sets allergens
     const handleAllergiesChange = (event) => {
         const { value, checked } = event.target;
         setAllergies((prevAllergies) =>
-          checked ? [...prevAllergies, value] : prevAllergies.filter((d) => d !== value)
+          checked ? [...prevAllergies, value] : 
+            prevAllergies.filter((d) => d !== value)
         );
     };
 
 //----------------------------------------------------------------------
 
-    const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/${process.env.REACT_APP_CLOUDINARY_KEY}/image/upload`;
+    const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/
+        ${process.env.REACT_APP_CLOUDINARY_KEY}/image/upload`;
     const CLOUDINARY_UPLOAD_PRESET = 'TigerFoodies';
 
     // Sets image
@@ -145,7 +153,8 @@ function EditCard({ net_id }) {
             if (data.secure_url) {
                 setPhoto(data.secure_url);
             } else {
-                throw new Error('Failed to retrieve image URL from Cloudinary response');
+                throw new Error(
+            'Failed to retrieve image URL from Cloudinary response');
             }
         } catch (error) {
             console.error('Error uploading the image:', error);
@@ -161,7 +170,8 @@ function EditCard({ net_id }) {
 
         // Validation: Ensure location and coordinates are set
         if (!location || !latitude || !longitude) {
-            alert("Please select a valid location from the suggestions.");
+            alert(
+                "Please select a valid location from the suggestions.");
             return; // Stop form submission
         }
 
@@ -183,14 +193,15 @@ function EditCard({ net_id }) {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(cardData), // Send card data as JSON
+                body: JSON.stringify(cardData), // Send card data 
             });
 
             if (response.ok) {
-                navigate('/view'); // Redirect to view after successful card editing
+                navigate('/view'); // Redirect to view after success
             } else {
                 const errorDetails = await response.json();
-                console.error("Failed to edit card:", errorDetails.message || "Unknown error");
+                console.error("Failed to edit card:", 
+                    errorDetails.message || "Unknown error");
             }
         } catch (error) {
             console.error('Error updating the card:', error);
@@ -215,7 +226,9 @@ function EditCard({ net_id }) {
             {/* Main content container for form data */}
             <div className='main' >
                 <div className="entire-form">
-                    <div className="page-name"> <h2>Edit Card</h2> </div>
+                    <div className="page-name">
+                        <h2>Edit Card</h2> 
+                    </div>
 
                     <form onSubmit={handleSubmit}>
                         {/* Title field */}
@@ -248,7 +261,9 @@ function EditCard({ net_id }) {
                             <div className='uploadedImage'>
                                 {photo && <img src={photo}
                                     alt="Uploaded preview" 
-                                    style={{ width: '100%', height: 'auto', borderRadius: '8px'}} />}
+                                    style={{ width: '100%', 
+                                            height: 'auto', 
+                                            borderRadius: '8px'}} />}
                             </div>
                         </div>
 
@@ -262,7 +277,7 @@ function EditCard({ net_id }) {
                                 
                                         // Set the autocomplete input value to preloaded location
                                         if (autocomplete && location) {
-                                            const input = autocomplete.gm_accessors_.input.input; // Access the native input element
+                                            const input = autocomplete.gm_accessors_.input.input;
                                             input.value = location;
                                         }
                                     }}
@@ -271,7 +286,8 @@ function EditCard({ net_id }) {
                                     <input
                                         type="text"
                                         value={location}
-                                        onChange={(e) => setLocation(e.target.value)}
+                                        onChange={(e) => 
+                                            setLocation(e.target.value)}
                                         placeholder="Enter a location..."
                                     />
                                 </Autocomplete>
@@ -281,19 +297,75 @@ function EditCard({ net_id }) {
                         {/* Dietary preferences field */}
                         <div className="dietary_tags">
                             <h4>Preferences:</h4>
-                            <label><input type="checkbox" name="dietary_tags" value="Halal" checked={dietary_tags.includes('Halal')} onChange={handleDietaryChange}/> Halal</label>
-                            <label><input type="checkbox" name="dietary_tags" value="Kosher" checked={dietary_tags.includes('Kosher')} onChange={handleDietaryChange}/> Kosher</label>
-                            <label><input type="checkbox" name="dietary_tags" value="Vegetarian" checked={dietary_tags.includes('Vegetarian')} onChange={handleDietaryChange}/> Vegetarian</label>
-                            <label><input type="checkbox" name="dietary_tags" value="Vegan" checked={dietary_tags.includes('Vegan')} onChange={handleDietaryChange}/> Vegan</label>
-                            <label><input type="checkbox" name="dietary_tags" value="Gluten-Free" checked={dietary_tags.includes('Gluten-Free')} onChange={handleDietaryChange}/> Gluten-Free</label>
+                            <label>
+                                <input type="checkbox" 
+                                    name="dietary_tags"
+                                    value="Halal"
+                                    checked={dietary_tags.includes('Halal')}
+                                    onChange={handleDietaryChange}/>
+                                Halal
+                            </label>
+                            <label>
+                                <input type="checkbox"
+                                    name="dietary_tags"
+                                    value="Kosher"
+                                    checked={dietary_tags.includes('Kosher')}
+                                    onChange={handleDietaryChange}/> 
+                                Kosher
+                            </label>
+                            <label>
+                                <input type="checkbox"
+                                    name="dietary_tags"
+                                    value="Vegetarian"
+                                    checked={dietary_tags.includes('Vegetarian')}
+                                    onChange={handleDietaryChange}/> 
+                                Vegetarian
+                            </label>
+                            <label>
+                                <input type="checkbox"
+                                    name="dietary_tags"
+                                    value="Vegan"
+                                    checked={dietary_tags.includes('Vegan')}
+                                    onChange={handleDietaryChange}/> 
+                                Vegan
+                            </label>
+                            <label>
+                                <input type="checkbox"
+                                    name="dietary_tags"
+                                    value="Gluten-Free"
+                                    checked={dietary_tags.includes('Gluten-Free')}
+                                    onChange={handleDietaryChange}/>
+                                Gluten-Free
+                            </label>
                         </div>
                         
                         {/* Allergens field */}
                         <div className="allergies">
                             <h4>Allergens:</h4>
-                            <label><input type="checkbox" name="allergies" value="Nuts" checked={allergies.includes('Nuts')} onChange={handleAllergiesChange}/> Nuts</label>
-                            <label><input type="checkbox" name="allergies" value="Dairy" checked={allergies.includes('Dairy')} onChange={handleAllergiesChange}/> Dairy</label>
-                            <label><input type="checkbox" name="allergies" value="Shellfish" checked={allergies.includes('Shellfish')} onChange={handleAllergiesChange}/> Shellfish</label>
+                            <label>
+                                <input type="checkbox" 
+                                    name="allergies" 
+                                    value="Nuts" 
+                                    checked={allergies.includes('Nuts')} 
+                                    onChange={handleAllergiesChange}/>
+                                Nuts
+                            </label>
+                            <label>
+                                <input type="checkbox"
+                                    name="allergies"
+                                    value="Dairy"
+                                    checked={allergies.includes('Dairy')} 
+                                    onChange={handleAllergiesChange}/>
+                                Dairy
+                            </label>
+                            <label>
+                                <input type="checkbox"
+                                    name="allergies"
+                                    value="Shellfish"
+                                    checked={allergies.includes('Shellfish')}
+                                    onChange={handleAllergiesChange}/>
+                                Shellfish
+                            </label>
                         </div>
 
                         {/* Description field */}    
@@ -308,7 +380,9 @@ function EditCard({ net_id }) {
                                         setDescription(e.target.value);
                                     }
                                 }}
-                                placeholder="Enter any extra information, such as specific room numbers..."/> 
+                                placeholder=
+    "Enter any extra information, such as specific room numbers..."
+                                /> 
                             </h4>
                         </div>   
                         
