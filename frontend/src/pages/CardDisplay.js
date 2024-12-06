@@ -64,13 +64,14 @@ function CardDisplay({ card, net_id }) {
 //----------------------------------------------------------------------
 
 // Component to render an individual card
-function Card({ onClick, card }) {
+function Card({ onClick, card }) {  
     return (
         <div key={card.card_id} className="card" onClick={onClick}>
             {/* Background image of modal is of the food */}
             <div
                 className="card-image"
-                style={(card.photo_url && {backgroundImage: (`url(${card.photo_url})`) })}
+                style={(card.photo_url && card.photo_url !== "null" &&
+                    {backgroundImage: (`url(${card.photo_url})`) })}
             ></div>
 
             {/* Shorthand information related to food */}
