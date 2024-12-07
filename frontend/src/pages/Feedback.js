@@ -53,9 +53,10 @@ const Feedback = ({ isModalActive, setIsModalActive, net_id }) => {
 
             if (response.ok) {
                 // If feedback sent successfully, alert the user
+                setIsFormDirty(false);
                 alert('Feedback sent successfully!');
                 setFeedbackInput("");
-                handleCloseModal();
+                setIsModalActive(false);
             } else {
                 // If the feedback did not send, tell user to try again
                 alert('Feedback did not send. Try again.');
