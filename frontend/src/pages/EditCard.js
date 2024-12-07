@@ -38,9 +38,6 @@ function EditCard({ net_id }) {
     const navigate = useNavigate();
     // Ref for referencing the Autocomplete instance
     const autocompleteRef = useRef(null);
-    // State variable that holds whether user accessing edit form
-    // is the creator of the card
-    const [isAuthorized, setIsAuthorized] = useState(true);
     // Check if there's new info in the form
     const [isFormDirty, setIsFormDirty] = useState(false);
 
@@ -55,17 +52,17 @@ function EditCard({ net_id }) {
                 const response = await fetch(`/api/cards/${card_id}`, {
                     method: 'GET',
                 });
+
+                // Unauthorized or forbidden access, redirect to homepage
+                if (response.status === 403 || response.status === 401 ||
+                        response.status === 404 || response.status === 500) {
+                    navigate("/", { replace: true });
+                    return;
+                }
+    
                 if (response.ok) {
                     const data = await response.json();
-
-                    // Check if logged-in user isn't the creator or an
-                    // admin
-                    if (data.net_id !== net_id && 
-                            net_id !== 'cs-tigerfoodies') {
-                        // Not authorized to edit
-                        setIsAuthorized(false);
-                    }
-
+                    
                     // Populate form fields with the existing card data
                     setTitle(data.title || '');
                     setDescription(data.description || '');
@@ -122,13 +119,6 @@ function EditCard({ net_id }) {
     }
     if (!isLoaded) {
         return <div>Loading map...</div>;
-    }
-
-//----------------------------------------------------------------------
-
-    // Redirect to homepage if the user is not authorized
-    if (!isAuthorized) {
-        return <Navigate to="/" replace />;
     }
 
 //----------------------------------------------------------------------

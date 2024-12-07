@@ -159,8 +159,8 @@ def get_data():
 # API Route for retrieving cards for a specific user
 @app.route('/api/cards/<string:net_id>', methods=['GET'])
 def retrieve_user_cards(net_id):
-    try:
-        # Connect to the database a nd establish a cursor
+    try: 
+        # Connect to the database and establish a cursor
         with psycopg2.connect(DATABASE_URL) as conn:
             with conn.cursor() as cursor:
                 # Define insertion query
@@ -328,6 +328,10 @@ def edit_card(card_id):
 @app.route('/api/cards/<int:card_id>', methods=['GET'])
 def retrieve_card(card_id):
     try:
+        user_net_id = session.get('username')
+        if not user_net_id:
+            return jsonify({"error": "Unauthorized"}), 401
+
         if not card_id:
             return jsonify({"error": "Invalid card_id"}), 400
         
@@ -337,11 +341,18 @@ def retrieve_card(card_id):
                 # Define insertion query
                 retrieval_query = '''SELECT card_id, title, description,
                     photo_url, location, latitude, longitude, 
-                    dietary_tags, allergies 
+                    dietary_tags, allergies, net_id
                     FROM cards WHERE card_id = %s;'''
                 # Execute query to retrieve card with given card_id
                 cursor.execute(retrieval_query, [card_id])
                 row = cursor.fetchone()
+
+                # Check whether user is creator of card or an admin
+                card_owner = row[9]
+                if card_owner != user_net_id and user_net_id != 'cs-tigerfoodies':
+                    # User is not authorized to edit this card
+                    return jsonify({"error": "Forbidden"}), 403
+                
                 if row:
                     card = {
                         "card_id": row[0],
