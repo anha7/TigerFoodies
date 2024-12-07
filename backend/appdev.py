@@ -510,14 +510,14 @@ def fetch_recent_rss_entries():
                 payload["p"] = os.environ["PASS"]
                 session.post(rss_url, data=payload)
 
-                # Define time threshold to retrieve most recent entries
-                time_threshold = datetime.now(eastern) - timedelta(
-                    seconds=300)
-
                 # Retrieve entries from freefood listserv RSS script
                 rss_response = session.get(rss_url)
                 soup_scrape = BeautifulSoup(rss_response.content, "xml")
                 items = soup_scrape.find_all("item")
+
+                # Define time threshold to retrieve most recent entries
+                time_threshold = datetime.now(eastern) - timedelta(
+                    seconds=120)
 
                 # Loop to add new entries from scraper to database
                 for item in items:
@@ -531,29 +531,24 @@ def fetch_recent_rss_entries():
                     # Scrape relevant information from entry
                     title = item.title.text
 
-                    # Check if the title already exists in the database
-                    check_query = """SELECT COUNT(*) FROM cards 
-                                    WHERE title = %s"""
-                    cursor.execute(check_query, (title,))
-                    result = cursor.fetchone()
-                    if result[0] > 0:
-                        # If the title already exists, skip this entry
-                        continue
+                    try:
+                        # Package data to be inserted into database
+                        data = ["cs-tigerfoodies", title]
+                        # Create insertion query
+                        insertion_query = """INSERT INTO cards (net_id,
+                            title, expiration, posted_at)
+                            VALUES (%s, %s, 
+                            CURRENT_TIMESTAMP + interval \'3 hours\', 
+                            CURRENT_TIMESTAMP)
+                            ON CONFLICT (title) DO NOTHING
+                        """
+                        #Execute insertion query
+                        cursor.execute(insertion_query, data)
+                        conn.commit()
+                    except psycopg2.IntegrityError:
+                        # Handle duplicate or integrity violations
+                        conn.rollback()
 
-                    # Package data to be inserted into database
-                    data = ["cs-tigerfoodies", title]
-
-                    # Create insertion query
-                    insertion_query = """INSERT INTO cards (net_id,
-                        title, expiration, posted_at)
-                        VALUES (%s, %s, 
-                        CURRENT_TIMESTAMP + interval \'3 hours\', 
-                        CURRENT_TIMESTAMP)
-                    """
-
-                    #Execute insertion query
-                    cursor.execute(insertion_query, data)
-                    conn.commit()
     except Exception as ex:
         print(str(ex))
 
