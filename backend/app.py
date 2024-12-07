@@ -11,7 +11,8 @@ import psycopg2
 import secrets
 from flask_mail import Mail, Message
 import bleach
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
+import pytz
 import schedule
 import time
 import html
@@ -45,8 +46,8 @@ mail = Mail(app)
 # Define relevant URLs
 rss_url = os.environ['RSS_URL']
 
-# Set timezone
-eastern = pytz.timezone('US/Eastern')
+# Set timezone used in RSS script
+utc = pytz.timezone('UTC')
 
 #-----------------------------------------------------------------------
 
@@ -518,8 +519,8 @@ def fetch_recent_rss_entries():
                 items = soup_scrape.find_all("item")
 
                 # Define time threshold to retrieve most recent entries
-                time_threshold = datetime.now(timezone.utc) - timedelta(
-                    minutes=35)
+                time_threshold = datetime.now(utc) - timedelta(
+                    minutes=30)
 
                 # Loop to add new entries from scraper to database
                 for item in items:
