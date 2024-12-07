@@ -28,7 +28,7 @@ DATABASE_URL = os.environ.get('DATABASE_URL')
 conn = psycopg2.connect(DATABASE_URL)
 
 # Initialize Flask app
-app = Flask(__name__, static_folder='build', static_url_path='')
+app = Flask(__name__, static_folder='build')
 
 # Set up secret key
 app.secret_key = secrets.token_hex(32)
@@ -502,7 +502,7 @@ def fetch_recent_rss_entries():
 
                 # Define time threshold to retrieve most recent entries
                 time_threshold = datetime.now(eastern) - timedelta(
-                    seconds=60)
+                    seconds=300)
 
                 # Retrieve entries from freefood listserv RSS script
                 rss_response = session.get(rss_url)
@@ -567,4 +567,4 @@ scheduler_thread.start()
 
 # Start the Flask app
 if __name__ == '__main__':
-    app.run(use_reloader=True, port=5000, threaded=True)
+    app.run(use_reloader=True, threaded=True)
