@@ -567,4 +567,4 @@ scheduler_thread.start()
 
 # Start the Flask app
 if __name__ == '__main__':
-    app.run(app)
+    app.run(use_reloader=True, port=5000, threaded=True)
