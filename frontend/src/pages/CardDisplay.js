@@ -128,13 +128,32 @@ function Card({ onClick, card }) {
 function Modal({ card, setIsModalActive, net_id }) {
     // State for comments visibility
     const [commentsIsActive, setCommentsIsActive] = useState(false);
+    // State to manage the new comment input
+    const [newComment, setNewComment] = useState('');
     // State for map modal visibility
     const [mapModalActive, setMapModalActive] = useState(false);
+    // Check if there's new info in the comment form
+    const [isFormDirty, setIsFormDirty] = useState(false);
+
+    // Warn users attempting to reload/close the page with unsaved comments
+    useEffect(() => {
+        const handleBeforeUnload = (event) => {
+            if (isFormDirty) {
+                event.preventDefault();
+                event.returnValue = "";
+            }
+        };
+        window.addEventListener("beforeunload", handleBeforeUnload);
+        return () => {
+            window.removeEventListener("beforeunload", handleBeforeUnload);
+        };
+    }, [isFormDirty]);
 
     // Handle location button click to open map modal
     const handleLocationClick = () => {
         setMapModalActive(true);
     };
+
     // Toggle visibiliy of comments section
     const handleCommentsButtonClick = () => {
         setCommentsIsActive(!commentsIsActive);
@@ -202,6 +221,9 @@ function Modal({ card, setIsModalActive, net_id }) {
                             <CommentsSection
                                 card_id={card.card_id}
                                 net_id={net_id}
+                                newComment={newComment}
+                                setNewComment={setNewComment}
+                                setIsFormDirty={setIsFormDirty}
                             />
                         )}
                     </div>
@@ -223,11 +245,10 @@ function Modal({ card, setIsModalActive, net_id }) {
 //----------------------------------------------------------------------
 
 // Component to manage and display the comments section
-function CommentsSection({ card_id, net_id }) {
+function CommentsSection({ card_id, net_id, newComment, setNewComment, 
+        setIsFormDirty }) {
     // State to store fetched comments
     const [comments, setComments] = useState([]);
-    // State to manage the new comment input
-    const [newComment, setNewComment] = useState('');
     // Ref that stores interval ID of polling timer
     const intervalIDRef = useRef(null)
     
@@ -333,6 +354,7 @@ function CommentsSection({ card_id, net_id }) {
                         if (e.target.value.length <= maxCommentLength) {
                             setNewComment(e.target.value);
                         }
+                        setIsFormDirty(e.target.value.trim().length > 0);
                     }}
                     placeholder="Add comment..."
                     required
