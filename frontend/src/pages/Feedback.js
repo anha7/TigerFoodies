@@ -12,10 +12,27 @@ import React, { useState } from 'react';
 const Feedback = ({ isModalActive, setIsModalActive, net_id }) => {
     // State to store user's feedback input
     const [feedbackInput, setFeedbackInput] = useState("");
+    // Check if there's new info in the form
+    const [isFormDirty, setIsFormDirty] = useState(false);
 
     // Functional component to close modal
     const handleCloseModal = () => {
-        setIsModalActive(false);
+        if (isFormDirty) {
+            // Prompt user to confirm whether they want to close modal
+            // if there's unsubmitted form data
+            const userConfirmed = window.confirm(
+"Are you sure you want to close out of this screen? Any changes you made will not be saved.");
+            
+            // Close modal if they confirmed
+            if (userConfirmed) {
+                setIsFormDirty(false);
+                setIsModalActive(false);
+            } else {
+                return;
+            }
+        } else {
+            setIsModalActive(false);
+        }
     }
 
     // Send the feedback data to the server
@@ -68,8 +85,10 @@ const Feedback = ({ isModalActive, setIsModalActive, net_id }) => {
                             <textarea
                                 type="text"
                                 placeholder="Report any bugs..."
-                                onChange={e => 
-                                    setFeedbackInput(e.target.value)}
+                                onChange={(e) => {
+                                    setFeedbackInput(e.target.value);
+                                    setIsFormDirty(true);
+                                }}
                                 required
                             />
                             <button onClick={handleSubmit}>

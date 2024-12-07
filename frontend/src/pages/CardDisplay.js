@@ -169,7 +169,22 @@ function Modal({ card, setIsModalActive, net_id }) {
         <div
             onClick={(e) => {
                 if (e.target === e.currentTarget) {
-                    setIsModalActive(false);
+                    if (isFormDirty) {
+                        // Prompt user to confirm whether they want to close modal
+                        // if there's unsubmitted form data
+                        const userConfirmed = window.confirm(
+"Are you sure you want to close out of this screen? Unposted comments will not be saved.");
+                        
+                        // Close modal if they confirmed
+                        if (userConfirmed) {
+                            setIsFormDirty(false);
+                            setIsModalActive(false);
+                        } else {
+                            return;
+                        }
+                    } else {
+                        setIsModalActive(false);
+                    }
                 }
             }}
             className={`modal-root ${mapModalActive ? 'no-overlay' : ''}`}
