@@ -547,7 +547,7 @@ def fetch_recent_rss_entries():
                         CURRENT_TIMESTAMP + interval \'3 hours\', 
                         CURRENT_TIMESTAMP)
                     """
-                    #Execute insertion query
+                    # Execute insertion query
                     cursor.execute(insertion_query, data)
                     conn.commit()
     except Exception as ex:
