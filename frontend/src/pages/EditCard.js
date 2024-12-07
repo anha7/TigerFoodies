@@ -62,7 +62,7 @@ function EditCard({ net_id }) {
     
                 if (response.ok) {
                     const data = await response.json();
-                    
+
                     // Populate form fields with the existing card data
                     setTitle(data.title || '');
                     setDescription(data.description || '');
@@ -172,38 +172,71 @@ function EditCard({ net_id }) {
     const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/${process.env.REACT_APP_CLOUDINARY_KEY}/image/upload`;
     const CLOUDINARY_UPLOAD_PRESET = 'TigerFoodies';
 
-    // Handle image uploads to Cloudinary
+    // Handle image uploads
     const handleImageChange = async (event) => {
         const file = event.target.files[0];
         if (!file) return;
-
-        const formData = new FormData();
-        // Add file to form data
-        formData.append('file', file);
-        // Add upload preset
-        formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
-
-        try {
-            // Upload image to Cloudinary
-            const response = await fetch(CLOUDINARY_URL, {
-                method: 'POST',
-                body: formData
-            });
-            const data = await response.json();
-
-            if (data.secure_url) {
-                // Update photo state with the secure URL
-                setPhoto(data.secure_url);
-            } else {
-                // Otherwise catch the error
-                throw new Error(
-            'Failed to retrieve image URL from Cloudinary response');
-            }
-        } catch (error) {
-            // Catch any other errors related to image uploading
-            console.error('Error uploading the image:', error);
-            alert('Image upload failed. Please try again.');
+    
+        // Allowed image types
+        const validImageTypes = ['image/jpeg', 'image/jpg', 'image/png', 
+            'image/webp'];
+        if (!validImageTypes.includes(file.type)) {
+            alert(
+        'Only JPG, JPEG, PNG, or WEBP image files are allowed.');
+            event.target.value = ""; // Reset the file input
+            return;
         }
+    
+        // Validate image dimensions
+        const image = new Image(file);
+        image.onload = async () => {
+            if (image.width > 2500 || image.height > 2500) {
+                alert(
+            'Image dimensions must be 2500x2500 pixels or smaller.');
+                event.target.value = ""; // Reset the file input
+                return;
+            }
+    
+            // Proceed with uploading to Cloudinary
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+    
+            try {
+                // Send image to Cloudinary for conversion to URL
+                const response = await fetch(CLOUDINARY_URL, {
+                    method: 'POST',
+                    body: formData,
+                });
+                const data = await response.json();
+                
+                // Ensure photo URL was sucessfully created
+                if (data.secure_url) {
+                    setPhoto(data.secure_url);
+                } else {
+                    // Otherwise catch the error
+                    throw new Error(
+            'Failed to retrieve image URL from Cloudinary response.');
+                }
+            } catch (error) {
+                // Catch any other errors related to uploading an image
+                console.error('Error uploading the image:', error);
+                alert('Image upload failed. Please try again.');
+            }
+        };
+    
+        // Validate image
+        image.onerror = () => {
+            alert('Invalid image file. Please select a valid image.');
+            event.target.value = ""; // Reset the file input
+        };
+    
+        // Read the file as a data URL to load its dimensions
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            image.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
     };
 
 //----------------------------------------------------------------------

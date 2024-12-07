@@ -143,6 +143,10 @@ form {
     align-items: center;
 }
 
+.dietary_tags h4 {
+    margin-top: 0;
+}
+
 .allergies h4, .dietary_tags h4 {
     margin-bottom: 0;
 }
