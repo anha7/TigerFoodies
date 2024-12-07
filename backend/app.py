@@ -11,7 +11,7 @@ import psycopg2
 import secrets
 from flask_mail import Mail, Message
 import bleach
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import schedule
 import time
 import html
@@ -506,18 +506,19 @@ def fetch_recent_rss_entries():
                 hidden_inputs = soup_login.find_all("input", 
                                                     type="hidden")
                 payload = {input_tag["name"]: input_tag.get("value", "") 
-                           for input_tag in hidden_inputs}
+                        for input_tag in hidden_inputs}
                 payload["Y"] = os.environ["LISTSERV_USERNAME"]
                 payload["p"] = os.environ["PASS"]
                 session.post(rss_url, data=payload)
 
                 # Retrieve entries from freefood listserv RSS script
                 rss_response = session.get(rss_url)
-                soup_scrape = BeautifulSoup(rss_response.content, "xml")
+                soup_scrape = BeautifulSoup(rss_response.content, 
+                                            "xml")
                 items = soup_scrape.find_all("item")
 
                 # Define time threshold to retrieve most recent entries
-                time_threshold = datetime.now(eastern) - timedelta(
+                time_threshold = datetime.now(timezone.utc) - timedelta(
                     seconds=120)
 
                 # Loop to add new entries from scraper to database
@@ -525,31 +526,35 @@ def fetch_recent_rss_entries():
                     # If scraper finds old entry, break from loop, no
                     # more new entries to add
                     pubDate = datetime.strptime(
-                        item.pubDate.text, "%a, %d %b %Y %H:%M:%S %z")
+                        item.pubDate.text, 
+                        "%a, %d %b %Y %H:%M:%S %z")
                     if pubDate < time_threshold:
                         break
                     
                     # Scrape relevant information from entry
                     title = item.title.text
 
-                    try:
-                        # Package data to be inserted into database
-                        data = ["cs-tigerfoodies", title]
-                        # Create insertion query
-                        insertion_query = """INSERT INTO cards (net_id,
-                            title, expiration, posted_at)
-                            VALUES (%s, %s, 
-                            CURRENT_TIMESTAMP + interval \'3 hours\', 
-                            CURRENT_TIMESTAMP)
-                            ON CONFLICT (title) DO NOTHING
+                    # Check if the entry already exists in database
+                    check_query = """SELECT 1 FROM cards 
+                            WHERE title = %s
                         """
-                        #Execute insertion query
-                        cursor.execute(insertion_query, data)
-                        conn.commit()
-                    except psycopg2.IntegrityError:
-                        # Handle duplicate or integrity violations
-                        conn.rollback()
-                        
+                    cursor.execute(check_query, (title,))
+                    if cursor.fetchone():
+                        # Skip this iteration if the title exists
+                        continue 
+
+                    # Package data to be inserted into database
+                    data = ["cs-tigerfoodies", title]
+                    # Create insertion query
+                    insertion_query = """INSERT INTO cards 
+                        (net_id, title, expiration, posted_at)
+                        VALUES (%s, %s, 
+                        CURRENT_TIMESTAMP + interval \'3 hours\', 
+                        CURRENT_TIMESTAMP)
+                    """
+                    #Execute insertion query
+                    cursor.execute(insertion_query, data)
+                    conn.commit()
     except Exception as ex:
         print(str(ex))
 
