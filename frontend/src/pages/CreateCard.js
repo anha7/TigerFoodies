@@ -141,7 +141,8 @@ function CreateCard( { net_id } ) {
         }
     
         // Validate image dimensions
-        const image = new Image(file);
+        const image = new Image();
+        image.src = file;
         image.onload = async () => {
             if (image.width > 2500 || image.height > 2500) {
                 alert(
