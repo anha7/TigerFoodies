@@ -567,4 +567,4 @@ scheduler_thread.start()
 
 # Start the Flask app
 if __name__ == '__main__':
-    Flask.run(app)
+    app.run(app)
