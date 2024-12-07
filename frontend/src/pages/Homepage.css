@@ -73,7 +73,6 @@ p {
     font-family: "Quicksand", sans-serif;
 }
 
-/* Change styling of button when hovered over */
 .nav-button:hover {
     background-color: #E79781; /* color when it's hovered over */
 }
@@ -125,7 +124,7 @@ p {
 
 /* Style hidden navbar buttons on mobile */
 .mobile-navbar-left {
-    height: 0px; /* Hide hamburger menu options in normal display */
+    height: 0px;
     justify-content: center;
     top: 3.5vh;
     position: absolute;
@@ -297,6 +296,7 @@ main {
 
 /*--------------------------------------------------------------------*/
 
+/* Style background of modal */
 .modal-root {
     display: flex;
     justify-content: center;
@@ -365,8 +365,6 @@ main {
     justify-content: flex-start;
     align-items: flex-end;
 }
-
-/*--------------------------------------------------------------------*/
 
 .comments-button, .location-button {
     background: transparent;
@@ -472,7 +470,6 @@ main {
     border-radius: 15px;
 }
 
-/* Change styling of button when hovered over */
 .comment-form button:hover {
     background-color: #E79781;
 }
@@ -567,7 +564,7 @@ main {
 
 /*--------------------------------------------------------------------*/
 
-/* Styles all checkboxes */
+/* Style all checkboxes */
 input[type="checkbox"] {
     appearance: none;
     width: 3em;
@@ -615,8 +612,7 @@ input[type="checkbox"]:checked:after {
 
 /* Style mobile food preferences menu */
 .mobile-preferences-menu {
-    display: none; /* Hide mobile preferences selection in normal 
-        display */
+    display: none;
     visibility: hidden;
     opacity: 0;
     align-self: center;
@@ -632,7 +628,6 @@ input[type="checkbox"]:checked:after {
     transition: 0.3s;
 }
 
-/* Style mobile dietary preferences selection */
 .mobile-preferences-selection {
     overflow-y: auto;
     display: flex;
@@ -730,7 +725,6 @@ footer p {
         display: flex;
     }
 
-    /* Modify the width of search bar, search bar container, and input */
     .search-form {
         width: 85%;
         padding-right: 0;
@@ -744,7 +738,6 @@ footer p {
         width: 90%;
     }
 
-    /* Move last button over to accommodate for padding from input */
     .navbar-right button:last-child {
         margin-left: 32px;
     }
@@ -760,7 +753,6 @@ footer p {
         justify-content: center;
     }
 
-    /* Make sure food cards reaches full height of page */
     .content-container {
         width: 100%;
     }
@@ -797,7 +789,6 @@ footer p {
         grid-template-columns: repeat(2, 1fr);
     }
 
-    /* Make modal container wider on smaller screens */
     .modal-card {
         width: 75%;
     }
@@ -812,7 +803,6 @@ footer p {
         grid-template-columns: repeat(1, 1fr);
     }
 
-    /* Style search form input for mobile screens */
     .search-form input {
         width: 89%;
     }
@@ -821,12 +811,10 @@ footer p {
         padding: 0 1.5vw;
     }
 
-    /* Center greeting on mobile screens */
     .greeting {
         text-align: center;
     }
 
-    /* Make modal container wider on smaller screens */
     .modal-card {
         width: 90%;
     }

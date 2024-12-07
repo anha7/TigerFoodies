@@ -349,11 +349,15 @@ const markFormDirty = () => {
                                 onChange={(e) => {
                                     if (e.target.value.length <= maxTitleLength) {
                                         setTitle(e.target.value);
+                                    } else {
+                                        setTitle(
+                    e.target.value.length.slice(0, maxTitleLength));
                                     }
                                     markFormDirty();
                                 }}
                                 placeholder="Enter a title..."/> 
                             </h4>
+                            <p>{maxTitleLength - title.length}</p>
                         </div>
 
                         {/* Image upload field */}
@@ -515,6 +519,9 @@ const markFormDirty = () => {
                                 onChange={(e) => {
                                     if (e.target.value.length <= maxDescriptionLength) {
                                         setDescription(e.target.value);
+                                    } else {
+                                        setDescription(
+                    e.target.value.length.slice(0, maxDescriptionLength));
                                     }
                                     markFormDirty();
                                 }}
@@ -522,6 +529,7 @@ const markFormDirty = () => {
     "Enter any extra information, such as specific room numbers..."
                                 /> 
                             </h4>
+                            <p>{maxDescriptionLength - description.length}</p>
                         </div>   
                         
                         {/* Submit button */}

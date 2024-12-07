@@ -20,11 +20,6 @@
     color: white;
 }
 
-/* TigerFoodies homepage link turns bold on hover */
-.viewcards-header a:hover {
-    font-weight: bold;
-}
-
 .nav a {
     text-decoration: none;
 }

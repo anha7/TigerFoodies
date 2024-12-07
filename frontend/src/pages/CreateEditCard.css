@@ -21,11 +21,6 @@
     text-decoration: none;
 }
 
-/* TigerFoodies homepage link turns bold on hover */
-.nav a:hover {
-    font-weight: bold;
-}
-
 /*--------------------------------------------------------------------*/
 
 /* Style main content */
@@ -53,7 +48,7 @@
     text-decoration: none;
 }
 
-/* Page Title */
+/* Page title */
 h2 {
     margin-top: 9;
     margin-bottom: 0;
@@ -61,7 +56,7 @@ h2 {
     font-size: 2rem;
 }
 
-/* Form Container */
+/* Form container */
 form {
     line-height: 1.2em;
     margin-left: 2vw;
@@ -71,22 +66,69 @@ form {
     margin-top: 0;
 }
 
-/* Style input form for title, locations, and photo fields */
-.title input, .location input, .photo input {
+/* Set style types of fields with character limits*/
+.title, .description {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Style input form for location and photo fields */
+.location input, .photo input {
     width: 95%;
     height: 3vh;
     font-family: "Quicksand", sans-serif;
 }
 
-/* Style input for description field */
+.photo h4 {
+    margin-top: 0;
+}
+
+/* Style uploaded image */
+.uploadedImage {
+    width: 100%;
+    max-width: 200px;
+    height: auto;
+    border-radius: 15px;
+    object-fit: cover;
+}
+
+/* Style title field */
+.title h4 {
+    margin-bottom: 0;
+}
+
+.title input {
+    width: 90%;
+    padding-right: 5%;
+    height: 3vh;
+    font-family: "Quicksand", sans-serif;
+}
+
+.title p, .description p {
+    right: 5%;
+    top: -23px;
+    align-self: flex-end;
+    position: relative;
+    color: #716F81;
+    font-size: 0.75rem;
+    font-style: italic;
+}
+
+/* Style description field */ 
+.description h4 {
+    margin-bottom: 0;
+}
+
 .description textarea {
     padding: 4px 0 0 3px;
     height: 10vh;
-    width: 95%;
+    width: 90%;
+    padding-right: 5%;
     font-family: "Quicksand", sans-serif;
     resize: none;
 }
 
+/* Style placeholder text */ 
 .title input::placeholder, .location input::placeholder, 
         .description textarea::placeholder {
     font-family: "Quicksand", sans-serif;
@@ -101,7 +143,6 @@ form {
     align-items: center;
 }
 
-/* Style labels for dietary preferences and allergies */
 .allergies h4, .dietary_tags h4 {
     margin-bottom: 0;
 }
@@ -112,7 +153,6 @@ form {
     justify-content: center;
 }
 
-/* Button styling */
 button[type="submit"] {
     font-size: 1.1rem;
     color: #fff;
@@ -130,18 +170,28 @@ button[type="submit"]:hover {
     background-color: #565466;
 }
 
-.uploadedImage {
-    width: 100%; /* or specify a fixed width, e.g., 300px */
-    max-width: 200px;
-    height: auto;
-    border-radius: 15px; /* for rounded corners */
-    object-fit: cover; /* scales image to fill without stretching */
-}
-
 /*--------------------------------------------------------------------*/
 
 /* Responsive design for mobile */
 @media screen and (max-width: 840px) {
+    .entire-form {
+        width: 90%;
+    }
+
+    form {
+        padding: 0 2vw;
+    }
+
+    .title input {
+        width: 88%;
+        padding-right: 7%;
+    }
+
+    .description textarea {
+        width: 87%;
+        padding-right: 8%;
+    }
+
     .dietary_tags {
         display: flex;
         flex-direction: column;
@@ -150,13 +200,5 @@ button[type="submit"]:hover {
     .allergies {
         display: flex;
         flex-direction: column;
-    }
-
-    .entire-form {
-        width: 90%;
-    }
-
-    form {
-        padding: 0 2vw;
     }
 }

@@ -338,6 +338,7 @@ function CommentsSection({ card_id, net_id, newComment, setNewComment,
 
                 if (response.ok) {
                     setNewComment(''); // Clear the input field
+                    setIsFormDirty(false); // No unsaved data anymore
                     fetchComments(); // Refresh comments after posting
                 } else {
                     // Otherwise display error

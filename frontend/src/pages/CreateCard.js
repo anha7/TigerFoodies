@@ -290,6 +290,9 @@ function CreateCard( { net_id } ) {
                                     onChange={(e) => {
                                         if (e.target.value.length <= maxTitleLength) {
                                             setTitle(e.target.value);
+                                        } else {
+                                            setTitle(
+                        e.target.value.length.slice(0, maxTitleLength));
                                         }
                                         markFormDirty();
                                     }}
@@ -297,6 +300,7 @@ function CreateCard( { net_id } ) {
                                     maxLength={maxTitleLength}
                                 />
                             </h4>
+                            <p>{maxTitleLength - title.length}</p>
                         </div>
 
                         {/* Image upload field */}
@@ -451,6 +455,9 @@ function CreateCard( { net_id } ) {
                                     onChange={(e) => {
                                         if (e.target.value.length <= maxDescriptionLength) {
                                             setDescription(e.target.value);
+                                        } else {
+                                            setDescription(
+                        e.target.value.length.slice(0, maxDescriptionLength));
                                         }
                                         markFormDirty();
                                     }}
@@ -458,7 +465,8 @@ function CreateCard( { net_id } ) {
         "Enter any extra information, such as specific room numbers..."
                                     maxLength={maxDescriptionLength}
                                 />
-                            </h4>  
+                            </h4>
+                            <p>{maxDescriptionLength - description.length}</p>  
                         </div>   
                         
                         {/* Submit button */}
