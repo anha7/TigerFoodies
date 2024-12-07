@@ -519,7 +519,7 @@ def fetch_recent_rss_entries():
 
                 # Define time threshold to retrieve most recent entries
                 time_threshold = datetime.now(timezone.utc) - timedelta(
-                    seconds=120)
+                    minutes=35)
 
                 # Loop to add new entries from scraper to database
                 for item in items:
