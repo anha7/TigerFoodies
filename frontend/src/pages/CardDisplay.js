@@ -81,32 +81,38 @@ function Card({ onClick, card }) {
                     <h3>{card.title}</h3>
                     <p>
                         {card.location && (
-                            <>
-                                <img src={locationIcon}
-                                alt="Location"
-                                height="14px" /> 
-                                {card.location}
-                            </>
+                            <span className="icon-text">
+                                <img 
+                                    src={locationIcon}
+                                    alt="Location"
+                                    height="14px" 
+                                />
+                                <span>{card.location}</span>
+                            </span>
                         )}
                     </p>
                     <p>
                         {card.dietary_tags.length > 0 && (
-                            <>
-                                <img src={dietaryPreferencesIcon} 
-                                alt="Dietary Preferences"
-                                height="14px" /> 
-                                {card.dietary_tags?.join(', ') || ' '}
-                            </>
+                            <span className="icon-text">
+                                <img 
+                                    src={dietaryPreferencesIcon} 
+                                    alt="Dietary Preferences"
+                                    height="14px" 
+                                />
+                                <span>{card.dietary_tags?.join(', ')}</span>
+                            </span>
                         )}
                     </p>
                     <p>
                         {card.allergies.length > 0 && (
-                            <>
-                                <img src={allergensIcon}
-                                alt="Allergens"
-                                height="14px" /> 
-                                {card.allergies?.join(', ') || ' '}
-                            </>
+                            <span className="icon-text">
+                                <img 
+                                    src={allergensIcon}
+                                    alt="Allergens"
+                                    height="14px" 
+                                />
+                                <span>{card.allergies?.join(', ')}</span>
+                            </span>
                         )}
                     </p>
                 </div>

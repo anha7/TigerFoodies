@@ -254,6 +254,13 @@ main {
     height: 125px;
 }
 
+/* Style icons in the condensed cards */
+.icon-text {
+    display: flex;
+    align-items: center;
+    gap: 0.3em;
+}
+
 /* Style the text content of the cards */
 .card-content, .modal-card-content {
     display: flex;
