@@ -323,6 +323,12 @@ function CommentsSection({ card_id, net_id, newComment, setNewComment,
         
         // Continue with posting comment since user confirmed
         if (userConfirmed) {
+            // Validation: ensure comment isn't empty
+            if (!newComment.trim()) {
+                alert("Comment cannot be empty or just whitespace.");
+                return; // Stop form submission
+            }
+    
             // Prepare new comment data
             const newCommentData = { comment: newComment, net_id };
 

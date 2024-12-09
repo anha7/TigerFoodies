@@ -44,31 +44,47 @@ const Feedback = ({ isModalActive, setIsModalActive, net_id }) => {
         // Prevent default form submission
         e.preventDefault();
 
-        // Send post request to the backend with the user's input
-        try {
-            const response = await fetch(`/api/feedback`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ net_id: net_id, 
-                    feedback: feedbackInput }),
-            });
+        // Prompt user to confirm if the information they want to submit
+        // is correct
+        const userConfirmed = window.confirm(
+            "Are you sure all information you want to send is correct?");
 
-            if (response.ok) {
-                // If feedback sent successfully, alert the user
-                setIsFormDirty(false);
-                alert('Feedback sent successfully!');
-                setFeedbackInput("");
-                setIsModalActive(false);
-            } else {
-                // If the feedback did not send, tell user to try again
-                alert('Feedback did not send. Try again.');
+        // Submit feedback if they confirmed
+        if (userConfirmed) {
+            // Send post request to the backend with the user's input
+            try {
+                // Validation: ensure feedback isn't empty
+                if (!feedbackInput.trim()) {
+                    alert(
+                        "Feedback cannot be empty or just whitespace."
+                    );
+                    return; // Stop form submission
+                }
+
+                const response = await fetch(`/api/feedback`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ net_id: net_id, 
+                        feedback: feedbackInput }),
+                });
+
+                if (response.ok) {
+                    // If feedback sent successfully, alert the user
+                    setIsFormDirty(false);
+                    alert('Feedback sent successfully!');
+                    setFeedbackInput("");
+                    setIsModalActive(false);
+                } else {
+                    // If the feedback did not send, tell user to try again
+                    alert('Feedback did not send. Try again.');
+                }
+            } catch (error) {
+                // Otherwise catch any errors related to sending feedback
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
             }
-        } catch (error) {
-            // Otherwise catch any errors related to sending feedback
-            console.error('Error:', error);
-            alert('An error occurred. Please try again.');
         }
     };
 

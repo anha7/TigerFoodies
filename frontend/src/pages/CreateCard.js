@@ -214,6 +214,14 @@ function CreateCard( { net_id } ) {
                 return; // Stop form submission
             }
 
+            // Validation: ensure title isn't empty
+            if (!title.trim()) {
+                alert(
+                    "Title cannot be empty or just whitespace."
+                );
+                return; // Stop form submission
+            }
+
             // Prepare card data
             const cardData = {
                 net_id: net_id,
