@@ -49,14 +49,13 @@ function EditCard({ net_id }) {
         const fetchCard = async () => {        
             try {
                 // Retrieve existing card data
-                const response = await fetch(`/api/cards/${card_id}`, {
+                const response = await fetch(`/api/cards/${net_id}/${card_id}`, {
                     method: 'GET',
                 });
 
-                // Unauthorized or forbidden access, redirect to homepage
-                if (response.status === 403 || response.status === 401 ||
-                        response.status === 404 || response.status === 500) {
-                    navigate("/", { replace: true });
+                // Unauthorized, redirect to homepage
+                if (response.status === 403) {
+                    navigate("/");
                     return;
                 }
     
@@ -76,10 +75,13 @@ function EditCard({ net_id }) {
                     // Otherwise catch errors
                     console.warn(
                         'Backend card information not available.');
+                    navigate("/");
+                    
                 }
             } catch (error) {
                 // Catch any errors related to fetching card data
                 console.error('Error fetching card data:', error);
+                navigate("/");
             }
 
         };

@@ -19,7 +19,6 @@ import html
 import threading
 import requests
 from bs4 import BeautifulSoup
-import pytz
 
 #-----------------------------------------------------------------------
 
@@ -161,8 +160,8 @@ def get_data():
 # API Route for retrieving cards for a specific user
 @app.route('/api/cards/<string:net_id>', methods=['GET'])
 def retrieve_user_cards(net_id):
-    try:
-        # Connect to the database a nd establish a cursor
+    try: 
+        # Connect to the database and establish a cursor
         with psycopg2.connect(DATABASE_URL) as conn:
             with conn.cursor() as cursor:
                 # Define insertion query
@@ -327,13 +326,9 @@ def edit_card(card_id):
 #-----------------------------------------------------------------------
         
 # API Route for retrieving a specific card
-@app.route('/api/cards/<int:card_id>', methods=['GET'])
-def retrieve_card(card_id):
+@app.route('/api/cards/<string:net_id>/<int:card_id>', methods=['GET'])
+def retrieve_card(net_id, card_id):
     try:
-        user_net_id = session.get('username')
-        if not user_net_id:
-            return jsonify({"error": "Unauthorized"}), 401
-
         if not card_id:
             return jsonify({"error": "Invalid card_id"}), 400
         
@@ -350,8 +345,8 @@ def retrieve_card(card_id):
                 row = cursor.fetchone()
 
                 # Check whether user is creator of card or an admin
-                card_owner = row[9]
-                if card_owner != user_net_id and user_net_id != 'cs-tigerfoodies':
+                card_owner = str(row[9])
+                if card_owner != net_id and net_id != 'cs-tigerfoodies':
                     # User is not authorized to edit this card
                     return jsonify({"error": "Forbidden"}), 403
                 
@@ -368,7 +363,8 @@ def retrieve_card(card_id):
                         "latitude": row[5],
                         "longitude": row[6],
                         "dietary_tags": row[7],
-                        "allergies": row[8]
+                        "allergies": row[8],
+                        "net_id": row[9]
                     }
                     return jsonify(card)
                 else:

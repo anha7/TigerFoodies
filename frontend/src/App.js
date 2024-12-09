@@ -68,7 +68,7 @@ function App() {
                         net_id={net_id}/>} />
                     {/* Editing Card Route */}
                     <Route path="/edit/:card_id" 
-                        element={<EditCard/>} />
+                        element={<EditCard net_id={net_id}/>} />
                     {/* Fallback Route */}
                     <Route path="*"element={<Navigate to="/" 
                         replace state={{ net_id }}/>}/>
