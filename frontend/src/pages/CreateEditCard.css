@@ -21,6 +21,10 @@
     text-decoration: none;
 }
 
+.nav h1:hover {
+    color: rgb(222, 222, 222);
+}
+
 /*--------------------------------------------------------------------*/
 
 /* Style main content */
@@ -66,7 +70,7 @@ form {
     margin-top: 0;
 }
 
-/* Set style types of fields with character limits*/
+/* Set style types of fields with character limits */
 .title, .description {
     display: flex;
     flex-direction: column;

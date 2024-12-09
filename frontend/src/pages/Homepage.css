@@ -157,6 +157,7 @@ p {
 }
 
 .feedback-form textarea {
+    display: flex;
     height: 80%;
     border: none;
     box-shadow: 1px 0 3px black;
@@ -166,14 +167,25 @@ p {
     resize: none;
     box-sizing: border-box;
     text-wrap: wrap;
+    width: 100%;
+    padding-right: 7.5%;
 }
 
 .feedback-form textarea::placeholder {
     font-style: italic;
 }
 
+.feedback-form p {
+    right: 2%;
+    top: -23px;
+    align-self: flex-end;
+    position: relative;
+    color: #716F81;
+    font-size: 0.75rem;
+    font-style: italic;
+}
+
 .feedback-form button {
-    margin-top: 2vh;
     width: 30%;
     height: 8%;
     align-self: center;
@@ -442,7 +454,8 @@ main {
 }
 
 .comment-form input {
-    width: 90%;
+    width: 81%;
+    padding-right: 9%;
     font-family: "Quicksand", sans-serif;
     font-size: 0.9rem;
     margin-bottom: 1vh;
@@ -452,6 +465,17 @@ main {
     border-radius: 15px;
     padding-left: 0.5vw;
     height: 4vh;
+}
+
+.comment-form p {
+    height: 0;
+    right: 6%;
+    top: -34px;
+    align-self: flex-end;
+    position: relative;
+    color: #716F81;
+    font-size: 0.75rem;
+    font-style: italic;
 }
 
 .comment-form input::placeholder {
@@ -704,6 +728,15 @@ footer p {
     .card-list {
         grid-template-columns: repeat(3, 1fr);
     }
+
+    .feedback-form textarea {
+        padding-right: 10%;
+    }
+
+    .comment-form input {
+        width: 79%;
+        padding-right: 11%;
+    }
 }
 
 /*--------------------------------------------------------------------*/
@@ -793,6 +826,15 @@ footer p {
     .modal-card {
         width: 75%;
     }
+
+    .feedback-form textarea {
+        padding-right: 7%;
+    }
+
+    .comment-form input {
+        width: 81%;
+        padding-right: 9%;
+    }
 }
 
 /*--------------------------------------------------------------------*/
@@ -818,5 +860,14 @@ footer p {
 
     .modal-card {
         width: 90%;
+    }
+
+    .feedback-form textarea {
+        padding-right: 9%;
+    }
+
+    .comment-form input {
+        width: 80.5%;
+        padding-right: 8.5%;
     }
 }

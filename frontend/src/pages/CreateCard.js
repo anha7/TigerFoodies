@@ -325,7 +325,7 @@ function CreateCard( { net_id } ) {
                                             setTitle(e.target.value);
                                         } else {
                                             setTitle(
-                        e.target.value.length.slice(0, maxTitleLength));
+                            e.target.value.slice(0, maxTitleLength));
                                         }
                                         markFormDirty();
                                     }}
@@ -490,7 +490,7 @@ function CreateCard( { net_id } ) {
                                             setDescription(e.target.value);
                                         } else {
                                             setDescription(
-                        e.target.value.length.slice(0, maxDescriptionLength));
+                        e.target.value.slice(0, maxDescriptionLength));
                                         }
                                         markFormDirty();
                                     }}

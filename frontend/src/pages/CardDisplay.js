@@ -375,12 +375,16 @@ function CommentsSection({ card_id, net_id, newComment, setNewComment,
                     onChange={(e) => {
                         if (e.target.value.length <= maxCommentLength) {
                             setNewComment(e.target.value);
+                        } else {
+                            setNewComment(
+                            e.target.value.slice(0, maxCommentLength));
                         }
                         setIsFormDirty(e.target.value.trim().length > 0);
                     }}
                     placeholder="Add comment..."
                     required
                 />
+                <p>{maxCommentLength - newComment.length}</p>
                 <button>Post</button>
             </form>
         </div>

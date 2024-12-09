@@ -15,6 +15,8 @@ const Feedback = ({ isModalActive, setIsModalActive, net_id }) => {
     // Check if there's new info in the form
     const [isFormDirty, setIsFormDirty] = useState(false);
 
+//----------------------------------------------------------------------
+
     // Functional component to close modal
     const handleCloseModal = () => {
         if (isFormDirty) {
@@ -34,6 +36,8 @@ const Feedback = ({ isModalActive, setIsModalActive, net_id }) => {
             setIsModalActive(false);
         }
     }
+
+//----------------------------------------------------------------------
 
     // Send the feedback data to the server
     const handleSubmit = async (e) => {
@@ -68,6 +72,11 @@ const Feedback = ({ isModalActive, setIsModalActive, net_id }) => {
         }
     };
 
+//----------------------------------------------------------------------
+    
+    // Character limit for feedback
+    const maxFeedbackLength = 300;
+
     return (
         <>
             {isModalActive && (
@@ -86,12 +95,19 @@ const Feedback = ({ isModalActive, setIsModalActive, net_id }) => {
                             <textarea
                                 type="text"
                                 placeholder="Report any bugs..."
+                                value={feedbackInput}
                                 onChange={(e) => {
-                                    setFeedbackInput(e.target.value);
+                                    if (e.target.value.length <= maxFeedbackLength) {
+                                        setFeedbackInput(e.target.value);
+                                    } else {
+                                        setFeedbackInput(
+                            e.target.value.slice(0, maxFeedbackLength));
+                                    }
                                     setIsFormDirty(true);
                                 }}
                                 required
                             />
+                            <p>{maxFeedbackLength - feedbackInput.length}</p>
                             <button onClick={handleSubmit}>
                                 Submit
                             </button>
