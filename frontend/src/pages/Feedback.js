@@ -103,7 +103,8 @@ const Feedback = ({ isModalActive, setIsModalActive, net_id }) => {
                                         setFeedbackInput(
                             e.target.value.slice(0, maxFeedbackLength));
                                     }
-                                    setIsFormDirty(true);
+                                    setIsFormDirty(
+                                    e.target.value.trim().length > 0);
                                 }}
                                 required
                             />
