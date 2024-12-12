@@ -181,10 +181,10 @@ function EditCard({ net_id }) {
     
         // Allowed image types
         const validImageTypes = ['image/jpeg', 'image/jpg', 'image/png', 
-            'image/webp'];
+            'image/webp', 'image/heic'];
         if (!validImageTypes.includes(file.type)) {
             alert(
-        'Only JPG, JPEG, PNG, or WEBP image files are allowed.');
+        'Only JPG, JPEG, PNG, WEBP, or HEIC image files are allowed.');
             event.target.value = ""; // Reset the file input
             return;
         }
